@@ -1,0 +1,16 @@
+/**
+ * clean-up/css/style.css
+ *
+ * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
+ * @link http://www.netcommons.org NetCommons Project
+ * @license http://www.netcommons.org/license.txt NetCommons License
+ * @copyright Copyright 2014, NetCommons Project
+ */
+
+/*.clean-up-developer .radio-inline:first-child {*/
+	/*padding-left: 0px;*/
+/*}*/
+
+/*.plugin-clean-up .clean-up-check-trial .checkbox.checkbox-inline {*/
+	/*padding-left: 0px;*/
+/*}*/
