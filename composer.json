@@ -1,0 +1,37 @@
+{
+    "name": "netcommons/clean-up",
+    "description": "CleanUp for NetCommons Plugin",
+    "homepage": "http://www.netcommons.org/",
+    "extra": {
+        "installer-paths": {
+            "app/Plugin/{$name}": ["type:cakephp-plugin"]
+        }
+    },
+    "require": {
+        "cakedc/migrations":           "~2.2",
+        "netcommons/net-commons":      "@dev",
+        "netcommons/site-manager":     "@dev",
+        "netcommons/system-manager":   "@dev",
+        "netcommons/wysiwyg":          "@dev",
+        "netcommons/files":            "@dev"
+    },
+    "license": "LicenseRef-NetCommons",
+    "license-ref-net-commons": "https://raw.githubusercontent.com/NetCommons3/NetCommons3/master/license.txt",
+    "authors": [
+        {
+          "name": "Mitsuru Mutaguchi(OpenSource WorkShop)",
+          "email": "mutaguchi@opensource-workshop.jp",
+          "homepage": "https://opensource-workshop.jp/",
+          "role": "Developer"
+        },
+        {
+            "name": "NetCommons Community",
+            "homepage": "http://www.netcommons.org"
+        }
+    ],
+    "type":        "cakephp-plugin",
+    "keywords":    ["cakephp", "clean-up"],
+    "config": {
+        "vendor-dir": "vendors"
+    }
+}
