@@ -22,7 +22,7 @@
 			<div class="well well-sm" style="box-sizing: border-box; min-height: 20px; padding: 9px; margin-bottom: 20px; background-color: rgb(245, 245, 245); border: 1px solid rgb(227, 227, 227); border-radius: 3px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px inset;">
 				使用されていないアップロードファイルを削除します。
 				対象のプラグインを選択して、[削除]を押してください。<br>
-				ファイルクリーンアップを実行する前に、<a>こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
+				ファイルクリーンアップを実行する前に、<a href="https://www.netcommons.org/NetCommons3/download#!#frame-362" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
 			</div>
 			<div class="panel panel-default" style="box-sizing: border-box; margin-bottom: 20px; background-color: rgb(255, 255, 255); border: 1px solid rgb(221, 221, 221); border-radius: 4px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px;">
 
