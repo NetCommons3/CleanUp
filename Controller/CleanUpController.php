@@ -75,7 +75,7 @@ class CleanUpController extends CleanUpAppController {
 			CakeLog::info('[ValidationErrors] ' . $this->request->here());
 			CakeLog::info(print_r($this->CleanUp->validationErrors, true));
 		} else {
-			$this->request->data['CleanUp'] = $this->CleanUp->create();
+			//$this->request->data['CleanUp'] = $this->CleanUp->create();
 		}
 
 		//		if (! $this->request->is('delete')) {
