@@ -13,10 +13,70 @@
 <!--	--><?php //echo __d('nc2_to_nc3', 'Go here for the migration from NetCommons2 documentation.'); ?>
 <!--</a>-->
 
+<article>
+	<div class="well well-sm">
+		使用されていないアップロードファイルを削除します。
+		対象のプラグインを選択して、[削除]を押してください。<br>
+		ファイルクリーンアップを実行する前に、<a href="https://www.netcommons.org/NetCommons3/download#!#frame-362" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
+	</div>
+	<div class="panel panel-default">
+		<?php echo $this->NetCommonsForm->create('CleanUp', array(
+//			'ng-controller' => 'SystemManager',
+//			'name' => 'form',
+//			'url' => NetCommonsUrl::blockUrl(array(
+//				'controller' => 'clean_up',
+//				'action' => 'delete',
+//			)),
+//			'type' => 'delete',
+		)); ?>
+<!--		<div class="panel-body">-->
+<!--			<div class="form-inline">-->
+<!--				<div class="clearfix">-->
+<!--					--><?php
+//					$default = Hash::extract($pluginsRoom, '{n}.PluginsRoom[room_id=' . Current::read('Room.id') . ']');
+//					echo $this->PluginsForm->checkboxPluginsRoom(
+//						'PluginsRoom.plugin_key',
+//						array(
+//							'div' => array('class' => 'plugin-checkbox-outer'),
+//							'default' => array_values(Hash::combine($default, '{n}.plugin_key', '{n}.plugin_key'))
+//						)
+//					);
+//					?>
+<!--				</div>-->
+<!--			</div>-->
+<!--		</div>-->
+
+			<div class="panel-body">
+				<div class="form-inline">
+					<div class="clearfix">
+						<div class="plugin-checkbox-outer">
+							<div class="checkbox nc-multiple-checkbox">
+								<?php echo $this->NetCommonsForm->checkbox('announcements', array(
+									'type' => 'checkbox',
+									'label' => __d('clean_up', 'お知らせ'),
+//									'div' => array('class' => 'plugin-checkbox-outer'),
+//									'div' => array('class' => ''),
+//									'class' => 'checkbox nc-multiple-checkbox'
+								)); ?>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="panel-footer text-center">
+				<?php echo $this->Button->delete(
+					null,
+					__d('clean_up', '削除します。よろしいですか？')
+				); ?>
+			</div>
+		<?php echo $this->NetCommonsForm->end(); ?>
+	</div>
+</article>
+
+
 <?php /* サンプル画面 */ ?>
 <div class="row" style="box-sizing: border-box; margin-right: -15px; margin-left: -15px;">
 	<div role="main" id="container-main" class="control-panel col-sm-10"
-
 		 style="box-sizing: border-box; position: relative; min-height: 1px; padding-right: 15px; padding-left: 15px; float: left; width: 975px;">
 		<article class="plugin-rooms" style="box-sizing: border-box; display: block;">
 			<div class="well well-sm" style="box-sizing: border-box; min-height: 20px; padding: 9px; margin-bottom: 20px; background-color: rgb(245, 245, 245); border: 1px solid rgb(227, 227, 227); border-radius: 3px; box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 1px inset;">

@@ -19,6 +19,14 @@ App::uses('CleanUpAppModel', 'CleanUp.Model');
 class CleanUp extends CleanUpAppModel {
 
 /**
+ * useTable
+ * TODO 仮でfalse
+ *
+ * @var bool
+ */
+	public $useTable = false;
+
+/**
  * use behaviors
  *
  * @var array
@@ -61,7 +69,104 @@ class CleanUp extends CleanUpAppModel {
  * @return mixed On success Model::$data if its not empty or true, false on failure
  * @throws InternalErrorException
  */
-	public function cleanUp($data) {
+//	public function fileCleanUp($data) {
+	public function CleanUp($data) {
+		$this->loadModels(array(
+			'UploadFile' => 'Files.UploadFile',
+//			'Block' => 'Blocks.Block',
+		));
+		//トランザクションBegin
+		$this->begin();
+
+		//$this->UploadFile->deleteUploadFile($UploadFile_id);
+		
+		// 対象のプラグインを指定
+//		$pluginKey = $data['Plugin']['key'][0];
+
+		// ---------------------------------
+		// お知らせの場合
+		// ---------------------------------
+
+		// アップロードTBをチェック
+
+//		$this->UploadFile->bindModel([
+//			'hasMany' => [
+//				'Block' => [
+//					'className' => 'Blocks.Block',
+////					'foreignKey' => false,
+//					'foreignKey' => 'key',
+//					'conditions' => [
+////						$this->UploadFile->alias . '.block_key = Block.key',
+//						'Block.plugin_key' =>'announcements'		// TODO 仮
+//					],
+//					'fields' => '',
+//					'order' => ''
+//				]
+//			],
+//		]);
+		$uploadFiles = $this->UploadFile->find('all', array(
+			'recursive' => 0,
+			'conditions' => array(
+				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+				'OR' => array(
+					$this->UploadFile->alias . '.content_key !=' => null,
+					$this->UploadFile->alias . '.content_key !=' => '',
+				),
+				//$this->UploadFile->alias . '.block_key = Block.key',
+				'Block.plugin_key' =>'announcements'		// TODO 仮
+			),
+//			'callbacks' => false,
+			'joins' => array(
+				array('table' => 'blocks',
+					'alias' => 'Block',
+					'type' => 'inner',
+					'conditions' => array(
+						$this->UploadFile->alias . '.block_key = Block.key',
+					)
+				)
+			),
+			'fields' => 'content_key',
+			'order' => ''
+		));
+
+		// TODO $uploadFiles 取得件数とれすぎる.見直し 1000件づつとか。
+		// TODO クリーンアップ設定TB作って、ぱらめとる必要ありそう。
+		foreach ($uploadFiles as $uploadFile) {
+			// このコンテンツでアップロードファイルを使っているかどうか。
+			/*
+			SELECT * FROM nc3.announcements
+			where (announcements.is_active = 1
+			OR announcements.is_latest = 1)
+			AND `key` = 'ee5cda11750fe0e839a4b539590b35dd'
+			*/
+			$model = 'Announcement';
+			$class = 'Announcements.Announcement';
+			$fields = 'content'; // 複数の場合カンマ区切りかな
+			$this->loadModels(array(
+				$model => $class,
+			));
+			// 多言語, アクティブ, 最終のコンテンツで複数件あるため、ループする
+			$announcements = $this->$model->find('all', array(
+				'recursive' => -1,
+				'conditions' => array(
+					'OR' => array(
+						$this->$model->alias . '.is_active' => '1',
+						$this->$model->alias . '.is_latest' => '1',
+					),
+					$this->$model->alias . '.key' => $uploadFile['UploadFile']['content_key'],
+				),
+				'fields' => $fields,
+				'order' => ''
+			));
+			foreach ($announcements as $announcement) {
+				$content = $announcement[$this->Announcement->alias]['content'];
+			}
+			var_dump($announcements);
+
+		}
+
+//		var_dump($uploadFiles);
+
 		//		$this->loadModels(array(
 		//			'Like' => 'Likes.Like',
 		//			'TagsContent' => 'Tags.TagsContent',

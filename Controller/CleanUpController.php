@@ -63,9 +63,13 @@ class CleanUpController extends CleanUpAppController {
  * @return CakeResponse
  */
 	public function delete() {
+		//var_dump( $this->request->data);
 		if ($this->request->is('post')) {
+			//var_dump(111);
 			$data = $this->request->data;
-			if ($this->CleanUp->delete($data)) {
+			// TODO テスト：対象プラグインキー
+			$data['Plugin']['key'][] = 'announcements';
+			if ($this->CleanUp->fileCleanUp($data)) {
 				// TODO success画面へredirect
 				$this->redirect($this->referer());
 				return;
