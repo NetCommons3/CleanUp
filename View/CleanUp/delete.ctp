@@ -66,7 +66,7 @@
 			<div class="panel-footer text-center">
 				<?php echo $this->Button->delete(
 					null,
-					__d('clean_up', '削除します。よろしいですか？')
+					__d('clean_up', 'チェックされたプラグインの使用されていないアップロードファイルを削除します。よろしいですか？')
 				); ?>
 			</div>
 		<?php echo $this->NetCommonsForm->end(); ?>

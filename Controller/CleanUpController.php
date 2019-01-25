@@ -54,6 +54,8 @@ class CleanUpController extends CleanUpAppController {
  * @see NetCommonsAppController::beforeFilter()
  */
 	public function beforeFilter() {
+		// ログ出力設定
+		$this->CleanUp->setupLog();
 		parent::beforeFilter();
 	}
 
@@ -76,8 +78,8 @@ class CleanUpController extends CleanUpAppController {
 			}
 
 			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
-			CakeLog::info('[ValidationErrors] ' . $this->request->here());
-			CakeLog::info(print_r($this->CleanUp->validationErrors, true));
+			CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
+			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
 		} else {
 			//$this->request->data['CleanUp'] = $this->CleanUp->create();
 		}
