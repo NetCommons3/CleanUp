@@ -42,14 +42,6 @@ class CleanUp extends CleanUpAppModel {
 	);
 
 /**
- * belongsTo associations
- *
- * @var array
- */
-	public $belongsTo = array(
-	);
-
-/**
  * Validation rules
  *
  * @var array
@@ -70,6 +62,65 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
+ * getCleanUp
+ *
+ * return例
+ * ```
+ * array (size=1)
+ *   0 =>
+ *     array (size=2)
+ *       'CleanUp' =>
+ *         array (size=1)
+ *           'plugin_key' => string 'announcements' (length=13)
+ *       'Plugin' =>
+ *         array (size=2)
+ *           'key' => string 'announcements' (length=13)
+ *           'name' => string 'お知らせ' (length=12)
+ * ```
+ *
+ * @return array
+ */
+	public function getCleanUp() {
+		$params = array(
+			'recursive' => -1,
+			//'conditions' => array(),
+			//'callbacks' => false,
+			'joins' => array(
+				array('table' => 'plugins',
+					'alias' => 'Plugin',
+					'type' => 'inner',
+					'conditions' => array(
+						'CleanUp.plugin_key = Plugin.key',
+						'Plugin.language_id' => Current::read('Language.id'),
+					)
+				)
+			),
+			'fields' => 'CleanUp.plugin_key, Plugin.key, Plugin.name',
+			//'order' => ''
+		);
+		return $this->find('all', $params);
+	}
+
+/**
+ * getUnknowCleanUp
+ *
+ * @return array
+ */
+	public function getUnknowCleanUp() {
+		$unknowCleanUp = [
+			'CleanUp' => [
+				'plugin_key' => 'unknown',
+			],
+			'Plugin' => [
+				'key' => 'unknown',
+				// プラグイン不明のファイル
+				'name' => __d('clean_up', 'Plugin unknown file'),
+			],
+		];
+		return $unknowCleanUp;
+	}
+
+/**
  * ファイルクリーンアップ
  *
  * @param array $data received post data
@@ -80,7 +131,6 @@ class CleanUp extends CleanUpAppModel {
 		$this->setupLog();
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
-//			'Block' => 'Blocks.Block',
 		));
 		//トランザクションBegin
 		$this->begin();

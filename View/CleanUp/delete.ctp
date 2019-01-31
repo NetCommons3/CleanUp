@@ -9,15 +9,13 @@
  */
 ?>
 
-<!--<a href="https://github.com/NetCommons3/CleanUp#CleanUp" target="_blank">-->
-<!--	--><?php //echo __d('nc2_to_nc3', 'Go here for the migration from NetCommons2 documentation.'); ?>
-<!--</a>-->
-
 <article>
 	<div class="well well-sm">
-		使用されていないアップロードファイルを削除します。
-		対象のプラグインを選択して、[削除]を押してください。<br>
-		ファイルクリーンアップを実行する前に、<a href="https://www.netcommons.org/NetCommons3/download#!#frame-362" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
+		<?php echo __d('clean_up', '使用されていないアップロードファイルを削除します。
+対象のプラグインを選択して、[削除]を押してください。
+ファイルクリーンアップを実行する前に、<a href="%s" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
+		', 'https://www.netcommons.org/NetCommons3/download#!#frame-362');
+		?>
 	</div>
 	<div class="panel panel-default">
 		<?php echo $this->NetCommonsForm->create('CleanUp', array(
@@ -29,49 +27,26 @@
 //			)),
 //			'type' => 'delete',
 		)); ?>
-<!--		<div class="panel-body">-->
-<!--			<div class="form-inline">-->
-<!--				<div class="clearfix">-->
-<!--					--><?php
-//					$default = Hash::extract($pluginsRoom, '{n}.PluginsRoom[room_id=' . Current::read('Room.id') . ']');
-//					echo $this->PluginsForm->checkboxPluginsRoom(
-//						'PluginsRoom.plugin_key',
-//						array(
-//							'div' => array('class' => 'plugin-checkbox-outer'),
-//							'default' => array_values(Hash::combine($default, '{n}.plugin_key', '{n}.plugin_key'))
-//						)
-//					);
-//					?>
-<!--				</div>-->
-<!--			</div>-->
-<!--		</div>-->
 
 			<div class="panel-body">
 				<div class="form-inline">
 					<div class="clearfix">
-						<div class="plugin-checkbox-outer">
-							<div class="checkbox nc-multiple-checkbox">
-								<?php echo $this->NetCommonsForm->checkbox('announcements', array(
-									'type' => 'checkbox',
-									'label' => __d('clean_up', 'お知らせ'),
-//									'div' => array('class' => 'plugin-checkbox-outer'),
-//									'div' => array('class' => ''),
-//									'class' => 'checkbox nc-multiple-checkbox'
-								)); ?>
-							</div>
-							<div class="checkbox nc-multiple-checkbox">
-								<?php echo $this->NetCommonsForm->checkbox('unknown', array(
-									'type' => 'checkbox',
-									'label' => __d('clean_up', 'プラグイン不明のファイル'),
-//									'div' => array('class' => 'plugin-checkbox-outer'),
-//									'div' => array('class' => ''),
-//									'class' => 'checkbox nc-multiple-checkbox'
-								)); ?>
-							</div>
-						</div>
+						<?php
+						//$default = Hash::extract($pluginsRoom, '{n}.PluginsRoom[room_id=' . Current::read('Room.id') . ']');
+						echo $this->CleanUpForm->checkboxPlugins(
+							'CleanUp.plugin_key',
+							array(
+								'div' => array('class' => 'plugin-checkbox-outer'),
+								//'default' => array_values(Hash::combine($default, '{n}.plugin_key', '{n}.plugin_key'))
+								//'default' => array_values(Hash::combine($cleanUp, '{n}.CleanUp.plugin_key', '{n}.CleanUp.plugin_key'))
+								'default' => array_values(Hash::combine($cleanUp, '{n}.Plugin.key', '{n}.Plugin.key'))
+							)
+						);
+						?>
 					</div>
 				</div>
 			</div>
+
 			<div class="panel-footer text-center">
 				<?php echo $this->Button->delete(
 					null,

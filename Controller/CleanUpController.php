@@ -15,6 +15,8 @@ App::uses('CleanUpAppController', 'CleanUp.Controller');
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Controller
+ * @property CleanUp $CleanUp
+ * @property CakeRequest request
  */
 class CleanUpController extends CleanUpAppController {
 
@@ -27,14 +29,15 @@ class CleanUpController extends CleanUpAppController {
 		'CleanUp.CleanUp'
 	);
 
-	///**
-	// * use helpers
-	// *
-	// * @var array
-	// * @see NetCommonsAppController::$helpers
-	// */
-	//	public $helpers = array(
-	//	);
+/**
+ * use helpers
+ *
+ * @var array
+ * @see NetCommonsAppController::$helpers
+ */
+	public $helpers = array(
+		'CleanUp.CleanUpForm'
+	);
 
 	///**
 	// * use components
@@ -83,7 +86,11 @@ class CleanUpController extends CleanUpAppController {
 			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
 		} else {
 			//$this->request->data['CleanUp'] = $this->CleanUp->create();
+			$this->request->data['CleanUp'] = $this->CleanUp->getCleanUp();
+			$this->request->data['CleanUp'][] = $this->CleanUp->getUnknowCleanUp();
 		}
+//var_dump($this->request->data['CleanUp']);
+		$this->set('cleanUp', $this->request->data['CleanUp']);
 
 		//		if (! $this->request->is('delete')) {
 		//			return $this->throwBadRequest();
