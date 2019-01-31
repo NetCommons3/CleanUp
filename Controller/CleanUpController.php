@@ -70,12 +70,12 @@ class CleanUpController extends CleanUpAppController {
 	public function delete() {
 		//var_dump( $this->request->data);
 		if ($this->request->is('post')) {
-//			var_dump(111);
 			$data = $this->request->data;
-			// TODO テスト：対象プラグインキー
-			$data['Plugin']['key'][] = 'announcements';
+//			var_dump($data);
+//			CakeLog::debug(print_r($data, true));
+			//$data['CleanUp']['plugin_key'][] = 'announcements';
 			if ($this->CleanUp->fileCleanUp($data)) {
-				// TODO success画面へredirect
+				// success画面へredirect
 				$this->redirect($this->referer());
 				return;
 			}
@@ -86,7 +86,7 @@ class CleanUpController extends CleanUpAppController {
 			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
 		} else {
 			//$this->request->data['CleanUp'] = $this->CleanUp->create();
-			$this->request->data['CleanUp'] = $this->CleanUp->getCleanUp();
+			$this->request->data['CleanUp'] = $this->CleanUp->getCleanUpsAndPlugin();
 			$this->request->data['CleanUp'][] = $this->CleanUp->getUnknowCleanUp();
 		}
 //var_dump($this->request->data['CleanUp']);
