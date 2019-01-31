@@ -59,6 +59,15 @@
 //									'class' => 'checkbox nc-multiple-checkbox'
 								)); ?>
 							</div>
+							<div class="checkbox nc-multiple-checkbox">
+								<?php echo $this->NetCommonsForm->checkbox('unknown', array(
+									'type' => 'checkbox',
+									'label' => __d('clean_up', 'プラグイン不明のファイル'),
+//									'div' => array('class' => 'plugin-checkbox-outer'),
+//									'div' => array('class' => ''),
+//									'class' => 'checkbox nc-multiple-checkbox'
+								)); ?>
+							</div>
 						</div>
 					</div>
 				</div>

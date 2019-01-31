@@ -20,17 +20,18 @@ App::uses('CleanUpAppModel', 'CleanUp.Model');
 class CleanUp extends CleanUpAppModel {
 
 /**
- * @var string フィールドの区切り文字
+ * フィールドの区切り文字
+ *
+ * @var string
  */
 	const FIELD_DELIMITER = ',';
 
 /**
- * useTable
- * TODO 仮でfalse
+ * 1000件ずつアップロードファイルのデータを取得するようにする
  *
- * @var bool
+ * @var string
  */
-	public $useTable = false;
+	const FIND_LIMIT_UPLOAD_FILE = 1000;
 
 /**
  * use behaviors
@@ -73,10 +74,9 @@ class CleanUp extends CleanUpAppModel {
  *
  * @param array $data received post data
  * @return mixed On success Model::$data if its not empty or true, false on failure
- * @throws InternalErrorException
+ * @throws Exception
  */
-//	public function fileCleanUp($data) {
-	public function CleanUp($data) {
+	public function fileCleanUp($data) {
 		$this->setupLog();
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
@@ -89,6 +89,8 @@ class CleanUp extends CleanUpAppModel {
 		
 		// 対象のプラグインを指定
 //		$pluginKey = $data['Plugin']['key'][0];
+
+		// TODO プラグイン毎に実行
 
 		// ---------------------------------
 		// お知らせの場合
@@ -111,180 +113,110 @@ class CleanUp extends CleanUpAppModel {
 //				]
 //			],
 //		]);
-		$targetPluginKey = 'announcements';	// TODO 仮
-		$uploadFiles = $this->UploadFile->find('all', array(
-			'recursive' => 0,
-			'conditions' => array(
-				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-				'OR' => array(
-					$this->UploadFile->alias . '.content_key !=' => null,
-					$this->UploadFile->alias . '.content_key !=' => '',
-				),
-				//$this->UploadFile->alias . '.block_key = Block.key',
-				'Block.plugin_key' => $targetPluginKey
-			),
-//			'callbacks' => false,
-			'joins' => array(
-				array('table' => 'blocks',
-					'alias' => 'Block',
-					'type' => 'inner',
-					'conditions' => array(
-						$this->UploadFile->alias . '.block_key = Block.key',
-					)
-				)
-			),
-			'fields' => 'id, room_id, content_key, path, original_name',
-			'order' => ''
-		));
+		$pluginKey = 'announcements';	// TODO 仮
+		$model = 'Announcement';
+		$class = 'Announcements.Announcement';
+		$fields = 'content'; // 複数の場合カンマ区切り
 
-		// TODO $uploadFiles 取得件数とれすぎる.見直し 1000件づつとか。
-		// TODO クリーンアップ設定TB作って、ぱらめとる必要ありそう。
-		// アップロードファイル、1件1件チェック。使われていないidをピックアップ
-		foreach ($uploadFiles as $i => $uploadFile) {
-			// このコンテンツでアップロードファイルを使っているかどうか。
-			/*
-			SELECT * FROM nc3.announcements
-			where (announcements.is_active = 1
-			OR announcements.is_latest = 1)
-			AND `key` = 'ee5cda11750fe0e839a4b539590b35dd'
-			*/
-			// アップロードしたファイルのパスを作成
-			/* @see WysiwygFileController::upload() よりコピー */
-			$checkFileUrl = NetCommonsUrl::actionUrl(
-				array(
-					'plugin' => 'wysiwyg',
-					'controller' => 'file',
-					'action' => 'download',
-					$uploadFile['UploadFile']['room_id'],
-					$uploadFile['UploadFile']['id']
-				),
-				false
-			);
-			$checkImageUrl = NetCommonsUrl::actionUrl(
-				array(
-					'plugin' => 'wysiwyg',
-					'controller' => 'image',
-					'action' => 'download',
-					$uploadFile['UploadFile']['room_id'],
-					$uploadFile['UploadFile']['id']
-				),
-				false
-			);
+		// block_keyあり、content_keyあり、コンテンツあり
+//		$uploadFiles = $this->UploadFile->find('all', array(
+//			'recursive' => 0,
+//			'conditions' => array(
+//				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+//				'OR' => array(
+//					array($this->UploadFile->alias . '.content_key !=' => null),
+//					array($this->UploadFile->alias . '.content_key !=' => ''),
+//				),
+//				'Block.plugin_key' => $targetPluginKey
+//			),
+//			//'callbacks' => false,
+//			'joins' => array(
+//				array('table' => 'blocks',
+//					'alias' => 'Block',
+//					'type' => 'inner',
+//					'conditions' => array(
+//						$this->UploadFile->alias . '.block_key = Block.key',
+//					)
+//				)
+//			),
+//			'fields' => 'id, room_id, content_key, path, original_name',
+//			//'order' => ''
+//		));
 
-			$model = 'Announcement';
-			$class = 'Announcements.Announcement';
-			$fields = 'content'; // 複数の場合カンマ区切りかな
-			$this->loadModels(array(
-				$model => $class,
-			));
 
-			// TODO 作成途中
-			// fileUrl, imageUrl使ってると件数取得できる
-			$checkConditions = [];
-			$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
-			foreach ($fieldsArray as $field) {
-				$checkConditions[] = array(
-					'OR' => array(
-						$this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%',
-						$this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%',
-					),
-				);
-			}
-
-			// TODO 作成途中 array_merge_recasivあたりでマージする想定
-			$conditions = array(
-				array(
-					'OR' => array(
-						$this->$model->alias . '.is_active' => '1',
-						$this->$model->alias . '.is_latest' => '1',
-					),
-				),
-				$this->$model->alias . '.key' => $uploadFile['UploadFile']['content_key'],
-				$checkConditions,
-			);
-
-			// 多言語, アクティブ, 最終のコンテンツで複数件あるため、ループする
-			$count = $this->$model->find('count', array(
-				'recursive' => -1,
-				'conditions' => $conditions,
-				//'fields' => $fields,
-				//'order' => ''
-			));
-
-			// 該当あり = 該当ファイルは削除しないため、unset
-			if ($count) {
-				unset($uploadFiles[$i]);
-				break;
-			}
-//			foreach ($announcements as $announcement) {
-//				$content = $announcement[$this->Announcement->alias]['content'];
-//				//var_dump($content);
-//				// チェック
-//				if (strpos($content, $checkFileUrl) !== false) {
-//					// 含まれるため、該当ファイルは削除しないため、unset
-//					unset($uploadFiles[$i]);
-//					break;
-//				}
-//				if (strpos($content, $checkImageUrl) !== false) {
-//					// 含まれるため、該当ファイルは削除しないため、unset
-//					unset($uploadFiles[$i]);
-//					break;
-//				}
-//			}
-			var_dump($count);
-
-//			var_dump($url, $url2);
-		}
-		if (! $uploadFiles) {
-			CakeLog::info(__d('clean_up', '%s 対象ファイルが一件もありませんでした', [$targetPluginKey]), ['CleanUp']);
-			return true;
-		}
 
 		// ファイル削除処理
 //		var_dump($uploadFiles);
+		//
+		// 処理件数
+		$reseultCount = 0;
 
 		try {
-			// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
-			// とりあえずupload_files_contents削除処理は、なしで進める。
+			// プラグイン不明のファイル
+			//
+			// 全プラグインの処理終わってから最後に実行
+			// block_keyなし、content_keyなし
+			// block_keyなしの場合、どのプラグインから投稿されたか不明
+			// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
+			$params = array(
+				'recursive' => 0,
+				'conditions' => array(
+					$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+					'OR' => array(
+						array('Block.id' => null),
+						array($this->UploadFile->alias . '.content_key' => null),
+						array($this->UploadFile->alias . '.content_key' => ''),
+					),
+				),
+				//'callbacks' => false,
+				'joins' => array(
+					array('table' => 'blocks',
+						'alias' => 'Block',
+						'type' => 'left',
+						'conditions' => array(
+							$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+							$this->UploadFile->alias . '.block_key = Block.key',
+						)
+					)
+				),
+				'fields' => 'id, room_id, content_key, path, original_name',
+				//'order' => ''
+			);
 
-			// ファイル削除
-			foreach ($uploadFiles as $i => $uploadFile) {
-				//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
-				$this->__deleteUploadFile($uploadFile);
+			// TODO クリーンアップ設定TB作って、ぱらめとる必要ありそう。
 
-				$fileName = $uploadFile['UploadFile']['original_name'];
-				CakeLog::info(__d('clean_up', '「%s」を削除しました', [$fileName]), ['CleanUp']);
-				unset($uploadFiles[$i]);
+			// $uploadFiles findでデータとれすぎてメモリ圧迫問題対応。 1000件づつ取得
+			$params = array_merge($params, array('limit' => self::FIND_LIMIT_UPLOAD_FILE, 'offset' => 0));
+			while ($uploadFiles = $this->UploadFile->find('all', $params)){
+				foreach ($uploadFiles as $i => $uploadFile) {
+					// このコンテンツでアップロードファイルを使っているかどうか。
+					// 該当あり => 該当ファイルは使ってるため削除しない
+					if ($this->__isUseUploadFile($uploadFile, $model, $class, $fields)) {
+						unset($uploadFiles[$i]);
+						continue;
+					}
+					var_dump($uploadFile);
+
+					// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
+					// とりあえずupload_files_contents削除処理は、なしで進める。
+
+					// ファイル削除
+	//				foreach ($uploadFiles as $i => $uploadFile) {
+					//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
+					$fileName = $uploadFile['UploadFile']['original_name'];
+	//				if ($this->__deleteUploadFile($uploadFile) === false) {
+						CakeLog::info(__d('clean_up', '「%s」の削除に失敗しました', [$fileName]), ['CleanUp']);
+	//				} else {
+	//					CakeLog::info(__d('clean_up', '「%s」を削除しました', [$fileName]), ['CleanUp']);
+	//				}
+	//					unset($uploadFiles[$i]);
+	//				}
+					$reseultCount++;
+				}
+				// 次のn件取得
+				$params['offset'] = self::FIND_LIMIT_UPLOAD_FILE;
 			}
 
-		//			// 動画削除($callbacks = true)
-		//			$this->contentKey = $data['Video']['key'];
-		//			if (! $this->deleteAll(array($this->alias . '.key' => $data['Video']['key']), false, true)) {
-		//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-		//			}
-		//
-		//			// アップロードファイル 削除
-		//			$conditions = array($this->UploadFile->alias . '.content_key' => $data['Video']['key']);
-		//			if (! $this->UploadFile->deleteAll($conditions, false)) {
-		//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-		//			}
-		//
-		//			// タグコンテンツ 削除
-		//			$conditions = array($this->TagsContent->alias . '.content_id' => $data['Video']['id']);
-		//			if (! $this->TagsContent->deleteAll($conditions, false)) {
-		//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-		//			}
-		//
-		//			// いいね 削除
-		//			$conditions = array($this->Like->alias . '.content_key' => $data['Video']['key']);
-		//			if (! $this->Like->deleteAll($conditions, false)) {
-		//				throw new InternalErrorException(__d('net_commons', 'Internal Server Error'));
-		//			}
-		//
-		//			// 総容量更新
-		//			$totalSize = $this->getTotalSize();
-		//			$this->VideoSetting->saveTotalSize($totalSize);
-		//
 			//トランザクションCommit
 			$this->commit();
 
@@ -293,13 +225,18 @@ class CleanUp extends CleanUpAppModel {
 			$this->rollback($ex);
 		}
 
+		if ($reseultCount === 0) {
+			CakeLog::info(__d('clean_up', '%s 対象ファイルが一件もありませんでした', [$pluginKey]), ['CleanUp']);
+			return true;
+		}
+
 		return true;
 	}
 
 /**
  * Delete uploadFile
  *
- * @param arrya $uploadFile UploadFile
+ * @param array $uploadFile UploadFile
  * @return bool
  * @see UploadFile::deleteUploadFile() よりコピー
  */
@@ -317,6 +254,88 @@ class CleanUp extends CleanUpAppModel {
 		$this->UploadFile->uploadSettings('real_file_name', 'thumbnailSizes', $thumbnailSizes);
 
 		return $this->UploadFile->delete($fileId, false);
+	}
+
+/**
+ * このコンテンツでアップロードファイルを使っているかどうか。
+ *
+ * @param array $uploadFile UploadFile
+ * @param string $model モデル名
+ * @param string $class クラス名
+ * @param string $fields フィールド名
+ * @return bool true:使ってる|false:使ってない
+ */
+	private function __isUseUploadFile($uploadFile, $model, $class, $fields) {
+		// このコンテンツでアップロードファイルを使っているかどうか。
+		/*
+		SELECT * FROM nc3.announcements
+		where (announcements.is_active = 1
+		OR announcements.is_latest = 1)
+		AND `key` = 'ee5cda11750fe0e839a4b539590b35dd'
+		*/
+		// アップロードしたファイルのパスを作成
+		/* @see WysiwygFileController::upload() よりコピー */
+		$checkFileUrl = NetCommonsUrl::actionUrl(
+			array(
+				'plugin' => 'wysiwyg',
+				'controller' => 'file',
+				'action' => 'download',
+				$uploadFile['UploadFile']['room_id'],
+				$uploadFile['UploadFile']['id']
+			),
+			false
+		);
+		$checkImageUrl = NetCommonsUrl::actionUrl(
+			array(
+				'plugin' => 'wysiwyg',
+				'controller' => 'image',
+				'action' => 'download',
+				$uploadFile['UploadFile']['room_id'],
+				$uploadFile['UploadFile']['id']
+			),
+			false
+		);
+
+		$this->loadModels(array(
+			$model => $class,
+		));
+
+		// fileUrl, imageUrl使ってると件数取得する条件
+		$checkConditions = [];
+		$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
+		foreach ($fieldsArray as $field) {
+			$checkConditions[] = array(
+				'OR' => array(
+					array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%'),
+					array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%'),
+				),
+			);
+		}
+
+		// 最新とアクティブを取得する条件
+		$conditions = array(
+			array(
+				'OR' => array(
+					$this->$model->alias . '.is_active' => '1',
+					$this->$model->alias . '.is_latest' => '1',
+				),
+			),
+			$this->$model->alias . '.key' => $uploadFile['UploadFile']['content_key'],
+		);
+		$conditions = array_merge_recursive($conditions, $checkConditions);
+
+		// 多言語, 最新とアクティブ, のコンテンツで複数件ある
+		$count = $this->$model->find('count', array(
+			'recursive' => -1,
+			'conditions' => $conditions,
+			//'fields' => $fields,
+			//'order' => ''
+		));
+
+		if ($count) {
+			return true;
+		}
+		return false;
 	}
 
 /**

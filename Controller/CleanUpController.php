@@ -67,7 +67,7 @@ class CleanUpController extends CleanUpAppController {
 	public function delete() {
 		//var_dump( $this->request->data);
 		if ($this->request->is('post')) {
-			//var_dump(111);
+//			var_dump(111);
 			$data = $this->request->data;
 			// TODO テスト：対象プラグインキー
 			$data['Plugin']['key'][] = 'announcements';
@@ -77,6 +77,7 @@ class CleanUpController extends CleanUpAppController {
 				return;
 			}
 
+			// エラー
 			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
 			CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
 			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
