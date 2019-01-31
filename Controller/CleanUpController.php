@@ -66,31 +66,32 @@ class CleanUpController extends CleanUpAppController {
  * 削除
  *
  * @return CakeResponse
+ * @throws Exception
  */
 	public function delete() {
-		//var_dump( $this->request->data);
+		$cleanUps = $this->CleanUp->getCleanUpsAndPlugin();
+		$cleanUps[] = $this->CleanUp->getUnknowCleanUp();
+		// 'multiple' => 'checkbox'表示用
+		$this->set('cleanUps', $cleanUps);
+
 		if ($this->request->is('post')) {
 			$data = $this->request->data;
-//			var_dump($data);
-//			CakeLog::debug(print_r($data, true));
-			//$data['CleanUp']['plugin_key'][] = 'announcements';
+			//var_dump($data);
 			if ($this->CleanUp->fileCleanUp($data)) {
 				// success画面へredirect
-				$this->redirect($this->referer());
+				//$this->redirect($this->referer());
 				return;
 			}
-
 			// エラー
 			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
 			CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
 			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
+
 		} else {
-			//$this->request->data['CleanUp'] = $this->CleanUp->create();
-			$this->request->data['CleanUp'] = $this->CleanUp->getCleanUpsAndPlugin();
-			$this->request->data['CleanUp'][] = $this->CleanUp->getUnknowCleanUp();
+			// チェックボックス初期値
+			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
+			$this->request->data['CleanUp']['plugin_key'] = $default;
 		}
-//var_dump($this->request->data['CleanUp']);
-		$this->set('cleanUp', $this->request->data['CleanUp']);
 
 		//		if (! $this->request->is('delete')) {
 		//			return $this->throwBadRequest();

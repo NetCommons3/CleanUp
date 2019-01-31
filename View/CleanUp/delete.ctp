@@ -38,14 +38,13 @@
 							array(
 								'div' => array('class' => 'plugin-checkbox-outer'),
 								//'default' => array_values(Hash::combine($default, '{n}.plugin_key', '{n}.plugin_key'))
-								//'default' => array_values(Hash::combine($cleanUp, '{n}.CleanUp.plugin_key', '{n}.CleanUp.plugin_key'))
-								//'default' => array_values(Hash::combine($cleanUp, '{n}.Plugin.key', '{n}.Plugin.key'))
-								'default' => Hash::extract($cleanUp, '{n}.Plugin.key')
+								//'default' => Hash::extract($default, '{n}.Plugin.key')
 							)
 						);
 						?>
 					</div>
 				</div>
+				<?php echo $this->NetCommonsForm->error('CleanUp.plugin_key'); ?>
 			</div>
 
 			<div class="panel-footer text-center">

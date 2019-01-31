@@ -65,6 +65,17 @@ class CleanUp extends CleanUpAppModel {
  * @see Model::save()
  */
 	public function beforeValidate($options = array()) {
+		$this->validate = Hash::merge(array(
+			'plugin_key' => array(
+				'notBlank' => array(
+					'rule' => array('notBlank'),
+					// プラグイン
+					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('clean_up', 'plugin')),
+					'required' => true,
+				),
+			),
+		), $this->validate);
+
 		return parent::beforeValidate($options);
 	}
 
@@ -142,6 +153,13 @@ class CleanUp extends CleanUpAppModel {
 		//トランザクションBegin
 		$this->begin();
 
+		//バリデーション
+		$this->set($data);
+		/* @see beforeValidate() */
+		if (! $this->validates()) {
+			return false;
+		}
+
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->__getCleanUps($data);
 		foreach ($data['CleanUp']['plugin_key'] as $plugin_key) {
@@ -151,7 +169,8 @@ class CleanUp extends CleanUpAppModel {
 				break;
 			}
 		}
-//var_dump($cleanUps);
+		//var_dump($cleanUps);
+
 		try {
 			// TODO プラグイン毎に実行
 
