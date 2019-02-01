@@ -213,8 +213,10 @@ class CleanUp extends CleanUpAppModel {
 				$targetCount = 0;
 				//var_dump($cleanUp);
 				$pluginName = $cleanUp['Plugin']['name'];
+				$model = $cleanUp['CleanUp']['model'];
 
-				CakeLog::info(__d('clean_up', '[%s] クリーンアップ処理を開始します', [$pluginName]), ['CleanUp']);
+				CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理を開始します',
+					[$pluginName, $model]), ['CleanUp']);
 
 				//アップロードファイルのfind条件 ゲット
 				$params = $this->__getUploadFileParams($cleanUp);
@@ -229,9 +231,12 @@ class CleanUp extends CleanUpAppModel {
 				}
 
 				if ($targetCount === 0) {
-					CakeLog::info(__d('clean_up', '[%s] 対象ファイルが一件もありませんでした', [$pluginName]), ['CleanUp']);
+					CakeLog::info(__d('clean_up', '[%s:%s] 対象ファイルが一件もありませんでした',
+						[$pluginName, $model]), ['CleanUp']);
+				} else {
+					CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理が完了しました',
+						[$pluginName, $model]), ['CleanUp']);
 				}
-				CakeLog::info(__d('clean_up', '[%s] クリーンアップ処理が完了しました', [$pluginName]), ['CleanUp']);
 			}
 
 			//トランザクションCommit
@@ -350,14 +355,15 @@ class CleanUp extends CleanUpAppModel {
 
 			// ファイル削除
 			$pluginName = $cleanUp['Plugin']['name'];
+			$model = $cleanUp['CleanUp']['model'];
 			$fileName = $uploadFile['UploadFile']['original_name'];
 			//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
 			//if ($this->__deleteUploadFile($uploadFile) === false) {
-				CakeLog::info(__d('clean_up', '[%s] 「%s」の削除に失敗しました',
-					[$pluginName, $fileName]), ['CleanUp']);
+				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」の削除に失敗しました',
+					[$pluginName, $model, $fileName]), ['CleanUp']);
 			//} else {
-				CakeLog::info(__d('clean_up', '[%s] 「%s」を削除しました',
-					[$pluginName, $fileName]), ['CleanUp']);
+				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」を削除しました',
+					[$pluginName, $model, $fileName]), ['CleanUp']);
 			//}
 			$targetCount++;
 		}
