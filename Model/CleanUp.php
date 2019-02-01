@@ -67,11 +67,11 @@ class CleanUp extends CleanUpAppModel {
 	public function beforeValidate($options = array()) {
 		$this->validate = Hash::merge(array(
 			'plugin_key' => array(
-				'notBlank' => array(
-					'rule' => array('notBlank'),
-					// プラグイン
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('clean_up', 'plugin')),
-					'required' => true,
+				'multiple' => array(
+					'rule' => array('multiple', array('min' => 1)),
+					// plugin
+					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('clean_up', 'プラグイン')),
+					'required' => false,
 				),
 			),
 		), $this->validate);
@@ -131,8 +131,8 @@ class CleanUp extends CleanUpAppModel {
 			],
 			'Plugin' => [
 				'key' => self::UNKNOWN_PLUGIN_KEY,
-				// プラグイン不明ファイル
-				'name' => __d('clean_up', 'Plugin unknown file'),
+				// Plugin unknown file
+				'name' => __d('clean_up', 'プラグイン不明ファイル'),
 			],
 		];
 		return $unknowCleanUp;
@@ -152,6 +152,7 @@ class CleanUp extends CleanUpAppModel {
 		));
 		//トランザクションBegin
 		$this->begin();
+		//var_dump($data);
 
 		//バリデーション
 		$this->set($data);
@@ -177,6 +178,10 @@ class CleanUp extends CleanUpAppModel {
 			foreach ($cleanUps as $cleanUp) {
 				// 削除件数
 				$deleteCount = 0;
+				//var_dump($cleanUp);
+				$pluginName = $cleanUp['Plugin']['name'];
+
+				CakeLog::info(__d('clean_up', '[%s] クリーンアップ処理を開始します', [$pluginName]), ['CleanUp']);
 
 				//アップロードファイルのfind条件 ゲット
 				$params = $this->__getUploadFileParams($cleanUp);
@@ -198,15 +203,14 @@ class CleanUp extends CleanUpAppModel {
 						// とりあえずupload_files_contents削除処理は、なしで進める。
 
 						// ファイル削除
-		//				foreach ($uploadFiles as $i => $uploadFile) {
-						//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
 						$fileName = $uploadFile['UploadFile']['original_name'];
+						//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
 		//				if ($this->__deleteUploadFile($uploadFile) === false) {
-							CakeLog::info(__d('clean_up', '「%s」の削除に失敗しました', [$fileName]), ['CleanUp']);
+							CakeLog::info(__d('clean_up', '[%s] 「%s」の削除に失敗しました',
+								[$pluginName, $fileName]), ['CleanUp']);
 		//				} else {
-		//					CakeLog::info(__d('clean_up', '「%s」を削除しました', [$fileName]), ['CleanUp']);
-		//				}
-		//					unset($uploadFiles[$i]);
+							CakeLog::info(__d('clean_up', '[%s] 「%s」を削除しました',
+								[$pluginName, $fileName]), ['CleanUp']);
 		//				}
 						$deleteCount++;
 					}
@@ -215,9 +219,10 @@ class CleanUp extends CleanUpAppModel {
 				}
 
 				if ($deleteCount === 0) {
-					$pluginKey = $cleanUp['CleanUp']['plugin_key'];
-					CakeLog::info(__d('clean_up', '%s 対象ファイルが一件もありませんでした', [$pluginKey]), ['CleanUp']);
+					$pluginName = $cleanUp['CleanUp']['plugin_key'];
+					CakeLog::info(__d('clean_up', '[%s] 対象ファイルが一件もありませんでした', [$pluginName]), ['CleanUp']);
 				}
+				CakeLog::info(__d('clean_up', '[%s] クリーンアップ処理が完了しました', [$pluginName]), ['CleanUp']);
 			}
 
 			//トランザクションCommit
@@ -244,8 +249,18 @@ class CleanUp extends CleanUpAppModel {
 				'plugin_key' => $data['CleanUp']['plugin_key']
 			),
 			//'callbacks' => false,
-			'fields' => 'plugin_key, model, class, fields',
-			'order' => 'id'
+			'joins' => array(
+				array('table' => 'plugins',
+					'alias' => 'Plugin',
+					'type' => 'inner',
+					'conditions' => array(
+						'CleanUp.plugin_key = Plugin.key',
+						'Plugin.language_id' => Current::read('Language.id'),
+					)
+				)
+			),
+			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, Plugin.name',
+			'order' => 'CleanUp.id'
 		);
 		return $this->find('all', $params);
 	}

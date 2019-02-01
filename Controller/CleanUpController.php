@@ -84,9 +84,10 @@ class CleanUpController extends CleanUpAppController {
 			}
 			// エラー
 			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
-			CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
-			CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
-
+			//CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
+			//CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
+			CakeLog::info('[ValidationErrors] ' . $this->request->here());
+			CakeLog::info(print_r($this->CleanUp->validationErrors, true));
 		} else {
 			// チェックボックス初期値
 			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
