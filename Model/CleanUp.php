@@ -9,6 +9,7 @@
  */
 
 App::uses('CleanUpAppModel', 'CleanUp.Model');
+App::uses('NetCommonsUrl', 'NetCommons.Utility');
 
 /**
  * CleanUp Model
@@ -20,7 +21,7 @@ App::uses('CleanUpAppModel', 'CleanUp.Model');
 class CleanUp extends CleanUpAppModel {
 
 /**
- * フィールドの区切り文字
+ * WYSIWYG対象フィールドの区切り文字
  *
  * @var string
  */
@@ -38,7 +39,7 @@ class CleanUp extends CleanUpAppModel {
  *
  * @var string
  */
-	const UNKNOWN_PLUGIN_KEY = 'unknown';
+	const PLUGIN_KEY_UNKNOWN = 'unknown';
 
 /**
  * use behaviors
@@ -54,6 +55,18 @@ class CleanUp extends CleanUpAppModel {
  * @var array
  */
 	public $validate = array();
+
+/**
+ * construct
+ *
+ * @return void
+ */
+	function __construct() {
+		parent::__construct();
+
+		// ログ設定
+		$this->setupLog();
+	}
 
 /**
  * Called during validation operations, before validation. Please note that custom
@@ -82,23 +95,10 @@ class CleanUp extends CleanUpAppModel {
 /**
  * getCleanUpsAndPlugin
  *
- * return例
- * ```
- * array (size=1)
- *   0 =>
- *     array (size=2)
- *       'CleanUp' =>
- *         array (size=1)
- *           'plugin_key' => string 'announcements' (length=13)
- *       'Plugin' =>
- *         array (size=2)
- *           'key' => string 'announcements' (length=13)
- *           'name' => string 'お知らせ' (length=12)
- * ```
- *
+ * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
  * @return array
  */
-	public function getCleanUpsAndPlugin() {
+	public function getCleanUpsAndPlugin($data = null) {
 		$params = array(
 			'recursive' => -1,
 			//'conditions' => array(),
@@ -113,9 +113,17 @@ class CleanUp extends CleanUpAppModel {
 					)
 				)
 			),
-			'fields' => 'CleanUp.plugin_key, Plugin.key, Plugin.name',
+			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, ' .
+				'Plugin.key, Plugin.name',
 			'order' => 'CleanUp.id'
 		);
+		// dataあれば条件追加
+		if ($data) {
+			$params['conditions'] = [
+				'plugin_key' => $data['CleanUp']['plugin_key']
+			];
+		}
+
 		return $this->find('all', $params);
 	}
 
@@ -127,15 +135,27 @@ class CleanUp extends CleanUpAppModel {
 	public function getUnknowCleanUp() {
 		$unknowCleanUp = [
 			'CleanUp' => [
-				'plugin_key' => self::UNKNOWN_PLUGIN_KEY,
+				'plugin_key' => self::PLUGIN_KEY_UNKNOWN,
 			],
 			'Plugin' => [
-				'key' => self::UNKNOWN_PLUGIN_KEY,
+				'key' => self::PLUGIN_KEY_UNKNOWN,
 				// Plugin unknown file
 				'name' => __d('clean_up', 'プラグイン不明ファイル'),
 			],
 		];
 		return $unknowCleanUp;
+	}
+
+/**
+ * プラグイン不明ファイルを含むCleanUp一覧 ゲット
+ *
+ * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
+ * @return array
+ */
+	public function getCleanUpsAndUnknow($data = null) {
+		$cleanUps = $this->getCleanUpsAndPlugin($data);
+		$cleanUps[] = $this->getUnknowCleanUp();
+		return $cleanUps;
 	}
 
 /**
@@ -146,7 +166,6 @@ class CleanUp extends CleanUpAppModel {
  * @throws Exception
  */
 	public function fileCleanUp($data) {
-		$this->setupLog();
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
 		));
@@ -162,10 +181,10 @@ class CleanUp extends CleanUpAppModel {
 		}
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
-		$cleanUps = $this->__getCleanUps($data);
+		$cleanUps = $this->getCleanUpsAndPlugin($data);
 		foreach ($data['CleanUp']['plugin_key'] as $plugin_key) {
 			// プラグイン不明ファイルがチェックされてたら、プラグイン不明ファイル データ追加
-			if ($plugin_key == self::UNKNOWN_PLUGIN_KEY) {
+			if ($plugin_key == self::PLUGIN_KEY_UNKNOWN) {
 				$cleanUps[] = $this->getUnknowCleanUp();
 				break;
 			}
@@ -233,36 +252,7 @@ class CleanUp extends CleanUpAppModel {
 			$this->rollback($ex);
 		}
 
-
 		return true;
-	}
-
-/**
- * __getCleanUp
- *
- * @return array
- */
-	public function __getCleanUps($data) {
-		$params = array(
-			'recursive' => -1,
-			'conditions' => array(
-				'plugin_key' => $data['CleanUp']['plugin_key']
-			),
-			//'callbacks' => false,
-			'joins' => array(
-				array('table' => 'plugins',
-					'alias' => 'Plugin',
-					'type' => 'inner',
-					'conditions' => array(
-						'CleanUp.plugin_key = Plugin.key',
-						'Plugin.language_id' => Current::read('Language.id'),
-					)
-				)
-			),
-			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, Plugin.name',
-			'order' => 'CleanUp.id'
-		);
-		return $this->find('all', $params);
 	}
 
 /**
@@ -273,7 +263,7 @@ class CleanUp extends CleanUpAppModel {
  * @see UploadFile::deleteUploadFile() よりコピー
  */
 	private function __getUploadFileParams($cleanUp) {
-		if ($cleanUp['CleanUp']['plugin_key'] == self::UNKNOWN_PLUGIN_KEY) {
+		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイル
 			//
 			// 全プラグインの処理終わってから最後に実行
@@ -368,7 +358,7 @@ class CleanUp extends CleanUpAppModel {
 		//private function __isUseUploadFile($uploadFile, $cleanUp, $class, $fields) {
 		//* @param string $class クラス名
 		//* @param string $fields フィールド名
-		if ($cleanUp['CleanUp']['plugin_key'] == self::UNKNOWN_PLUGIN_KEY) {
+		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイルは、ブロックキーなしやコンテンツキーなしで、使われていないため、false
 			return false;
 		}
@@ -438,8 +428,6 @@ class CleanUp extends CleanUpAppModel {
 		$count = $this->$model->find('count', array(
 			'recursive' => -1,
 			'conditions' => $conditions,
-			//'fields' => $fields,
-			//'order' => ''
 		));
 
 		if ($count) {
@@ -459,7 +447,7 @@ class CleanUp extends CleanUpAppModel {
 		// Consoleに出力すると<tag></tag>で囲われ見辛い。
 		// @see
 		// https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
-		// CakeLog::infoをよびだし、debug.logとNc2ToNc3.logの両方出力するようにした。
+		// CakeLog::infoをよびだし、debug.logとCleanUp.logの両方出力するようにした。
 		CakeLog::config(
 			'CleanUpFile',
 			[

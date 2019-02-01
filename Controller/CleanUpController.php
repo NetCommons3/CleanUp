@@ -39,29 +39,6 @@ class CleanUpController extends CleanUpAppController {
 		'CleanUp.CleanUpForm'
 	);
 
-	///**
-	// * use components
-	// *
-	// * @var array
-	// * @see NetCommonsAppController::$components
-	// * @see ContentCommentsComponent::beforeRender()
-	// *
-	// */
-	//	public $components = array(
-	//	);
-
-/**
- * beforeFilter
- *
- * @return void
- * @see NetCommonsAppController::beforeFilter()
- */
-	public function beforeFilter() {
-		// ログ出力設定
-		$this->CleanUp->setupLog();
-		parent::beforeFilter();
-	}
-
 /**
  * 削除
  *
@@ -69,8 +46,7 @@ class CleanUpController extends CleanUpAppController {
  * @throws Exception
  */
 	public function delete() {
-		$cleanUps = $this->CleanUp->getCleanUpsAndPlugin();
-		$cleanUps[] = $this->CleanUp->getUnknowCleanUp();
+		$cleanUps = $this->CleanUp->getCleanUpsAndUnknow();
 		// 'multiple' => 'checkbox'表示用
 		$this->set('cleanUps', $cleanUps);
 
@@ -78,50 +54,16 @@ class CleanUpController extends CleanUpAppController {
 			$data = $this->request->data;
 			//var_dump($data);
 			if ($this->CleanUp->fileCleanUp($data)) {
-				// success画面へredirect
+				// リダイレクトすると、チェック内容が消えるため、そのままreturn
 				//$this->redirect($this->referer());
 				return;
 			}
 			// エラー
 			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
-			//CakeLog::info('[ValidationErrors] ' . $this->request->here(), ['CleanUp']);
-			//CakeLog::info(print_r($this->CleanUp->validationErrors, true), ['CleanUp']);
-			CakeLog::info('[ValidationErrors] ' . $this->request->here());
-			CakeLog::info(print_r($this->CleanUp->validationErrors, true));
 		} else {
 			// チェックボックス初期値
 			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
 			$this->request->data['CleanUp']['plugin_key'] = $default;
 		}
-
-		//		if (! $this->request->is('delete')) {
-		//			return $this->throwBadRequest();
-		//		}
-		//
-		//		$video = $this->Video->getWorkflowContents('first', array(
-		//			'recursive' => 1,
-		//			'conditions' => array(
-		//				$this->Video->alias . '.key' => $this->data['Video']['key']
-		//			)
-		//		));
-		//
-		//		//削除権限チェック
-		//		if (! $this->Video->canDeleteWorkflowContent($video)) {
-		//			return $this->throwBadRequest();
-		//		}
-		//
-		//		// 削除
-		//		if (!$this->Video->deleteVideo($this->data)) {
-		//			return $this->throwBadRequest();
-		//		}
-		//
-		//		// 一覧へ
-		//		$url = NetCommonsUrl::actionUrl(array(
-		//			'controller' => 'videos',
-		//			'action' => 'index',
-		//			'block_id' => $this->data['Block']['id'],
-		//			'frame_id' => $this->data['Frame']['id'],
-		//		));
-		//		$this->redirect($url);
 	}
 }
