@@ -54,30 +54,33 @@ class CleanUpShell extends AppShell {
  *
  * @return void
  * @throws Exception
+ * @see http://www.php.net/manual/ja/info.configuration.php#ini.max-execution-time max_execution_time  PHP を コマンドライン から実行する場合のデフォルト設定は 0 です。
  */
 	public function main() {
 		//var_dump($this->args[0]);
-		$pluginKey = $this->args[0];
+		//$pluginKey = $this->args[0];
+		$pluginKeys = $this->args;
 
 		$data = [];
-		if ($pluginKey == self::PLUGIN_KEY_ALL) {
+		if (array_search(self::PLUGIN_KEY_ALL, $pluginKeys)) {
 			// プラグインキーの一覧
 			$data['CleanUp']['plugin_key'] = $this->__getPluginKeys();
 		} else {
-			$data['CleanUp']['plugin_key'][] = $pluginKey;
+			$data['CleanUp']['plugin_key'] = $pluginKeys;
 		}
 
 		//$data['CleanUp']['plugin_key'][] = 'announcements';
 		//$data['CleanUp']['plugin_key'][] = 'unknown';
-		//		$data['CleanUp']['plugin_key'] = '';
+		//$data['CleanUp']['plugin_key'] = '';
 		//var_dump($data);
 		if ($this->CleanUp->fileCleanUp($data)) {
 			// 成功
 			$this->out('Success!!');
 			return;
 		}
-		// エラー. 第1引数plugin_keyを選択肢からの必須にしたため, 基本到達しない想定
-		$this->out('[ValidationErrors] ' . print_r($this->CleanUp->validationErrors, true));
+		// エラー. 第1引数plugin_keyを選択肢からの必須にしたため, 基本到達しない
+		$this->out('[ValidationErrors]');
+		var_export($this->CleanUp->validationErrors);
 	}
 
 /**
@@ -85,6 +88,7 @@ class CleanUpShell extends AppShell {
  *
  * @return ConsoleOptionParser
  * @link http://book.cakephp.org/2.0/ja/console-and-shells.html#Shell::getOptionParser
+ * @SuppressWarnings(PHPMD.UnusedLocalVariable)
  */
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
@@ -92,13 +96,14 @@ class CleanUpShell extends AppShell {
 		// 説明
 		$parser->description([
 			__d('clean_up', 'ファイルクリーンアップ'),
-			__d('clean_up', '使用されていないアップロードファイルを削除します。
-対象のプラグインを指定してください。 ファイルクリーンアップを実行する前に、
-こちらを参考に必ずバックアップして、いつでもリストアできるようにしてから実行してください。'),
+			__d('clean_up', '使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。
+全ての引数はplugin_keyとして処理します。
+ファイルクリーンアップを実行する前に、こちらを参考に必ずバックアップして、いつでもリストアできるように
+してから実行してください。'),
 			CleanUp::HOW_TO_BACKUP_URL,
 			'',
 			__d('clean_up', '実行結果は下記にログ出力されます。'),
-			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log'
+			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log',
 		]);
 
 		// プラグインキーの一覧
@@ -106,14 +111,22 @@ class CleanUpShell extends AppShell {
 		$pluginKeys[] = self::PLUGIN_KEY_ALL;
 
 		// 引数
-		$parser->addArguments([
-			'plugin_key' => [
-				'help' => __d('clean_up', '第1引数 クリーンアップする対象のプラグインキー。' .
-					'[通常以外で指定できるプラグインキー] unknown:プラグイン不明ファイル, all:全てのプラグイン'),
-				'required' => true,
+		$arguments[] = [
+			'help' => __d('clean_up', 'クリーンアップする対象のプラグインキー。
+[通常以外で指定できるプラグインキー] unknown:プラグイン不明ファイル, all:全てのプラグイン'),
+			'required' => true,
+			'choices' => $pluginKeys,
+		];
+
+		// プラグイン数分ループして引数を追加する
+		foreach($pluginKeys as $pluginKey) {
+			$arguments[] = [
+				'required' => false,
 				'choices' => $pluginKeys,
-			],
-		]);
+			];
+		}
+
+		$parser->addArguments($arguments);
 
 		return $parser;
 	}

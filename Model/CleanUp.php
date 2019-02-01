@@ -151,6 +151,7 @@ class CleanUp extends CleanUpAppModel {
 		$unknowCleanUp = [
 			'CleanUp' => [
 				'plugin_key' => self::PLUGIN_KEY_UNKNOWN,
+				'model' => self::PLUGIN_KEY_UNKNOWN, //ログ出力のみで利用
 			],
 			'Plugin' => [
 				'key' => self::PLUGIN_KEY_UNKNOWN,
@@ -181,7 +182,6 @@ class CleanUp extends CleanUpAppModel {
  * @throws Exception
  */
 	public function fileCleanUp($data) {
-		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
 		));
@@ -195,6 +195,7 @@ class CleanUp extends CleanUpAppModel {
 		if (! $this->validates()) {
 			return false;
 		}
+		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->getCleanUpsAndPlugin($data);
@@ -357,14 +358,13 @@ class CleanUp extends CleanUpAppModel {
 			$pluginName = $cleanUp['Plugin']['name'];
 			$model = $cleanUp['CleanUp']['model'];
 			$fileName = $uploadFile['UploadFile']['original_name'];
-			//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
-			//if ($this->__deleteUploadFile($uploadFile) === false) {
+			if ($this->__deleteUploadFile($uploadFile) === false) {
 				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」の削除に失敗しました',
 					[$pluginName, $model, $fileName]), ['CleanUp']);
-			//} else {
+			} else {
 				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」を削除しました',
 					[$pluginName, $model, $fileName]), ['CleanUp']);
-			//}
+			}
 			$targetCount++;
 		}
 		return $targetCount;

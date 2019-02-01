@@ -52,6 +52,9 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUps', $cleanUps);
 
 		if ($this->request->is('post')) {
+			// TODO 仮で画面からのみ30分設定
+			set_time_limit(1800);
+
 			$data = $this->request->data;
 			//var_dump($data);
 			if ($this->CleanUp->fileCleanUp($data)) {
