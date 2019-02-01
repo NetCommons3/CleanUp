@@ -17,6 +17,7 @@ App::uses('CleanUpAppController', 'CleanUp.Controller');
  * @package NetCommons\CleanUp\Controller
  * @property CleanUp $CleanUp
  * @property CakeRequest request
+ * @property NetCommonsComponent NetCommons
  */
 class CleanUpController extends CleanUpAppController {
 
@@ -56,6 +57,10 @@ class CleanUpController extends CleanUpAppController {
 			if ($this->CleanUp->fileCleanUp($data)) {
 				// リダイレクトすると、チェック内容が消えるため、そのままreturn
 				//$this->redirect($this->referer());
+				// 削除しましたFlashメッセージを設定
+				$this->NetCommons->setFlashNotification(
+					__d('net_commons', 'Successfully deleted.'), array('class' => 'success')
+				);
 				return;
 			}
 			// エラー

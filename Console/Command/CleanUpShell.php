@@ -9,6 +9,7 @@
  */
 
 App::uses('Current', 'NetCommons.Utility');
+App::uses('CleanUp', 'CleanUp.Model');
 
 /**
  * CleanUp Shell
@@ -88,13 +89,26 @@ class CleanUpShell extends AppShell {
 	public function getOptionParser() {
 		$parser = parent::getOptionParser();
 
+		// 説明
+		$parser->description([
+			__d('clean_up', 'ファイルクリーンアップ'),
+			__d('clean_up', '使用されていないアップロードファイルを削除します。
+対象のプラグインを指定してください。 ファイルクリーンアップを実行する前に、
+こちらを参考に必ずバックアップして、いつでもリストアできるようにしてから実行してください。'),
+			CleanUp::HOW_TO_BACKUP_URL,
+			'',
+			__d('clean_up', '実行結果は下記にログ出力されます。'),
+			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log'
+		]);
+
 		// プラグインキーの一覧
 		$pluginKeys = $this->__getPluginKeys();
 		$pluginKeys[] = self::PLUGIN_KEY_ALL;
 
+		// 引数
 		$parser->addArguments([
 			'plugin_key' => [
-				'help' => __d('clean_up', '第1引数で指定してください, クリーンアップする対象のプラグインキー。' .
+				'help' => __d('clean_up', '第1引数 クリーンアップする対象のプラグインキー。' .
 					'[通常以外で指定できるプラグインキー] unknown:プラグイン不明ファイル, all:全てのプラグイン'),
 				'required' => true,
 				'choices' => $pluginKeys,

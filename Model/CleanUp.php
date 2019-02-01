@@ -35,11 +35,26 @@ class CleanUp extends CleanUpAppModel {
 	const FIND_LIMIT_UPLOAD_FILE = 1000;
 
 /**
+ * 削除遅延日 x日前<br />
+ * 例えば1日前を指定すると、今日アップしたファイルは消さなくなります
+ *
+ * @var string
+ */
+	const DELETE_DELAY_DAY = 0;
+
+/**
  * プラグイン不明ファイル のプラグインキー
  *
  * @var string
  */
 	const PLUGIN_KEY_UNKNOWN = 'unknown';
+
+/**
+ * バックアップ方法URL
+ *
+ * @var string
+ */
+	const HOW_TO_BACKUP_URL = 'https://www.netcommons.org/NetCommons3/download#!#frame-362';
 
 /**
  * use behaviors
@@ -166,6 +181,7 @@ class CleanUp extends CleanUpAppModel {
  * @throws Exception
  */
 	public function fileCleanUp($data) {
+		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
 		));
@@ -192,11 +208,9 @@ class CleanUp extends CleanUpAppModel {
 		//var_dump($cleanUps);
 
 		try {
-			// TODO プラグイン毎に実行
-
 			foreach ($cleanUps as $cleanUp) {
-				// 削除件数
-				$deleteCount = 0;
+				// 削除対象件数
+				$targetCount = 0;
 				//var_dump($cleanUp);
 				$pluginName = $cleanUp['Plugin']['name'];
 
@@ -208,37 +222,13 @@ class CleanUp extends CleanUpAppModel {
 				$params = array_merge($params, array('limit' => self::FIND_LIMIT_UPLOAD_FILE, 'offset' => 0));
 
 				while ($uploadFiles = $this->UploadFile->find('all', $params)){
-					foreach ($uploadFiles as $i => $uploadFile) {
-						// このコンテンツでアップロードファイルを使っているかどうか。
-						// 該当あり => 該当ファイルは使ってるため削除しない
-						//if ($this->__isUseUploadFile($uploadFile, $model, $class, $fields)) {
-						if ($this->__isUseUploadFile($uploadFile, $cleanUp)) {
-							unset($uploadFiles[$i]);
-							continue;
-						}
-						//var_dump($uploadFile);
-
-						// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
-						// とりあえずupload_files_contents削除処理は、なしで進める。
-
-						// ファイル削除
-						$fileName = $uploadFile['UploadFile']['original_name'];
-						//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
-		//				if ($this->__deleteUploadFile($uploadFile) === false) {
-							CakeLog::info(__d('clean_up', '[%s] 「%s」の削除に失敗しました',
-								[$pluginName, $fileName]), ['CleanUp']);
-		//				} else {
-							CakeLog::info(__d('clean_up', '[%s] 「%s」を削除しました',
-								[$pluginName, $fileName]), ['CleanUp']);
-		//				}
-						$deleteCount++;
-					}
+					// ファイル削除
+					$targetCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp, $targetCount);
 					// 次のn件取得
 					$params['offset'] = self::FIND_LIMIT_UPLOAD_FILE;
 				}
 
-				if ($deleteCount === 0) {
-					$pluginName = $cleanUp['CleanUp']['plugin_key'];
+				if ($targetCount === 0) {
 					CakeLog::info(__d('clean_up', '[%s] 対象ファイルが一件もありませんでした', [$pluginName]), ['CleanUp']);
 				}
 				CakeLog::info(__d('clean_up', '[%s] クリーンアップ処理が完了しました', [$pluginName]), ['CleanUp']);
@@ -252,6 +242,7 @@ class CleanUp extends CleanUpAppModel {
 			$this->rollback($ex);
 		}
 
+		CakeLog::info(__d('clean_up', 'クリーンアップ処理が完了しました'), ['CleanUp']);
 		return true;
 	}
 
@@ -291,8 +282,9 @@ class CleanUp extends CleanUpAppModel {
 						)
 					)
 				),
-				'fields' => 'id, room_id, content_key, path, original_name',
-				'order' => 'id'
+				'fields' => 'UploadFile.id, UploadFile.room_id, UploadFile.content_key, ' .
+					'UploadFile.path, UploadFile.original_name, UploadFile.modified',
+				'order' => 'UploadFile.id'
 			);
 		} else {
 			// block_keyあり、content_keyあり、コンテンツあり
@@ -316,11 +308,60 @@ class CleanUp extends CleanUpAppModel {
 						)
 					)
 				),
-				'fields' => 'id, room_id, content_key, path, original_name',
-				'order' => 'id'
+				'fields' => 'UploadFile.id, UploadFile.room_id, UploadFile.content_key, ' .
+					'UploadFile.path, UploadFile.original_name, UploadFile.modified',
+				'order' => 'UploadFile.id'
 			);
 		}
 		return $params;
+	}
+
+/**
+ * Delete uploadFiles
+ *
+ * @param array $uploadFiles UploadFiles
+ * @param array $cleanUp request->data 1件
+ * @param int $targetCount 削除対象件数
+ * @return int 削除対象件数
+ */
+	private function __deleteUploadFiles($uploadFiles, $cleanUp, $targetCount) {
+		foreach ($uploadFiles as $uploadFile) {
+			// 削除遅延日
+			$delayTime = self::DELETE_DELAY_DAY * 24 * 60 * 60;
+			$now = NetCommonsTime::getNowDatetime();
+			$delayDate = date('Y-m-d H:i:s',  strtotime($now) - $delayTime);
+			//var_dump($delayDate);
+
+			//var_dump($uploadFile['UploadFile']['modified']);
+			if($uploadFile['UploadFile']['modified'] >= $delayDate) {
+				// 削除遅延日  x日前を例えば1日前を指定すると、今日アップしたファイルは消さなくなります
+				continue;
+			}
+
+			// このコンテンツでアップロードファイルを使っているかどうか。
+			// 該当あり => 該当ファイルは使ってるため削除しない
+			if ($this->__isUseUploadFile($uploadFile, $cleanUp)) {
+				continue;
+			}
+			//var_dump($uploadFile);
+
+			// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
+			// とりあえずupload_files_contents削除処理は、なしで進める。
+
+			// ファイル削除
+			$pluginName = $cleanUp['Plugin']['name'];
+			$fileName = $uploadFile['UploadFile']['original_name'];
+			//$this->UploadFile->deleteUploadFile($uploadFile['UploadFile']['id']);
+			//if ($this->__deleteUploadFile($uploadFile) === false) {
+				CakeLog::info(__d('clean_up', '[%s] 「%s」の削除に失敗しました',
+					[$pluginName, $fileName]), ['CleanUp']);
+			//} else {
+				CakeLog::info(__d('clean_up', '[%s] 「%s」を削除しました',
+					[$pluginName, $fileName]), ['CleanUp']);
+			//}
+			$targetCount++;
+		}
+		return $targetCount;
 	}
 
 /**

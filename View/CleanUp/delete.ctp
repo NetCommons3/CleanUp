@@ -14,7 +14,7 @@
 		<?php echo __d('clean_up', '使用されていないアップロードファイルを削除します。
 対象のプラグインを選択して、[削除]を押してください。
 ファイルクリーンアップを実行する前に、<a href="%s" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span>
-		', 'https://www.netcommons.org/NetCommons3/download#!#frame-362');
+		', CleanUp::HOW_TO_BACKUP_URL);
 		?>
 	</div>
 	<div class="panel panel-default">
@@ -55,8 +55,32 @@
 			</div>
 		<?php echo $this->NetCommonsForm->end(); ?>
 	</div>
-</article>
 
+	<h2><?php echo __d('clean_up', '実行結果') ?></h2>
+	<div class="form-group">
+		<?php
+		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log';
+		$default = '';
+		if (file_exists($logPath)) {
+			$default = file_get_contents($logPath);
+		} else {
+			$default = __d('clean_up', 'ありません');
+		}
+		echo $this->NetCommonsForm->textarea('result', [
+			'default' => $default,
+			'class' => 'form-control',
+			'rows' => '15',
+		]);
+
+
+		//ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log'
+		//var_dump(file(ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log'));
+		?>
+		<div class="help-block">
+			<?php echo __d('clean_up', '時間はUTC表記です') ?>
+		</div>
+	</div>
+</article>
 
 <?php /* サンプル画面 */ ?>
 <div class="row" style="box-sizing: border-box; margin-right: -15px; margin-left: -15px;">
