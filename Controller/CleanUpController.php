@@ -9,6 +9,7 @@
  */
 
 App::uses('CleanUpAppController', 'CleanUp.Controller');
+App::uses('Folder', 'Utility');
 
 /**
  * CleanUp Controller
@@ -28,16 +29,6 @@ class CleanUpController extends CleanUpAppController {
  */
 	public $uses = array(
 		'CleanUp.CleanUp'
-	);
-
-/**
- * use helpers
- *
- * @var array
- * @see NetCommonsAppController::$helpers
- */
-	public $helpers = array(
-		'CleanUp.CleanUpForm'
 	);
 
 /**
@@ -64,14 +55,74 @@ class CleanUpController extends CleanUpAppController {
 				$this->NetCommons->setFlashNotification(
 					__d('net_commons', 'Successfully deleted.'), array('class' => 'success')
 				);
-				return;
+			} else {
+				// エラー
+				$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
 			}
-			// エラー
-			$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
+		} elseif ($this->request->is('ajax')) {
+			// ajaxの場合は何もしない
 		} else {
 			// チェックボックス初期値
 			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
 			$this->request->data['CleanUp']['plugin_key'] = $default;
 		}
+
+		// ログファイル名
+		$logFileNames = $this->__getLogFileNames();
+		$this->set('logFileNames', $logFileNames);
+
+		// ログの内容
+		$cleanUpLog = $this->__getleanUpLog();
+		$this->set('cleanUpLog', $cleanUpLog);
 	}
+
+/**
+ * ログファイル名
+ *
+ * @return array ログファイル名
+ */
+	private function __getLogFileNames() {
+		//インスタンスを作成
+		$dir = new Folder(ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS);
+		$files = $dir->read();
+		$logFileNames = [];
+		foreach ($files[1] as $file) {
+			if (strpos($file,'CleanUp.log') !== false) {
+				$logFileNames[] = $file;
+			}
+		}
+
+		// 空の場合セット
+		if (empty($logFileNames)) {
+			$logFileNames[] = 'CleanUp.log';
+		}
+		return $logFileNames;
+	}
+
+/**
+ * ログの内容
+ *
+ * @return string ログの内容
+ */
+	private function __getleanUpLog() {
+		$logFileNo = isset($this->params['named']['logFileNo'])
+			? $this->params['named']['logFileNo']
+			: 0;
+
+		if ($logFileNo == 0) {
+			$logFile = 'CleanUp.log';
+		} else {
+			$logFile = 'CleanUp.log.' . $logFileNo;
+		}
+		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . $logFile;
+
+		$cleanUpLog = '';
+		if (file_exists($logPath)) {
+			$cleanUpLog = file_get_contents($logPath);
+		} else {
+			$cleanUpLog = __d('clean_up', 'ありません');
+		}
+		return $cleanUpLog;
+	}
+
 }

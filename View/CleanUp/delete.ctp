@@ -7,9 +7,14 @@
  * @license http://www.netcommons.org/license.txt NetCommons License
  * @copyright Copyright 2014, NetCommons Project
  */
+echo $this->NetCommonsHtml->css('/clean_up/css/style.css');
+echo $this->NetCommonsHtml->script(array(
+	'/clean_up/js/clean_up.js',
+));
 ?>
 
-<article>
+<article ng-controller="CleanUp" ng-init="initialize()" ng-cloak>
+
 	<div class="well well-sm">
 		<?php echo __d('clean_up', '使用されていないアップロードファイルを削除します。
 対象のプラグインを選択して、[削除]を押してください。
@@ -18,28 +23,23 @@
 		?>
 	</div>
 	<div class="panel panel-default">
-		<?php echo $this->NetCommonsForm->create('CleanUp', array(
-//			'ng-controller' => 'SystemManager',
-//			'name' => 'form',
-//			'url' => NetCommonsUrl::blockUrl(array(
-//				'controller' => 'clean_up',
-//				'action' => 'delete',
-//			)),
-//			'type' => 'delete',
-		)); ?>
+		<?php echo $this->NetCommonsForm->create('CleanUp', array()); ?>
 
 			<div class="panel-body">
 				<div class="form-inline">
 					<div class="clearfix">
 						<?php
-						//$default = Hash::extract($pluginsRoom, '{n}.PluginsRoom[room_id=' . Current::read('Room.id') . ']');
-						echo $this->CleanUpForm->checkboxPlugins(
+						//チェックボックスの設定
+						$options = Hash::combine(
+							$cleanUps, '{n}.Plugin.key', '{n}.Plugin.name'
+						);
+						echo $this->NetCommonsForm->select(
 							'CleanUp.plugin_key',
-							array(
+							$options,
+							[
+								'multiple' => 'checkbox',
 								'div' => array('class' => 'plugin-checkbox-outer'),
-								//'default' => array_values(Hash::combine($default, '{n}.plugin_key', '{n}.plugin_key'))
-								//'default' => Hash::extract($default, '{n}.Plugin.key')
-							)
+							]
 						);
 						?>
 					</div>
@@ -57,23 +57,27 @@
 	</div>
 
 	<h2><?php echo __d('clean_up', '実行結果') ?></h2>
+	<?php echo $this->NetCommonsForm->create('Log', array()); ?>
+
 	<div class="form-group">
-		<?php
-		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log';
-		$cleanUpLog = '';
-		if (file_exists($logPath)) {
-			$cleanUpLog = file_get_contents($logPath);
-		} else {
-			$cleanUpLog = __d('clean_up', 'ありません');
-		}
-		echo $this->NetCommonsForm->textarea('result', [
+		<div class="form-inline">
+			<?php echo $this->NetCommonsForm->input('_log_file', [
+				'options' => $logFileNames,
+				//'ng-change' => 'more()',
+				//'ng-model'
+			]); ?>
+			<button type="button" class="btn btn-default" ng-click="more()" >
+				<?php echo __d('clean_up', '見る'); ?>
+			</button>
+		</div>
+		<?php echo $this->NetCommonsForm->textarea('_log_result', [
 			'default' => $cleanUpLog,
 			'class' => 'form-control',
 			'rows' => '15',
-		]);
-		?>
+		]); ?>
 		<div class="help-block">
 			<?php echo __d('clean_up', '時刻は協定世界時(UTC)表記です') ?>
 		</div>
 	</div>
+	<?php echo $this->NetCommonsForm->end(); ?>
 </article>
