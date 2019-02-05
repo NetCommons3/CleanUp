@@ -7,8 +7,10 @@
             "app/Plugin/{$name}": ["type:cakephp-plugin"]
         }
     },
+    "repositories": [
+        {"type": "vcs", "url": "https://github.com/NetCommons3/migrations.git"}
+    ],
     "require": {
-        "cakedc/migrations":           "~2.2",
         "netcommons/net-commons":      "@dev",
         "netcommons/site-manager":     "@dev",
         "netcommons/system-manager":   "@dev",
