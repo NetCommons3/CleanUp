@@ -36,8 +36,8 @@ class CleanUpUtility {
 		$plugins = implode(' ', $data['CleanUp']['plugin_key']);
 
 		// バックグラウンドでファイルクリーンアップ
-		// コマンド例) Console/cake clean_up.clean_up announcements blogs
-		self::execInBackground(APP . 'Console' . DS . 'cake clean_up.clean_up ' . $plugins);
+		// コマンド例) Console/cake clean_up.clean_up clean_up announcements blogs
+		self::execInBackground(APP . 'Console' . DS . 'cake clean_up.clean_up clean_up ' . $plugins);
 	}
 
 /**
@@ -85,10 +85,14 @@ class CleanUpUtility {
 /**
  * ロックファイルの削除。バッチ終了時
  *
- * @return void
+ * @return bool true:削除|false:ファイルなし
  */
 	public static function deleteLockFile() {
-		unlink(self::$lockFilePath);
+		if (file_exists(self::$lockFilePath)) {
+			unlink(self::$lockFilePath);
+			return true;
+		}
+		return false;
 	}
 
 /**

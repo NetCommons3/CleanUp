@@ -104,7 +104,8 @@ class CleanUp extends CleanUpAppModel {
 				),
 				'isLockFile' => array(
 					'rule' => array('isLockFile'),
-					'message' => __d('clean_up', '実行中ロックのため、実行できません。しばらくお待ちください'),
+					'message' => __d('clean_up', 'ロックファイルがあります。
+ファイルクリーンアップ実行中のため、しばらくお待ちください。'),
 					'required' => false,
 				),
 			),

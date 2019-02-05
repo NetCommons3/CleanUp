@@ -50,13 +50,17 @@ class CleanUpShell extends AppShell {
 	}
 
 /**
- * Main
+ * ファイルクリーンアップ
+ * ### コマンド例
+ * ```
+ * Console/cake clean_up.clean_up clean_up all
+ * ```
  *
  * @return void
  * @throws Exception
  * @see http://www.php.net/manual/ja/info.configuration.php#ini.max-execution-time max_execution_time  PHP を コマンドライン から実行する場合のデフォルト設定は 0 です。
  */
-	public function main() {
+	public function clean_up() {
 		//var_dump($this->args[0]);
 		//$pluginKey = $this->args[0];
 		$pluginKeys = $this->args;
@@ -84,6 +88,26 @@ class CleanUpShell extends AppShell {
 	}
 
 /**
+ * 実行中ロックファイルの強制削除
+ * ### コマンド例
+ * ```
+ * Console/cake clean_up.clean_up unlock
+ * ```
+ *
+ * @return void
+ * @throws Exception
+ * @see http://www.php.net/manual/ja/info.configuration.php#ini.max-execution-time max_execution_time  PHP を コマンドライン から実行する場合のデフォルト設定は 0 です。
+ */
+	public function unlock() {
+		// ロックファイルの削除
+		if (CleanUpUtility::deleteLockFile()) {
+			$this->out(__d('clean_up', '実行中ロックファイルを削除しました。'));
+		} else {
+			$this->out(__d('clean_up', '実行中ロックファイルはありません。'));
+		}
+	}
+
+/**
  * 引数設定
  *
  * @return ConsoleOptionParser
@@ -96,6 +120,11 @@ class CleanUpShell extends AppShell {
 		// 説明
 		$parser->description([
 			__d('clean_up', 'ファイルクリーンアップ'),
+			'',
+			__d('clean_up', '[コマンド]
+cake clean_up.clean_up clean_up [arguments]: ファイルクリーンアップ
+cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除'),
+			'',
 			__d('clean_up', '使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。
 全ての引数はplugin_keyとして処理します。
 ファイルクリーンアップを実行する前に、こちらを参考に必ずバックアップして、いつでもリストアできるように
@@ -113,12 +142,15 @@ class CleanUpShell extends AppShell {
 		// 引数
 		$arguments[] = [
 			'help' => __d('clean_up', 'クリーンアップする対象のプラグインキー。
-[通常以外で指定できるプラグインキー] unknown:プラグイン不明ファイル, all:全てのプラグイン'),
-			'required' => true,
+[通常以外で指定できるプラグインキー]
+unknown: プラグイン不明ファイル
+all: 全てのプラグイン'),
+			'required' => false,
 			'choices' => $pluginKeys,
 		];
 
 		// プラグイン数分ループして引数を追加する
+		// 最大プラグイン数と+1(上記helpで説明の分)の引数を設定
 		foreach($pluginKeys as $pluginKey) {
 			$arguments[] = [
 				'required' => false,

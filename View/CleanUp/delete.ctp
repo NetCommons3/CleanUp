@@ -46,7 +46,7 @@ echo $this->NetCommonsHtml->script(array(
 	<?php if ($isLockFile) : ?>
 		<div class="form-group">
 			<span class="label label-info">
-				<?php echo __d('clean_up', '実行中ロック (%sよりファイルクリーンアップ開始)', [$this->Date->dateFormat($cleanUpStart)]); ?>
+				<?php echo __d('clean_up', '実行ロック中 (%sよりファイルクリーンアップ開始)', [$this->Date->dateFormat($cleanUpStart)]); ?>
 			</span>
 		</div>
 	<?php endif; ?>
@@ -92,7 +92,7 @@ echo $this->NetCommonsHtml->script(array(
 	<?php /* 実行中ロックファイル強制削除処理 */ ?>
 	<div class="nc-danger-zone" ng-init="dangerZone=false;">
 		<?php echo $this->NetCommonsForm->create(false, [
-			'url' => array('controller' => 'clean_up', 'action' => 'lock'),
+			'url' => array('controller' => 'clean_up', 'action' => 'unlock'),
 			'id' => 'CleanUpLock',
 			'type' => 'get',
 		]); ?>
@@ -100,15 +100,15 @@ echo $this->NetCommonsHtml->script(array(
 				<div uib-accordion-group is-open="dangerZone" class="panel-danger">
 					<uib-accordion-heading class="clearfix">
 						<span style="cursor: pointer">
-							<?php echo __d('clean_up', '実行中ロックファイル強制削除処理'); ?>
+							<?php echo __d('clean_up', 'ロックファイル強制削除処理'); ?>
 						</span>
 						<span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': dangerZone, 'glyphicon-chevron-right': ! dangerZone}"></span>
 					</uib-accordion-heading>
 
 					<div class="inline-block">
-						<?php echo __d('clean_up', '実行中ロックファイルを強制削除します。<br />
+						<?php echo __d('clean_up', 'ロックファイルを強制削除します。<br />
 ファイルクリーンアップの途中停止等でロックファイルが残り、実行できなくなった場合にご利用ください。<br />
-また、実行結果からファイルクリーンアップが停止した事を確認した上で、強制削除を行ってください。'); ?>
+また、実行結果からファイルクリーンアップが停止した事を確認した上で、ご利用ください。'); ?>
 					</div>
 					<?php echo $this->Button->delete(
 						__d('net_commons', 'Delete'),

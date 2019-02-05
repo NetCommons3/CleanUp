@@ -138,22 +138,26 @@ class CleanUpController extends CleanUpAppController {
  * @return CakeResponse
  * @throws Exception
  */
-	public function lock() {
+	public function unlock() {
 		if (! $this->request->is('get')) {
 			return $this->throwBadRequest();
 		}
 
 		// ロックファイルの削除
-		CleanUpUtility::deleteLockFile();
+		if (CleanUpUtility::deleteLockFile()) {
+			// メッセージ
+			$this->NetCommons->setFlashNotification(
+				__d('clean_up', '実行中ロックファイルを削除しました。'), array('class' => 'success')
+			);
+		} else {
+			$this->NetCommons->setFlashNotification(
+				__d('clean_up', '実行中ロックファイルはありません。'), array('class' => 'warning')
+			);
+		}
 
 		// 画面表示
 		$this->delete();
 		$this->view = 'delete';
-
-		// メッセージ
-		$this->NetCommons->setFlashNotification(
-			__d('net_commons', 'Successfully deleted.'), array('class' => 'success')
-		);
 	}
 
 }
