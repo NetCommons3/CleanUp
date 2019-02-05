@@ -20,7 +20,7 @@ NetCommonsApp.controller('CleanUp', ['$scope', '$http', 'NC3_URL',
        */
       $scope.initialize = function() {
         // textareaの最下部にスクロール
-        var logResult = $('textarea[name="data[Log][_log_result]"]');
+        var logResult = $('textarea[name="data[_log_result]"]');
         logResult.scrollTop(
           logResult[0].scrollHeight - logResult.height()
         );
@@ -33,7 +33,7 @@ NetCommonsApp.controller('CleanUp', ['$scope', '$http', 'NC3_URL',
        */
       $scope.more = function() {
         var url = '/clean_up/clean_up/delete';
-        var logFileNo = $('select[name="data[Log][_log_file]"]').val();
+        var logFileNo = $('select[name="data[_log_file]"]').val();
         //var logFile = $('select[name="data[Log][_log_file]"] option:selected').text();
         url = url + '/logFileNo:' + logFileNo;
         //console.log(logFile);
@@ -44,7 +44,7 @@ NetCommonsApp.controller('CleanUp', ['$scope', '$http', 'NC3_URL',
               var data = response.data;
               //console.log(data);
               // textareaの値セット
-              var logResult = $('textarea[name="data[Log][_log_result]"]');
+              var logResult = $('textarea[name="data[_log_result]"]');
               logResult.val(data['cleanUpLog']);
 
               // textareaの最下部にスクロール

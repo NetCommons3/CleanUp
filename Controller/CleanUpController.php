@@ -9,6 +9,8 @@
  */
 
 App::uses('CleanUpAppController', 'CleanUp.Controller');
+App::uses('CleanUp', 'CleanUp.Model');
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 App::uses('Folder', 'Utility');
 
 /**
@@ -39,21 +41,22 @@ class CleanUpController extends CleanUpAppController {
  */
 	public function delete() {
 		$cleanUps = $this->CleanUp->getCleanUpsAndUnknow();
-		// 'multiple' => 'checkbox'表示用
+		// 'multiple' => 'checkbox'表示
 		$this->set('cleanUps', $cleanUps);
 
 		if ($this->request->is('post')) {
-			// TODO 仮で画面からのみ30分設定
-			set_time_limit(1800);
+			// 仮で画面からのみ30分設定
+			//set_time_limit(1800);
 
 			$data = $this->request->data;
 			//var_dump($data);
-			if ($this->CleanUp->fileCleanUp($data)) {
+			//if ($this->CleanUp->fileCleanUp($data)) {
+			if ($this->CleanUp->fileCleanUpExec($data)) {
 				// リダイレクトすると、チェック内容が消えるため、そのままreturn
 				//$this->redirect($this->referer());
 				// 削除しましたFlashメッセージを設定
 				$this->NetCommons->setFlashNotification(
-					__d('net_commons', 'Successfully deleted.'), array('class' => 'success')
+					__d('clean_up', 'ファイルクリーンアップを実行しました。実行結果をご確認の上、完了までしばらくお待ちください'), array('class' => 'success')
 				);
 			} else {
 				// エラー
@@ -74,6 +77,10 @@ class CleanUpController extends CleanUpAppController {
 		// ログの内容
 		$cleanUpLog = $this->__getleanUpLog();
 		$this->set('cleanUpLog', $cleanUpLog);
+
+		// ロックファイル存在 => 実行中ラベル表示に利用
+		$this->set('isLockFile', CleanUpUtility::isLockFile());
+		$this->set('cleanUpStart', CleanUpUtility::readLockFile());
 	}
 
 /**
@@ -87,14 +94,14 @@ class CleanUpController extends CleanUpAppController {
 		$files = $dir->read();
 		$logFileNames = [];
 		foreach ($files[1] as $file) {
-			if (strpos($file,'CleanUp.log') !== false) {
+			if (strpos($file,CleanUp::LOG_FILE_NAME) !== false) {
 				$logFileNames[] = $file;
 			}
 		}
 
 		// 空の場合セット
 		if (empty($logFileNames)) {
-			$logFileNames[] = 'CleanUp.log';
+			$logFileNames[] = CleanUp::LOG_FILE_NAME;
 		}
 		return $logFileNames;
 	}
@@ -110,9 +117,9 @@ class CleanUpController extends CleanUpAppController {
 			: 0;
 
 		if ($logFileNo == 0) {
-			$logFile = 'CleanUp.log';
+			$logFile = CleanUp::LOG_FILE_NAME;
 		} else {
-			$logFile = 'CleanUp.log.' . $logFileNo;
+			$logFile = CleanUp::LOG_FILE_NAME . '.' . $logFileNo;
 		}
 		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . $logFile;
 
@@ -123,6 +130,30 @@ class CleanUpController extends CleanUpAppController {
 			$cleanUpLog = __d('clean_up', 'ありません');
 		}
 		return $cleanUpLog;
+	}
+
+/**
+ * 実行中ロックファイルの強制削除
+ *
+ * @return CakeResponse
+ * @throws Exception
+ */
+	public function lock() {
+		if (! $this->request->is('get')) {
+			return $this->throwBadRequest();
+		}
+
+		// ロックファイルの削除
+		CleanUpUtility::deleteLockFile();
+
+		// 画面表示
+		$this->delete();
+		$this->view = 'delete';
+
+		// メッセージ
+		$this->NetCommons->setFlashNotification(
+			__d('net_commons', 'Successfully deleted.'), array('class' => 'success')
+		);
 	}
 
 }

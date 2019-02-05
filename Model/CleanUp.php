@@ -10,6 +10,8 @@
 
 App::uses('CleanUpAppModel', 'CleanUp.Model');
 App::uses('NetCommonsUrl', 'NetCommons.Utility');
+App::uses('NetCommonsTime', 'NetCommons.Utility');
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUp Model
@@ -57,12 +59,11 @@ class CleanUp extends CleanUpAppModel {
 	const HOW_TO_BACKUP_URL = 'https://www.netcommons.org/NetCommons3/download#!#frame-362';
 
 /**
- * use behaviors
+ * ログファイル名
  *
- * @var array
+ * @var string
  */
-	public $actsAs = array(
-	);
+	const LOG_FILE_NAME = 'CleanUp.log';
 
 /**
  * Validation rules
@@ -101,10 +102,26 @@ class CleanUp extends CleanUpAppModel {
 					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('clean_up', 'プラグイン')),
 					'required' => false,
 				),
+				'isLockFile' => array(
+					'rule' => array('isLockFile'),
+					'message' => __d('clean_up', '実行中ロックのため、実行できません。しばらくお待ちください'),
+					'required' => false,
+				),
 			),
 		), $this->validate);
 
 		return parent::beforeValidate($options);
+	}
+
+/**
+ * 独自バリデーション<br />
+ * isLockFile ロックファイルの存在確認
+ *
+ * @param array $check
+ * @return bool
+ */
+	public function isLockFile($check) {
+		return !CleanUpUtility::isLockFile();
 	}
 
 /**
@@ -175,6 +192,25 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
+ * バックグラウンドでファイルクリーンアップ
+ *
+ * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ */
+	public function fileCleanUpExec($data) {
+		//バリデーション
+		$this->set($data);
+		/* @see beforeValidate() */
+		if (!$this->validates()) {
+			return false;
+		}
+
+		// バックグラウンドでファイルクリーンアップ
+		CleanUpUtility::cleanUp($data);
+		return true;
+	}
+
+/**
  * ファイルクリーンアップ
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
@@ -196,6 +232,9 @@ class CleanUp extends CleanUpAppModel {
 			return false;
 		}
 		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
+
+		// 複数起動防止ロック
+		CleanUpUtility::makeLockFile();
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->getCleanUpsAndPlugin($data);
@@ -244,9 +283,13 @@ class CleanUp extends CleanUpAppModel {
 			$this->commit();
 
 		} catch (Exception $ex) {
+			// ロック解除
+			CleanUpUtility::deleteLockFile();
 			//トランザクションRollback
 			$this->rollback($ex);
 		}
+		// ロック解除
+		CleanUpUtility::deleteLockFile();
 
 		CakeLog::info(__d('clean_up', 'クリーンアップ処理が完了しました'), ['CleanUp']);
 		return true;
@@ -488,6 +531,7 @@ class CleanUp extends CleanUpAppModel {
  *
  * @return void
  * @see Nc2ToNc3BaseBehavior::setup() よりコピー
+ * @see https://book.cakephp.org/2.0/ja/core-libraries/logging.html#id2 ログストリームの作成と設定, size,rotateのデフォルト値
  */
 	public function setupLog() {
 		// CakeLog::writeでファイルとコンソールに出力していた。
@@ -501,7 +545,9 @@ class CleanUp extends CleanUpAppModel {
 				'engine' => 'FileLog',
 				'types' => ['info'],
 				'scopes' => ['CleanUp'],
-				'file' => 'CleanUp.log',
+				'file' => self::LOG_FILE_NAME,
+				'size ' => '10MB',	// デフォルト値
+				'rotate ' => 10,	// デフォルト値
 			]
 		);
 	}
