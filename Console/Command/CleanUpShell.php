@@ -88,22 +88,20 @@ class CleanUpShell extends AppShell {
 	}
 
 /**
- * 実行中ロックファイルの強制削除
+ * ロックファイルの強制削除
  * ### コマンド例
  * ```
  * Console/cake clean_up.clean_up unlock
  * ```
  *
  * @return void
- * @throws Exception
- * @see http://www.php.net/manual/ja/info.configuration.php#ini.max-execution-time max_execution_time  PHP を コマンドライン から実行する場合のデフォルト設定は 0 です。
  */
 	public function unlock() {
 		// ロックファイルの削除
 		if (CleanUpUtility::deleteLockFile()) {
-			$this->out(__d('clean_up', '実行中ロックファイルを削除しました。'));
+			$this->out(__d('clean_up', 'ロックファイルを削除しました。'));
 		} else {
-			$this->out(__d('clean_up', '実行中ロックファイルはありません。'));
+			$this->out(__d('clean_up', 'ロックファイルはありません。'));
 		}
 	}
 

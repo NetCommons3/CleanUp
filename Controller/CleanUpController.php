@@ -147,11 +147,11 @@ class CleanUpController extends CleanUpAppController {
 		if (CleanUpUtility::deleteLockFile()) {
 			// メッセージ
 			$this->NetCommons->setFlashNotification(
-				__d('clean_up', '実行中ロックファイルを削除しました。'), array('class' => 'success')
+				__d('clean_up', 'ロックファイルを削除しました。'), array('class' => 'success')
 			);
 		} else {
 			$this->NetCommons->setFlashNotification(
-				__d('clean_up', '実行中ロックファイルはありません。'), array('class' => 'warning')
+				__d('clean_up', 'ロックファイルはありません。'), array('class' => 'warning')
 			);
 		}
 

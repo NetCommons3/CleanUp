@@ -112,7 +112,7 @@ echo $this->NetCommonsHtml->script(array(
 					</div>
 					<?php echo $this->Button->delete(
 						__d('net_commons', 'Delete'),
-						sprintf(__d('net_commons', 'Deleting the %s. Are you sure to proceed?'), __d('clean_up', '実行中ロックファイル')),
+						sprintf(__d('net_commons', 'Deleting the %s. Are you sure to proceed?'), __d('clean_up', 'ロックファイル')),
 						array('addClass' => 'pull-right')
 					); ?>
 				</div>
