@@ -21,13 +21,15 @@ App::uses('NetCommonsConsoleTestCase', 'NetCommons.TestSuite');
  */
 abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
 
-/**
- * Fixtures
- *
- * @var array
- * @see NetCommonsCakeTestCase::$_defaultFixtures 大量のFixturesを空にする
- */
-	protected $_defaultFixtures = array();
+	///**
+	// * Fixtures
+	// *
+	// * @var array
+	// * @see NetCommonsCakeTestCase::$_defaultFixtures 大量のFixturesを一部にする
+	// */
+	//	protected $_defaultFixtures = array(
+	//		'plugin.files.upload_file',
+	//	);
 
 /**
  * Fixtures
