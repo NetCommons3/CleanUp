@@ -62,7 +62,8 @@ abstract class CleanUpCakeTestCase extends CakeTestCase {
 		parent::setUp();
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpUtility::$lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
+		CleanUpUtility::$lockFilePath =
+			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
 	}
 
 /**
