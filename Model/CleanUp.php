@@ -59,13 +59,6 @@ class CleanUp extends CleanUpAppModel {
 	const HOW_TO_BACKUP_URL = 'https://www.netcommons.org/NetCommons3/download#!#frame-362';
 
 /**
- * ログファイル名
- *
- * @var string
- */
-	const LOG_FILE_NAME = 'CleanUp.log';
-
-/**
  * Validation rules
  *
  * @var array
@@ -81,7 +74,7 @@ class CleanUp extends CleanUpAppModel {
 		parent::__construct();
 
 		// ログ設定
-		$this->setupLog();
+		CleanUpUtility::setupLog();
 	}
 
 /**
@@ -232,6 +225,8 @@ class CleanUp extends CleanUpAppModel {
 		if (! $this->validates()) {
 			return false;
 		}
+		// タイムゾーンを日本に一時的に変更。ログ出力時間を日本時間に。
+		$timezone = CleanUpUtility::startLogTimezone();
 		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
 
 		// 複数起動防止ロック
@@ -286,13 +281,17 @@ class CleanUp extends CleanUpAppModel {
 		} catch (Exception $ex) {
 			// ロック解除
 			CleanUpUtility::deleteLockFile();
+			// タイムゾーンを元に戻す
+			CleanUpUtility::endLogTimezone($timezone);
 			//トランザクションRollback
 			$this->rollback($ex);
 		}
 		// ロック解除
 		CleanUpUtility::deleteLockFile();
-
 		CakeLog::info(__d('clean_up', 'クリーンアップ処理が完了しました'), ['CleanUp']);
+		// タイムゾーンを元に戻す
+		CleanUpUtility::endLogTimezone($timezone);
+
 		return true;
 	}
 
@@ -525,32 +524,6 @@ class CleanUp extends CleanUpAppModel {
 			return true;
 		}
 		return false;
-	}
-
-/**
- * Setup log
- *
- * @return void
- * @see Nc2ToNc3BaseBehavior::setup() よりコピー
- * @see https://book.cakephp.org/2.0/ja/core-libraries/logging.html#id2 ログストリームの作成と設定, size,rotateのデフォルト値
- */
-	public function setupLog() {
-		// CakeLog::writeでファイルとコンソールに出力していた。
-		// Consoleに出力すると<tag></tag>で囲われ見辛い。
-		// @see
-		// https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
-		// CakeLog::infoをよびだし、debug.logとCleanUp.logの両方出力するようにした。
-		CakeLog::config(
-			'CleanUpFile',
-			[
-				'engine' => 'FileLog',
-				'types' => ['info'],
-				'scopes' => ['CleanUp'],
-				'file' => self::LOG_FILE_NAME,
-				'size ' => '10MB',	// デフォルト値
-				'rotate ' => 10,	// デフォルト値
-			]
-		);
 	}
 
 }

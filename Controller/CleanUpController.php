@@ -78,9 +78,11 @@ class CleanUpController extends CleanUpAppController {
 		$cleanUpLog = $this->__getleanUpLog();
 		$this->set('cleanUpLog', $cleanUpLog);
 
-		// ロックファイル存在 => 実行中ラベル表示に利用
+		// ロックファイル
 		$this->set('isLockFile', CleanUpUtility::isLockFile());
-		$this->set('cleanUpStart', CleanUpUtility::readLockFile());
+		$cleanUpStart = CleanUpUtility::readLockFile();
+		$cleanUpStart = date('m/d G:i', strtotime($cleanUpStart));
+		$this->set('cleanUpStart', $cleanUpStart);
 	}
 
 /**
@@ -94,14 +96,14 @@ class CleanUpController extends CleanUpAppController {
 		$files = $dir->read();
 		$logFileNames = [];
 		foreach ($files[1] as $file) {
-			if (strpos($file,CleanUp::LOG_FILE_NAME) !== false) {
+			if (strpos($file,CleanUpUtility::LOG_FILE_NAME) !== false) {
 				$logFileNames[] = $file;
 			}
 		}
 
 		// 空の場合セット
 		if (empty($logFileNames)) {
-			$logFileNames[] = CleanUp::LOG_FILE_NAME;
+			$logFileNames[] = CleanUpUtility::LOG_FILE_NAME;
 		}
 		return $logFileNames;
 	}
@@ -117,9 +119,9 @@ class CleanUpController extends CleanUpAppController {
 			: 0;
 
 		if ($logFileNo == 0) {
-			$logFile = CleanUp::LOG_FILE_NAME;
+			$logFile = CleanUpUtility::LOG_FILE_NAME;
 		} else {
-			$logFile = CleanUp::LOG_FILE_NAME . '.' . $logFileNo;
+			$logFile = CleanUpUtility::LOG_FILE_NAME . '.' . $logFileNo;
 		}
 		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . $logFile;
 
@@ -144,7 +146,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ロックファイルの削除
-		if (CleanUpUtility::deleteLockFile()) {
+		if (CleanUpUtility::deleteLockFileAndSetupLog()) {
 			// メッセージ
 			$this->NetCommons->setFlashNotification(
 				__d('clean_up', 'ロックファイルを削除しました。'), array('class' => 'success')

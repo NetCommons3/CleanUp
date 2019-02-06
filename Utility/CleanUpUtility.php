@@ -25,7 +25,21 @@ class CleanUpUtility {
  * @var string
  */
 	public static $lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'CleanUp.lock';
-	//	public $lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.lock';
+
+/**
+ * ログファイル名
+ *
+ * @var string
+ */
+	const LOG_FILE_NAME = 'CleanUp.log';
+
+/**
+ * タイムゾーン。ログ出力時間 変更用<br>
+ * CakeLog::info()はCleanUpモデル内のみで利用
+ *
+ * @var string
+ */
+	const TIMEZONE = 'Asia/Tokyo';
 
 /**
  * ファイルクリーンアップ呼び出し
@@ -80,6 +94,7 @@ class CleanUpUtility {
 		//時刻をロックファイルに書き込む
 		$now = NetCommonsTime::getNowDatetime();
 		file_put_contents(self::$lockFilePath, $now);
+		CakeLog::info(__d('clean_up', 'ロックファイルを作成しました。'), ['CleanUp']);
 	}
 
 /**
@@ -90,9 +105,29 @@ class CleanUpUtility {
 	public static function deleteLockFile() {
 		if (file_exists(self::$lockFilePath)) {
 			unlink(self::$lockFilePath);
+			CakeLog::info(__d('clean_up', 'ロックファイルを削除しました。'), ['CleanUp']);
 			return true;
 		}
+		CakeLog::info(__d('clean_up', 'ロックファイルはありません。'), ['CleanUp']);
 		return false;
+	}
+
+/**
+ * ロックファイルの削除とログ出力設定。ロックファイル強制削除用
+ *
+ * @return bool true:削除|false:ファイルなし
+ */
+	public static function deleteLockFileAndSetupLog() {
+		self::setupLog();
+		// ログ開始時のタイムゾーン変更
+		$timezone = self::startLogTimezone();
+
+		CakeLog::info(__d('clean_up', 'ロックファイル強制削除処理を開始します。'), ['CleanUp']);
+		$isDelete = self::deleteLockFile();
+
+		// ログ終了時にタイムゾーン戻す
+		self::endLogTimezone($timezone);
+		return $isDelete;
 	}
 
 /**
@@ -114,10 +149,56 @@ class CleanUpUtility {
  */
 	public static function readLockFile() {
 		if (file_exists(self::$lockFilePath)) {
-			$cleanUpStart = file_get_contents(self::$lockFilePath);
-			$NetCommonsTime = new NetCommonsTime();
-			return $NetCommonsTime->toUserDatetime($cleanUpStart);
+			return file_get_contents(self::$lockFilePath);
 		}
 		return '';
 	}
+
+/**
+ * ログ開始時のタイムゾーン変更<br />
+ * タイムゾーンを一時的に変更。ログ出力時間を例えば日本時間に。
+ *
+ * @return string 日時
+ */
+	public static function startLogTimezone() {
+		$timezone = date_default_timezone_get();
+		date_default_timezone_set(self::TIMEZONE);
+		return $timezone;
+	}
+
+/**
+ * ログ終了時にタイムゾーン戻す
+ *
+ * @param string $timezone 日時
+ */
+	public static function endLogTimezone($timezone) {
+		date_default_timezone_set($timezone);
+	}
+
+/**
+ * Setup log
+ *
+ * @return void
+ * @see Nc2ToNc3BaseBehavior::setup() よりコピー
+ * @see https://book.cakephp.org/2.0/ja/core-libraries/logging.html#id2 ログストリームの作成と設定, size,rotateのデフォルト値
+ */
+	public static function setupLog() {
+		// CakeLog::writeでファイルとコンソールに出力していた。
+		// Consoleに出力すると<tag></tag>で囲われ見辛い。
+		// @see
+		// https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
+		// CakeLog::infoをよびだし、debug.logとCleanUp.logの両方出力するようにした。
+		CakeLog::config(
+			'CleanUpFile',
+			[
+				'engine' => 'FileLog',
+				'types' => ['info'],
+				'scopes' => ['CleanUp'],
+				'file' => self::LOG_FILE_NAME,
+				'size ' => '10MB',	// デフォルト値
+				'rotate ' => 10,	// デフォルト値
+			]
+		);
+	}
+
 }

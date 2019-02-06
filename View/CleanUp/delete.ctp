@@ -42,15 +42,6 @@ echo $this->NetCommonsHtml->script(array(
 		?>
 	</div>
 
-	<?php /* ロック中ラベル */ ?>
-	<?php if ($isLockFile) : ?>
-		<div class="form-group">
-			<span class="label label-info">
-				<?php echo __d('clean_up', '実行ロック中 (%sよりファイルクリーンアップ開始)', [$this->Date->dateFormat($cleanUpStart)]); ?>
-			</span>
-		</div>
-	<?php endif; ?>
-
 	<?php /* チェックボックス */ ?>
 	<div class="panel panel-default">
 		<?php echo $this->NetCommonsForm->create('CleanUp', [
@@ -78,12 +69,30 @@ echo $this->NetCommonsHtml->script(array(
 					</div>
 				</div>
 				<?php echo $this->NetCommonsForm->error('CleanUp.plugin_key'); ?>
+
+				<?php /* ロック中 */
+				$deleteButtonOption = [];
+				?>
+				<?php if ($isLockFile) : ?>
+					<div class="has-error">
+						<div class="help-block">
+							<?php
+							echo __d('clean_up', 'ロックファイルがあります。 ファイルクリーンアップ実行中のため、しばらくお待ちください。') . '<br />';
+							echo __d('clean_up', 'ファイルクリーンアップ開始日：%s', [$cleanUpStart]);
+							// 削除ボタン非活性
+							$deleteButtonOption = ['disabled' => 'disabled'];
+							?>
+						</div>
+					</div>
+				<?php endif; ?>
+
 			</div>
 
 			<div class="panel-footer text-center">
 				<?php echo $this->Button->delete(
 					null,
-					__d('clean_up', '使用されていないアップロードファイルを削除します。よろしいですか？')
+					__d('clean_up', '使用されていないアップロードファイルを削除します。よろしいですか？'),
+					$deleteButtonOption
 				); ?>
 			</div>
 		<?php echo $this->NetCommonsForm->end(); ?>
@@ -141,9 +150,6 @@ echo $this->NetCommonsHtml->script(array(
 				'class' => 'form-control',
 				'rows' => '15',
 			]); ?>
-			<div class="help-block">
-				<?php echo __d('clean_up', '時刻は協定世界時(UTC)表記です') ?>
-			</div>
 		</div>
 	<?php echo $this->NetCommonsForm->end(); ?>
 

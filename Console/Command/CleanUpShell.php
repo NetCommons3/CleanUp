@@ -98,11 +98,7 @@ class CleanUpShell extends AppShell {
  */
 	public function unlock() {
 		// ロックファイルの削除
-		if (CleanUpUtility::deleteLockFile()) {
-			$this->out(__d('clean_up', 'ロックファイルを削除しました。'));
-		} else {
-			$this->out(__d('clean_up', 'ロックファイルはありません。'));
-		}
+		CleanUpUtility::deleteLockFileAndSetupLog();
 	}
 
 /**
