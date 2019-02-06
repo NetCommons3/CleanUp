@@ -227,7 +227,7 @@ class CleanUp extends CleanUpAppModel {
 		}
 		// タイムゾーンを日本に一時的に変更。ログ出力時間を日本時間に。
 		$timezone = CleanUpUtility::startLogTimezone();
-		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します'), ['CleanUp']);
+		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します。'), ['CleanUp']);
 
 		// 複数起動防止ロック
 		CleanUpUtility::makeLockFile();
@@ -251,7 +251,7 @@ class CleanUp extends CleanUpAppModel {
 				$pluginName = $cleanUp['Plugin']['name'];
 				$model = $cleanUp['CleanUp']['model'];
 
-				CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理を開始します',
+				CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理を開始します。',
 					[$pluginName, $model]), ['CleanUp']);
 
 				//アップロードファイルのfind条件 ゲット
@@ -267,10 +267,10 @@ class CleanUp extends CleanUpAppModel {
 				}
 
 				if ($targetCount === 0) {
-					CakeLog::info(__d('clean_up', '[%s:%s] 対象ファイルが一件もありませんでした',
+					CakeLog::info(__d('clean_up', '[%s:%s] 対象ファイルが一件もありませんでした。',
 						[$pluginName, $model]), ['CleanUp']);
 				} else {
-					CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理が完了しました',
+					CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理が完了しました。',
 						[$pluginName, $model]), ['CleanUp']);
 				}
 			}

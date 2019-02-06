@@ -144,7 +144,6 @@ echo $this->NetCommonsHtml->script(array(
 				</button>
 
 			</div>
-
 			<?php echo $this->NetCommonsForm->textarea('_log_result', [
 				'default' => $cleanUpLog,
 				'class' => 'form-control',

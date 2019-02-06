@@ -34,8 +34,7 @@ class CleanUpUtility {
 	const LOG_FILE_NAME = 'CleanUp.log';
 
 /**
- * タイムゾーン。ログ出力時間 変更用<br>
- * CakeLog::info()はCleanUpモデル内のみで利用
+ * タイムゾーン。ログ出力時間 変更用
  *
  * @var string
  */
