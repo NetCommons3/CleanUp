@@ -30,6 +30,7 @@ class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
  * Fixtures
  *
  * @var array
+ * @see Plugin4testFixture
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
@@ -43,9 +44,13 @@ class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
  */
 	public function testCleanUp() {
 		//データ生成
+		// コンソール側でfixturesのclean_up <-> plugin4test関連データがうまくfindできてなくtravisで
+		// 下記エラーになった。
+		// Error: "announcements" is not a valid value for 0. Please use one of "unknown, all"
+		// コンソールのテストは、別途コンソール側で行うため、ここで指定するプラグインキーはテーブルをfind
+		// しなくてもある、unknownを指定する
 		$data['CleanUp']['plugin_key'] = [
-			'announcements',
-			'blogs'
+			'unknown'
 		];
 
 		//テスト実施

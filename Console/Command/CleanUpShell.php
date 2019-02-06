@@ -61,8 +61,6 @@ class CleanUpShell extends AppShell {
  * @see http://www.php.net/manual/ja/info.configuration.php#ini.max-execution-time max_execution_time  PHP を コマンドライン から実行する場合のデフォルト設定は 0 です。
  */
 	public function clean_up() {
-		//var_dump($this->args[0]);
-		//$pluginKey = $this->args[0];
 		$pluginKeys = $this->args;
 
 		$data = [];
@@ -73,18 +71,14 @@ class CleanUpShell extends AppShell {
 			$data['CleanUp']['plugin_key'] = $pluginKeys;
 		}
 
-		//$data['CleanUp']['plugin_key'][] = 'announcements';
-		//$data['CleanUp']['plugin_key'][] = 'unknown';
-		//$data['CleanUp']['plugin_key'] = '';
-		//var_dump($data);
 		if ($this->CleanUp->fileCleanUp($data)) {
 			// 成功
 			$this->out('Success!!');
 			return;
 		}
-		// エラー. 第1引数plugin_keyを選択肢からの必須にしたため, 基本到達しない
+		// エラー. 第1引数plugin_keyを選択肢からの必須にしたため, 基本到達しない. テストはここ通る
 		$this->out('[ValidationErrors]');
-		var_export($this->CleanUp->validationErrors);
+		$this->out(var_export($this->CleanUp->validationErrors));
 	}
 
 /**
