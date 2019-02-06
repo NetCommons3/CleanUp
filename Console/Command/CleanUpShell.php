@@ -120,8 +120,8 @@ cake clean_up.clean_up clean_up [arguments]: ファイルクリーンアップ
 cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除'),
 			'',
 			__d('clean_up', '使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。
-全ての引数はplugin_keyとして処理します。
-ファイルクリーンアップを実行する前に、こちらを参考に必ずバックアップして、
+全ての引数はplugin_keyとして処理します。ファイルクリーンアップを
+実行する前に、こちらを参考に必ずバックアップして、
 いつでもリストアできるようにしてから実行してください。'),
 			CleanUp::HOW_TO_BACKUP_URL,
 			'',

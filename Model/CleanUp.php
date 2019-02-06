@@ -270,10 +270,12 @@ class CleanUp extends CleanUpAppModel {
 				}
 
 				if ($targetCount === 0) {
-					CakeLog::info(__d('clean_up', '[%s:%s] 対象ファイルが一件もありませんでした。',
+					CakeLog::info(__d('clean_up',
+						'[%s:%s] 対象ファイルが一件もありませんでした。',
 						[$pluginName, $model]), ['CleanUp']);
 				} else {
-					CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理が完了しました。',
+					CakeLog::info(__d('clean_up',
+						'[%s:%s] クリーンアップ処理が完了しました。',
 						[$pluginName, $model]), ['CleanUp']);
 				}
 			}
