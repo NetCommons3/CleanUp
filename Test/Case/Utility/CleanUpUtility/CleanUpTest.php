@@ -27,6 +27,15 @@ class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
 	public $plugin = 'clean_up';
 
 /**
+ * Fixtures
+ *
+ * @var array
+ */
+	public $fixtures = array(
+		'plugin.clean_up.clean_up',
+	);
+
+/**
  * cleanUp()のテスト
  *
  * @return void
