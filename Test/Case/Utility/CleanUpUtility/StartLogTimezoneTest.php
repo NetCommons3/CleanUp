@@ -32,14 +32,14 @@ class CleanUpUtilityCleanUpUtilityStartLogTimezoneTest extends CleanUpCakeTestCa
  * @return void
  */
 	public function testStartLogTimezone() {
-		//データ生成
-
 		//テスト実施
 		$result = CleanUpUtility::startLogTimezone();
 
 		//チェック
-		$this->assertEquals('UTC', $result, 'date_default_timezoneの初期値はUTCの想定');
-		//var_dump($result);
+		$this->assertEquals('UTC', $result,
+			'戻り値は、date_default_timezoneの初期値でUTCの想定');
+		$this->assertEquals(CleanUpUtility::TIMEZONE, date_default_timezone_get(),
+			'date_default_timezoneは、CleanUpUtility::TIMEZONEに変更されてる想定');
 	}
 
 }
