@@ -8,9 +8,6 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
-//@codeCoverageIgnoreStart;
-App::uses('NetCommonsCakeTestCase', 'NetCommons.TestSuite');
-//@codeCoverageIgnoreEnd;
 App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
@@ -20,7 +17,7 @@ App::uses('CleanUpUtility', 'CleanUp.Utility');
  * @package NetCommons\CleanUp\TestSuite
  * @codeCoverageIgnore
  */
-abstract class CleanUpCakeTestCase extends NetCommonsCakeTestCase {
+abstract class CleanUpCakeTestCase extends CakeTestCase {
 
 /**
  * Fixtures
