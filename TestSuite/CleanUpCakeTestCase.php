@@ -8,6 +8,10 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
+/* コンソールでログ出力させないようにする */
+CakeLog::drop('stdout');
+CakeLog::drop('stderr');
+
 App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
