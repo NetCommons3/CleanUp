@@ -12,6 +12,7 @@
         "netcommons/net-commons":      "@dev",
         "netcommons/site-manager":     "@dev",
         "netcommons/system-manager":   "@dev",
+        "netcommons/plugin-manager":   "@dev",
         "netcommons/wysiwyg":          "@dev",
         "netcommons/files":            "@dev"
     },
