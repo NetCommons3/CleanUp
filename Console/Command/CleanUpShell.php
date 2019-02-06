@@ -41,7 +41,7 @@ class CleanUpShell extends AppShell {
  *
  * @return void
  */
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 		// とりあえず2:日本語をセット
 		Current::write('Language.id', '2');
@@ -121,8 +121,8 @@ cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除'),
 			'',
 			__d('clean_up', '使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。
 全ての引数はplugin_keyとして処理します。
-ファイルクリーンアップを実行する前に、こちらを参考に必ずバックアップして、いつでもリストアできるように
-してから実行してください。'),
+ファイルクリーンアップを実行する前に、こちらを参考に必ずバックアップして、
+いつでもリストアできるようにしてから実行してください。'),
 			CleanUp::HOW_TO_BACKUP_URL,
 			'',
 			__d('clean_up', '実行結果は下記にログ出力されます。'),
@@ -145,7 +145,9 @@ all: 全てのプラグイン'),
 
 		// プラグイン数分ループして引数を追加する
 		// 最大プラグイン数と+1(上記helpで説明の分)の引数を設定
-		foreach($pluginKeys as $pluginKey) {
+		// @codingStandardsIgnoreStart
+		foreach ($pluginKeys as $pluginKey) {
+			// @codingStandardsIgnoreEnd
 			$arguments[] = [
 				'required' => false,
 				'choices' => $pluginKeys,

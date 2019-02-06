@@ -70,7 +70,7 @@ class CleanUp extends CleanUpAppModel {
  *
  * @return void
  */
-	function __construct() {
+	public function __construct() {
 		parent::__construct();
 
 		// ログ設定
@@ -92,7 +92,8 @@ class CleanUp extends CleanUpAppModel {
 				'multiple' => array(
 					'rule' => array('multiple', array('min' => 1)),
 					// plugin
-					'message' => sprintf(__d('net_commons', 'Please input %s.'), __d('clean_up', 'プラグイン')),
+					'message' => __d('net_commons', 'Please input %s.',
+									__d('clean_up', 'プラグイン')),
 					'required' => false,
 				),
 				'isLockFile' => array(
@@ -111,10 +112,12 @@ class CleanUp extends CleanUpAppModel {
  * 独自バリデーション<br />
  * isLockFile ロックファイルの存在確認
  *
- * @param array $check
+ * @param array $check チェック値
  * @return bool
  */
+	// @codingStandardsIgnoreStart
 	public function isLockFile($check) {
+		// @codingStandardsIgnoreEnd
 		return !CleanUpUtility::isLockFile();
 	}
 
@@ -234,9 +237,9 @@ class CleanUp extends CleanUpAppModel {
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->getCleanUpsAndPlugin($data);
-		foreach ($data['CleanUp']['plugin_key'] as $plugin_key) {
+		foreach ($data['CleanUp']['plugin_key'] as $pluginKey) {
 			// プラグイン不明ファイルがチェックされてたら、プラグイン不明ファイル データ追加
-			if ($plugin_key == self::PLUGIN_KEY_UNKNOWN) {
+			if ($pluginKey == self::PLUGIN_KEY_UNKNOWN) {
 				$cleanUps[] = $this->getUnknowCleanUp();
 				break;
 			}
@@ -259,7 +262,7 @@ class CleanUp extends CleanUpAppModel {
 				// $uploadFiles findでデータとれすぎてメモリ圧迫問題対応。 1000件づつ取得
 				$params = array_merge($params, array('limit' => self::FIND_LIMIT_UPLOAD_FILE, 'offset' => 0));
 
-				while ($uploadFiles = $this->UploadFile->find('all', $params)){
+				while ($uploadFiles = $this->UploadFile->find('all', $params)) {
 					// ファイル削除
 					$targetCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp, $targetCount);
 					// 次のn件取得
@@ -378,11 +381,11 @@ class CleanUp extends CleanUpAppModel {
 			// 削除遅延日
 			$delayTime = self::DELETE_DELAY_DAY * 24 * 60 * 60;
 			$now = NetCommonsTime::getNowDatetime();
-			$delayDate = date('Y-m-d H:i:s',  strtotime($now) - $delayTime);
+			$delayDate = date('Y-m-d H:i:s', strtotime($now) - $delayTime);
 			//var_dump($delayDate);
 
 			//var_dump($uploadFile['UploadFile']['modified']);
-			if($uploadFile['UploadFile']['modified'] >= $delayDate) {
+			if ($uploadFile['UploadFile']['modified'] >= $delayDate) {
 				// 削除遅延日  x日前を例えば1日前を指定すると、今日アップしたファイルは消さなくなります
 				continue;
 			}

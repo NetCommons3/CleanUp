@@ -43,6 +43,7 @@ class CleanUpUtility {
 /**
  * ファイルクリーンアップ呼び出し
  *
+ * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
  * @return void
  */
 	public static function cleanUp($data) {
@@ -121,7 +122,8 @@ class CleanUpUtility {
 		// ログ開始時のタイムゾーン変更
 		$timezone = self::startLogTimezone();
 
-		CakeLog::info(__d('clean_up', 'ロックファイル強制削除処理を開始します。'), ['CleanUp']);
+		CakeLog::info(__d('clean_up',
+			'ロックファイル強制削除処理を開始します。'), ['CleanUp']);
 		$isDelete = self::deleteLockFile();
 
 		// ログ終了時にタイムゾーン戻す
@@ -169,6 +171,7 @@ class CleanUpUtility {
  * ログ終了時にタイムゾーン戻す
  *
  * @param string $timezone 日時
+ * @return void
  */
 	public static function endLogTimezone($timezone) {
 		date_default_timezone_set($timezone);

@@ -96,7 +96,7 @@ class CleanUpController extends CleanUpAppController {
 		$files = $dir->read();
 		$logFileNames = [];
 		foreach ($files[1] as $file) {
-			if (strpos($file,CleanUpUtility::LOG_FILE_NAME) !== false) {
+			if (strpos($file, CleanUpUtility::LOG_FILE_NAME) !== false) {
 				$logFileNames[] = $file;
 			}
 		}
