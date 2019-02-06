@@ -8,10 +8,9 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
-/* コンソールでログ出力させないようにする */
-CakeLog::drop('stdout');
-CakeLog::drop('stderr');
-
+//@codeCoverageIgnoreStart;
+App::uses('NetCommonsCakeTestCase', 'NetCommons.TestSuite');
+//@codeCoverageIgnoreEnd;
 App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
@@ -21,7 +20,15 @@ App::uses('CleanUpUtility', 'CleanUp.Utility');
  * @package NetCommons\CleanUp\TestSuite
  * @codeCoverageIgnore
  */
-abstract class CleanUpCakeTestCase extends CakeTestCase {
+abstract class CleanUpCakeTestCase extends NetCommonsCakeTestCase {
+
+/**
+ * Fixtures
+ *
+ * @var array
+ * @see NetCommonsCakeTestCase::$_defaultFixtures 大量のFixturesを空にする
+ */
+	protected $_defaultFixtures = array();
 
 /**
  * Fixtures

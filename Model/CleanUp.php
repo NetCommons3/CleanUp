@@ -108,6 +108,7 @@ class CleanUp extends CleanUpAppModel {
 		return parent::beforeValidate($options);
 	}
 
+// @codingStandardsIgnoreStart
 /**
  * 独自バリデーション<br />
  * isLockFile ロックファイルの存在確認
@@ -115,7 +116,6 @@ class CleanUp extends CleanUpAppModel {
  * @param array $check チェック値
  * @return bool
  */
-	// @codingStandardsIgnoreStart
 	public function isLockFile($check) {
 		// @codingStandardsIgnoreEnd
 		return !CleanUpUtility::isLockFile();
