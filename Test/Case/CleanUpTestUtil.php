@@ -35,6 +35,7 @@ class CleanUpTestUtil {
 
 		$folder = new Folder();
 		$folder->create($path1);
+		$folder->create($path2);
 		touch($file1);
 		touch($file2);
 		file_put_contents($file1, 1);
