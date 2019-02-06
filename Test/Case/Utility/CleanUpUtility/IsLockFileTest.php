@@ -33,9 +33,10 @@ class CleanUpUtilityCleanUpUtilityIsLockFileTest extends CleanUpCakeTestCase {
  * @see CleanUpCakeTestCase::tearDown()  テスト後に必ずロックファイルあってもなくても削除する
  */
 	public function testIsLockFile() {
-		//テスト実施
+		//データ生成
 		CleanUpUtility::makeLockFile();
 
+		//テスト実施
 		//チェック
 		$this->assertTrue(CleanUpUtility::isLockFile(), 'ロックファイルが存在ありtrueの想定');
 	}
@@ -48,6 +49,7 @@ class CleanUpUtilityCleanUpUtilityIsLockFileTest extends CleanUpCakeTestCase {
  * @see CleanUpCakeTestCase::tearDown()  テスト後に必ずロックファイルあってもなくても削除する
  */
 	public function testIsLockFileCannotFile() {
+		//テスト実施
 		//チェック
 		$this->assertFalse(CleanUpUtility::isLockFile(), 'ロックファイルがなくfalseの想定');
 	}
