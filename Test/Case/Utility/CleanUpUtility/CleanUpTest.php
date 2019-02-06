@@ -10,6 +10,7 @@
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
 App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
  * CleanUpUtility::cleanUp()のテスト
@@ -92,6 +93,9 @@ class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
  * @return void
  */
 	public function testCleanUp() {
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
 		//データ生成
 		// コンソール側でfixturesのclean_up <-> plugin4test関連データがうまくfindできてなくtravisで
 		// 下記エラーになった。

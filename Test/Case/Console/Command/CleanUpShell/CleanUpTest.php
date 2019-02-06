@@ -9,6 +9,7 @@
  */
 
 App::uses('CleanUpConsoleTestCase', 'CleanUp.TestSuite');
+App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
  * CleanUpShell::clean_up()のテスト
@@ -55,6 +56,9 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 		//$this->$shell->args[] = 'all';
 		//$this->$shell->args[] = 'announcements';
 		$this->$shell->args[] = 'unknown';
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
 
 		//チェック
 		$this->$shell->expects($this->at(0))->method('out')
