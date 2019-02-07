@@ -122,7 +122,7 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
- * getCleanUpsAndPlugin
+ * ファイルクリーンアップ対象プラグインデータ ゲット
  *
  * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
  * @return array
@@ -157,7 +157,7 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
- * getUnknowCleanUp
+ * プラグイン不明ファイル データゲット
  *
  * @return array
  */
@@ -220,7 +220,6 @@ class CleanUp extends CleanUpAppModel {
 		));
 		//トランザクションBegin
 		$this->begin();
-		//var_dump($data);
 
 		//バリデーション
 		$this->set($data);
@@ -244,7 +243,6 @@ class CleanUp extends CleanUpAppModel {
 				break;
 			}
 		}
-		//var_dump($cleanUps);
 
 		try {
 			foreach ($cleanUps as $cleanUp) {

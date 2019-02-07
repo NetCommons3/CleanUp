@@ -21,15 +21,16 @@ App::uses('NetCommonsGetTest', 'NetCommons.TestSuite');
  */
 abstract class CleanUpGetTest extends NetCommonsGetTest {
 
-/**
- * Fixtures
- *
- * @var array
- * @see NetCommonsCakeTestCase::$_defaultFixtures 大量のFixturesを一部にする
- */
-	protected $_defaultFixtures = array(
-		'plugin.m17n.language',
-	);
+	// ローカルテストでは下記で大丈夫だけど、travisでなぜかデータを取得できないエラーが出るためコメントアウト
+	///**
+	// * Fixtures
+	// *
+	// * @var array
+	// * @see NetCommonsCakeTestCase::$_defaultFixtures 大量のFixturesを一部にする
+	// */
+	//	protected $_defaultFixtures = array(
+	//		'plugin.m17n.language',
+	//	);
 
 /**
  * Fixtures
