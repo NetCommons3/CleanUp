@@ -88,6 +88,11 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
 		//テスト実施
 		$result = $this->$model->$methodName($data);
 
+		// TODO debug
+		$this->Plugin = ClassRegistry::init('PluginManager.Plugin', true);
+		var_export($this->$model->find('all'));
+		var_export($this->Plugin->find('all'));
+
 		//チェック
 		//var_export($result);
 		$this->assertCount(1, $result, 'Cleanup対象プラグインを1件できる想定');
