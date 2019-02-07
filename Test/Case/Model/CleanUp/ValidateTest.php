@@ -120,7 +120,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
  *
  * @return void
  */
-	public function testValidationError2() {
+	public function testValidationErrorLock() {
 		// 入力値は正常
 		$data['CleanUp']['plugin_key'] = ['unknown'];
 		// ロックファイル作成 = ロック中
