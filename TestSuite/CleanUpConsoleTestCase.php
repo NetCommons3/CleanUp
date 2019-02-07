@@ -62,4 +62,29 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
 		parent::__construct($name, $data, $dataName);
 	}
 
+/**
+ * setUp method
+ *
+ * @return void
+ */
+	public function setUp() {
+		parent::setUp();
+
+		// ロックファイルの出力先をtestに変更
+		CleanUpUtility::$lockFilePath =
+			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
+	}
+
+/**
+ * tearDown method
+ *
+ * @return void
+ */
+	public function tearDown() {
+		// テスト後に必ずロックファイルあってもなくても削除する
+		CleanUpUtility::deleteLockFile();
+
+		parent::tearDown();
+	}
+
 }

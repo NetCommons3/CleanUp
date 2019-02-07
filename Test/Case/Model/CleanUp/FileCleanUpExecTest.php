@@ -64,6 +64,9 @@ class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
 			'unknown'
 		];
 
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
 		//テスト実施
 		$result = $this->$model->$methodName($data);
 
