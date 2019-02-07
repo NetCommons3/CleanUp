@@ -10,6 +10,7 @@
 
 App::uses('Current', 'NetCommons.Utility');
 App::uses('CleanUp', 'CleanUp.Model');
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUp Shell

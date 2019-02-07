@@ -11,6 +11,7 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsConsoleTestCase', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUpConsoleTestCase TestCase
