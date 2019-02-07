@@ -44,7 +44,7 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 	protected $_shellName = 'CleanUpShell';
 
 /**
- * clean_up()のテスト
+ * clean_up() 引数１つ
  *
  * @return void
  */
@@ -54,6 +54,81 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 
 		//データ生成
 		//$this->$shell->args[] = 'all';
+		//$this->$shell->args[] = 'announcements';
+		$this->$shell->args[] = 'unknown';
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		//チェック
+		$this->$shell->expects($this->at(0))->method('out')
+			->with('Success!!');
+
+		//テスト実施
+		$this->$shell->clean_up();
+	}
+
+/**
+ * clean_up() 引数複数
+ *
+ * @return void
+ */
+	public function testCleanUps() {
+		$shell = $this->_shellName;
+		$this->$shell = $this->loadShell($shell);
+
+		//データ生成
+		//$this->$shell->args[] = 'all';
+		$this->$shell->args[] = 'announcements';
+		$this->$shell->args[] = 'unknown';
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		//チェック
+		$this->$shell->expects($this->at(0))->method('out')
+			->with('Success!!');
+
+		//テスト実施
+		$this->$shell->clean_up();
+	}
+
+/**
+ * clean_up() 引数１つでAll
+ *
+ * @return void
+ */
+	public function testCleanUpAll() {
+		$shell = $this->_shellName;
+		$this->$shell = $this->loadShell($shell);
+
+		//データ生成
+		$this->$shell->args[] = 'all';
+		//$this->$shell->args[] = 'announcements';
+		//$this->$shell->args[] = 'unknown';
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		//チェック
+		$this->$shell->expects($this->at(0))->method('out')
+			->with('Success!!');
+
+		//テスト実施
+		$this->$shell->clean_up();
+	}
+
+/**
+ * clean_up() 引数複数でAll含む
+ *
+ * @return void
+ */
+	public function testCleanUpAlls() {
+		$shell = $this->_shellName;
+		$this->$shell = $this->loadShell($shell);
+
+		//データ生成
+		$this->$shell->args[] = 'all';
 		//$this->$shell->args[] = 'announcements';
 		$this->$shell->args[] = 'unknown';
 
