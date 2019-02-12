@@ -11,6 +11,7 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsGetTest', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUpGetTest TestCase
@@ -65,4 +66,15 @@ abstract class CleanUpGetTest extends NetCommonsGetTest {
 		parent::__construct($name, $data, $dataName);
 	}
 
+/**
+ * setUp method
+ *
+ * @return void
+ */
+	public function setUp() {
+		parent::setUp();
+
+		// テスト時はログ出力しない
+		CleanUpUtility::$isOutputLog = false;
+	}
 }

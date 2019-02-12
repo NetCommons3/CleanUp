@@ -11,6 +11,7 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsValidateTest', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUpValidateTest TestCase
@@ -49,5 +50,17 @@ abstract class CleanUpValidateTestCase extends NetCommonsValidateTest {
 		}
 		$this->fixtures = array_merge($this->__fixtures, $this->fixtures);
 		parent::__construct($name, $data, $dataName);
+	}
+
+/**
+ * setUp method
+ *
+ * @return void
+ */
+	public function setUp() {
+		parent::setUp();
+
+		// テスト時はログ出力しない
+		CleanUpUtility::$isOutputLog = false;
 	}
 }

@@ -11,6 +11,7 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsModelTestCase', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
+App::uses('CleanUpUtility', 'CleanUp.Utility');
 
 /**
  * CleanUpModelTestCase TestCase
@@ -58,6 +59,9 @@ abstract class CleanUpModelTestCase extends NetCommonsModelTestCase {
  */
 	public function setUp() {
 		parent::setUp();
+
+		// テスト時はログ出力しない
+		CleanUpUtility::$isOutputLog = false;
 
 		// ロックファイルの出力先をtestに変更
 		CleanUpUtility::$lockFilePath =

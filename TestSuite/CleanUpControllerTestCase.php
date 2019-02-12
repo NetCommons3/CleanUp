@@ -60,6 +60,9 @@ abstract class CleanUpControllerTestCase extends NetCommonsControllerTestCase {
 	public function setUp() {
 		parent::setUp();
 
+		// テスト時はログ出力しない
+		CleanUpUtility::$isOutputLog = false;
+
 		// ロックファイルの出力先をtestに変更
 		CleanUpUtility::$lockFilePath =
 			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
