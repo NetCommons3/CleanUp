@@ -16,6 +16,7 @@ App::uses('NetCommonsTime', 'NetCommons.Utility');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Utility
  * @see MailSend よりコピー
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CleanUpUtility {
 
@@ -24,7 +25,7 @@ class CleanUpUtility {
  *
  * @var string
  */
-	public static $lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'CleanUp.lock';
+	public static $lockFilePath = '';
 
 /**
  * ログファイル名
@@ -39,6 +40,18 @@ class CleanUpUtility {
  * @var string
  */
 	const TIMEZONE = 'Asia/Tokyo';
+
+/**
+ * 自作のstatic initialize<br />
+ * 当クラス最下部で呼び出してる
+ *
+ * @return void
+ */
+	public static function initialize() {
+		// php5.4, 5.5対応 staticのメンバ変数に . 連結するとsyntax error
+		// https://travis-ci.org/NetCommons3/CleanUp/jobs/492013244#L866
+		self::$lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'CleanUp.lock';
+	}
 
 /**
  * ファイルクリーンアップ呼び出し
@@ -204,3 +217,6 @@ class CleanUpUtility {
 	}
 
 }
+
+// 自作のstatic initialize
+CleanUpUtility::initialize();

@@ -64,6 +64,7 @@ class CleanUpPrivateDeleteUploadFileTest extends CleanUpModelTestCase {
  *
  * @return void
  * @throws ReflectionException
+ * @see CleanUp::__deleteUploadFile()
  */
 	public function testDeleteUploadFile() {
 		$model = $this->_modelName;
@@ -71,8 +72,7 @@ class CleanUpPrivateDeleteUploadFileTest extends CleanUpModelTestCase {
 
 		//テストデータ
 		/* @see NetCommonsCakeTestCase::$_defaultFixtures 'plugin.files.upload_file','plugin.files.upload_files_content', 読み込んでる
-		 * @sse UploadFileFixture アップロードファイルのテストデータ. id=12, 13のwysiwygアップロードデータを利用
-		 * @see UploadFilesContentFixture アップロードファイルのテストデータ */
+		 * @sse UploadFileFixture アップロードファイルのテストデータ. id=12, 13のwysiwygアップロードデータを利用 */
 		$uploadFile['UploadFile'] = (new UploadFileFixture())->records[11];
 		//$data['UploadFile'] = (new UploadFileFixture())->records[12];
 
