@@ -28,7 +28,8 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
 		'plugin.clean_up.announcement_for_clean_up',
-		'plugin.plugin_manager.plugin4test',
+		'plugin.clean_up.block_for_clean_up',
+		'plugin.clean_up.plugin_for_clean_up',
 	);
 
 /**
