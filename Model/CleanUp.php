@@ -37,14 +37,6 @@ class CleanUp extends CleanUpAppModel {
 	const FIND_LIMIT_UPLOAD_FILE = 1000;
 
 /**
- * 削除遅延日 x日前<br />
- * 例えば1日前を指定すると、今日アップしたファイルは消さなくなります
- *
- * @var string
- */
-	const DELETE_DELAY_DAY = 0;
-
-/**
  * プラグイン不明ファイル のプラグインキー
  *
  * @var string
@@ -57,6 +49,14 @@ class CleanUp extends CleanUpAppModel {
  * @var string
  */
 	const HOW_TO_BACKUP_URL = 'https://www.netcommons.org/NetCommons3/download#!#frame-362';
+
+/**
+ * 削除遅延日 x日前<br />
+ * 例えば1日前を指定すると、今日アップしたファイルは消さなくなります
+ *
+ * @var string
+ */
+	public $deleteDelayDay = 0;
 
 /**
  * Validation rules
@@ -309,7 +309,6 @@ class CleanUp extends CleanUpAppModel {
 		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイル
 			//
-			// 全プラグインの処理終わってから最後に実行
 			// block_keyなし、content_keyなし
 			// block_keyなしの場合、どのプラグインから投稿されたか不明
 			// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
@@ -379,7 +378,9 @@ class CleanUp extends CleanUpAppModel {
 	private function __deleteUploadFiles($uploadFiles, $cleanUp, $targetCount) {
 		foreach ($uploadFiles as $uploadFile) {
 			// 削除遅延日
-			$delayTime = self::DELETE_DELAY_DAY * 24 * 60 * 60;
+			//$delayTime = self::DELETE_DELAY_DAY * 24 * 60 * 60;
+			$delayTime = $this->deleteDelayDay * 24 * 60 * 60;
+
 			$now = NetCommonsTime::getNowDatetime();
 			$delayDate = date('Y-m-d H:i:s', strtotime($now) - $delayTime);
 			//var_dump($delayDate);
