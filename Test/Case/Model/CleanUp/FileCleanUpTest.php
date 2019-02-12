@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUp::fileCleanUpExec()のテスト
+ * CleanUp::fileCleanUp()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -12,12 +12,12 @@ App::uses('CleanUpModelTestCase', 'CleanUp.TestSuite');
 App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
- * CleanUp::fileCleanUpExec()のテスト
+ * CleanUp::fileCleanUp()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Model\CleanUp
  */
-class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
+class CleanUpFileCleanUpTest extends CleanUpModelTestCase {
 
 /**
  * Fixtures
@@ -48,15 +48,15 @@ class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
  *
  * @var string
  */
-	protected $_methodName = 'fileCleanUpExec';
+	protected $_methodName = 'fileCleanUp';
 
 /**
- * fileCleanUpExec()のテスト
+ * fileCleanUp()のテスト
  *
  * @return void
- * @see CleanUp::fileCleanUpExec()
+ * @see CleanUp::fileCleanUp()
  */
-	public function testFileCleanUpExec() {
+	public function testFileCleanUp() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
@@ -72,16 +72,17 @@ class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
 		$result = $this->$model->$methodName($data);
 
 		//チェック
+		//var_export($result);
 		$this->assertTrue($result, '正常処理されるためtrueが戻る想定');
 	}
 
 /**
- * fileCleanUpExec()のvalidateErrorテスト
+ * fileCleanUp()のvalidateErrorテスト
  *
  * @return void
- * @see CleanUp::fileCleanUpExec()
+ * @see CleanUp::fileCleanUp()
  */
-	public function testFileCleanUpExecError() {
+	public function testFileCleanUpError() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
