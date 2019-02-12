@@ -81,17 +81,18 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
 		$methodName = $this->_methodName;
 
 		//データ生成
-		$data['CleanUp']['plugin_key'] = ['videos'];
+		$data['CleanUp']['plugin_key'] = ['announcements'];
 		// 言語：日本語
 		Current::write('Language.id', '2');
 
 		//テスト実施
 		$result = $this->$model->$methodName($data);
 
-		// TODO debug
-		$this->Plugin = ClassRegistry::init('PluginManager.Plugin', true);
-		var_export($this->$model->find('all'));
-		var_export($this->Plugin->find('all'));
+		// debug
+		//$this->Plugin = ClassRegistry::init('PluginManager.Plugin', true);
+		//var_export($this->$model->find('all'));
+		//var_export($this->Plugin->find('all'));
+		//var_export($result);
 
 		//チェック
 		//var_export($result);
@@ -109,7 +110,7 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
 		$methodName = $this->_methodName;
 
 		//データ生成
-		$data['CleanUp']['plugin_key'] = ['videos', 'tasks'];
+		$data['CleanUp']['plugin_key'] = ['announcements', 'bbses'];
 		// 言語：日本語
 		Current::write('Language.id', '2');
 
