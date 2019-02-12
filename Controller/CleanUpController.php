@@ -63,7 +63,7 @@ class CleanUpController extends CleanUpAppController {
 				$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
 			}
 		} elseif ($this->request->is('ajax')) {
-			// ajaxの場合は何もしない
+			// ログの内容(実行結果)見る場合ajax. ajaxは何もしない
 		} else {
 			// チェックボックス初期値
 			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
@@ -78,11 +78,9 @@ class CleanUpController extends CleanUpAppController {
 		$cleanUpLog = $this->__getleanUpLog();
 		$this->set('cleanUpLog', $cleanUpLog);
 
-		// ロックファイル
+		// ロックファイル関係
 		$this->set('isLockFile', CleanUpUtility::isLockFile());
-		$cleanUpStart = CleanUpUtility::readLockFile();
-		$cleanUpStart = date('m/d G:i', strtotime($cleanUpStart));
-		$this->set('cleanUpStart', $cleanUpStart);
+		$this->set('cleanUpStart', CleanUpUtility::readLockFile());
 	}
 
 /**

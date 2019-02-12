@@ -163,7 +163,10 @@ class CleanUpUtility {
  */
 	public static function readLockFile() {
 		if (file_exists(self::$lockFilePath)) {
-			return file_get_contents(self::$lockFilePath);
+			//return file_get_contents(self::$lockFilePath);
+			$cleanUpStart = file_get_contents(self::$lockFilePath);
+			$cleanUpStart = date('m/d G:i', strtotime($cleanUpStart));
+			return $cleanUpStart;
 		}
 		return '';
 	}
