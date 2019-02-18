@@ -93,13 +93,12 @@ class CleanUp extends CleanUpAppModel {
 					'rule' => array('multiple', array('min' => 1)),
 					// plugin
 					'message' => __d('net_commons', 'Please input %s.',
-									__d('clean_up', 'プラグイン')),
+									__d('clean_up', 'Plugin')),
 					'required' => false,
 				),
 				'isLockFile' => array(
 					'rule' => array('isLockFile'),
-					'message' => __d('clean_up', 'ロックファイルがあります。
-ファイルクリーンアップ実行中のため、しばらくお待ちください。'),
+					'message' => __d('clean_up', 'There is a lock file. Please wait for a while because file cleanup is in progress.'),
 					'required' => false,
 				),
 			),
@@ -170,7 +169,7 @@ class CleanUp extends CleanUpAppModel {
 			'Plugin' => [
 				'key' => self::PLUGIN_KEY_UNKNOWN,
 				// Plugin unknown file
-				'name' => __d('clean_up', 'プラグイン不明ファイル'),
+				'name' => __d('clean_up', 'Plugin unknown file'),
 			],
 		];
 		return $unknowCleanUp;
@@ -229,7 +228,7 @@ class CleanUp extends CleanUpAppModel {
 		}
 		// タイムゾーンを日本に一時的に変更。ログ出力時間を日本時間に。
 		$timezone = CleanUpUtility::startLogTimezone();
-		CakeLog::info(__d('clean_up', 'クリーンアップ処理を開始します。'), ['CleanUp']);
+		CakeLog::info(__d('clean_up', 'Start cleanup process.'), ['CleanUp']);
 
 		// 複数起動防止ロック
 		CleanUpUtility::makeLockFile();
@@ -252,7 +251,7 @@ class CleanUp extends CleanUpAppModel {
 				$pluginName = $cleanUp['Plugin']['name'];
 				$model = $cleanUp['CleanUp']['model'];
 
-				CakeLog::info(__d('clean_up', '[%s:%s] クリーンアップ処理を開始します。',
+				CakeLog::info(__d('clean_up', '[%s:%s] Start the cleanup process.',
 					[$pluginName, $model]), ['CleanUp']);
 
 				//アップロードファイルのfind条件 ゲット
@@ -269,11 +268,11 @@ class CleanUp extends CleanUpAppModel {
 
 				if ($targetCount === 0) {
 					CakeLog::info(__d('clean_up',
-						'[%s:%s] 対象ファイルが一件もありませんでした。',
+						'[%s:%s] There was no target file.',
 						[$pluginName, $model]), ['CleanUp']);
 				} else {
 					CakeLog::info(__d('clean_up',
-						'[%s:%s] クリーンアップ処理が完了しました。',
+						'[%s:%s] Cleanup processing is completed.',
 						[$pluginName, $model]), ['CleanUp']);
 				}
 			}
@@ -291,7 +290,7 @@ class CleanUp extends CleanUpAppModel {
 		}
 		// ロック解除
 		CleanUpUtility::deleteLockFile();
-		CakeLog::info(__d('clean_up', 'クリーンアップ処理が完了しました'), ['CleanUp']);
+		CakeLog::info(__d('clean_up', 'Cleanup processing is completed.'), ['CleanUp']);
 		// タイムゾーンを元に戻す
 		CleanUpUtility::endLogTimezone($timezone);
 
@@ -406,10 +405,10 @@ class CleanUp extends CleanUpAppModel {
 			$model = $cleanUp['CleanUp']['model'];
 			$fileName = $uploadFile['UploadFile']['original_name'];
 			if ($this->__deleteUploadFile($uploadFile) === false) {
-				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」の削除に失敗しました',
+				CakeLog::info(__d('clean_up', '[%s:%s]  Failed to delete "%s".',
 					[$pluginName, $model, $fileName]), ['CleanUp']);
 			} else {
-				CakeLog::info(__d('clean_up', '[%s:%s] 「%s」を削除しました',
+				CakeLog::info(__d('clean_up', '[%s:%s] "%s" deleted.',
 					[$pluginName, $model, $fileName]), ['CleanUp']);
 			}
 			$targetCount++;

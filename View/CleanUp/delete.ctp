@@ -34,12 +34,7 @@ echo $this->NetCommonsHtml->script(array(
 
 	<?php /* 上部メッセージ */ ?>
 	<div class="well well-sm">
-		<?php echo __d('clean_up', '使用されていないアップロードファイルを削除します。
-対象のプラグインを選択して、[削除]を押してください。
-ファイルクリーンアップを実行する前に、<a href="%s" target="_blank">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span><br />
-ファイルクリーンアップはバックグラウンドで実行します。
-		', CleanUp::HOW_TO_BACKUP_URL);
-		?>
+		<?php echo __d('clean_up', 'File cleanup view description', CleanUp::HOW_TO_BACKUP_URL); ?>
 	</div>
 
 	<?php /* チェックボックス */ ?>
@@ -77,8 +72,8 @@ echo $this->NetCommonsHtml->script(array(
 					<div class="has-error">
 						<div class="help-block">
 							<?php
-							echo __d('clean_up', 'ロックファイルがあります。 ファイルクリーンアップ実行中のため、しばらくお待ちください。') . '<br />';
-							echo __d('clean_up', 'ファイルクリーンアップ開始日：%s', [$cleanUpStart]);
+							echo __d('clean_up', 'There is a lock file. Please wait for a while because file cleanup is in progress.') . '<br />';
+							echo __d('clean_up', 'File cleanup start date: %s', [$cleanUpStart]);
 							// 削除ボタン非活性
 							$deleteButtonOption = ['disabled' => 'disabled'];
 							?>
@@ -91,7 +86,7 @@ echo $this->NetCommonsHtml->script(array(
 			<div class="panel-footer text-center">
 				<?php echo $this->Button->delete(
 					null,
-					__d('clean_up', '使用されていないアップロードファイルを削除します。よろしいですか？'),
+					__d('clean_up', 'Deletes unused upload files. Is it OK?'),
 					$deleteButtonOption
 				); ?>
 			</div>
@@ -109,19 +104,17 @@ echo $this->NetCommonsHtml->script(array(
 				<div uib-accordion-group is-open="dangerZone" class="panel-danger">
 					<uib-accordion-heading class="clearfix">
 						<span style="cursor: pointer">
-							<?php echo __d('clean_up', 'ロックファイル強制削除処理'); ?>
+							<?php echo __d('clean_up', 'Forcibly delete lock file'); ?>
 						</span>
 						<span class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': dangerZone, 'glyphicon-chevron-right': ! dangerZone}"></span>
 					</uib-accordion-heading>
 
 					<div class="inline-block">
-						<?php echo __d('clean_up', 'ロックファイルを強制削除します。<br />
-ファイルクリーンアップの途中停止等でロックファイルが残り、実行できなくなった場合にご利用ください。<br />
-また、実行結果からファイルクリーンアップが停止した事を確認した上で、ご利用ください。'); ?>
+						<?php echo __d('clean_up', 'Forcibly delete lock file description'); ?>
 					</div>
 					<?php echo $this->Button->delete(
 						__d('net_commons', 'Delete'),
-						sprintf(__d('net_commons', 'Deleting the %s. Are you sure to proceed?'), __d('clean_up', 'ロックファイル')),
+						sprintf(__d('net_commons', 'Deleting the %s. Are you sure to proceed?'), __d('clean_up', 'Lock file')),
 						array('addClass' => 'pull-right')
 					); ?>
 				</div>
@@ -130,7 +123,7 @@ echo $this->NetCommonsHtml->script(array(
 	</div>
 
 	<?php /* 実行結果 */ ?>
-	<h2><?php echo __d('clean_up', '実行結果') ?></h2>
+	<h2><?php echo __d('clean_up', 'Execution result') ?></h2>
 	<?php echo $this->NetCommonsForm->create(false, []); ?>
 		<div class="form-group">
 			<div class="form-inline">
@@ -140,7 +133,7 @@ echo $this->NetCommonsHtml->script(array(
 					//'ng-model'
 				]); ?>
 				<button type="button" class="btn btn-default" ng-click="more()" >
-					<?php echo __d('clean_up', '見る'); ?>
+					<?php echo __d('clean_up', 'Look'); ?>
 				</button>
 
 			</div>

@@ -15,11 +15,25 @@ msgstr ""
 
 #: Console/Command/CleanUpShell.php:111
 msgid "File cleanup command description"
-msgstr ""
+msgstr "File cleanup \n"
+"\n"
+"[Command]\n"
+"cake clean_up.clean_up clean_up [arguments]: file cleanup \n"
+"cake clean_up.clean_up unlock: forcibly delete running lock file \n"
+"\n"
+"Deletes unused upload files. Please specify target plugin_key. All arguments are processed as plugin_key. \n"
+"Before executing file cleanup, be sure to back up this file by referring to it here so that it can be restored anytime \n"
+"at any time. \n"
+"%s\n"
+"\n"
+"Execution result will be logged below. \n"
+"%s\n"
 
 #: Console/Command/CleanUpShell.php:123
 msgid "File cleanup command arguments help"
-msgstr ""
+msgstr "Plugin key to be cleaned up. \n"
+"[Plug-in key that can be specified other than normal] \n"
+"unknown: Plugin unknown file \n all: All plugins"
 
 #: Controller/CleanUpController.php:59
 msgid "File cleanup was executed. Please check the execution result and wait for a while until completion."
@@ -91,7 +105,10 @@ msgstr ""
 
 #: View/CleanUp/delete.ctp:37
 msgid "File cleanup view description"
-msgstr ""
+msgstr "Deletes unused upload files. \n"
+"Select the target plug-in and press [Delete]. \n"
+"Please do <a href="%s" target="_blank" rel="noopener noreferrer">here</a> before executing file cleanup <span class="text-danger"><u>Be sure to backup and restore it at any time before running it. </u></span><br />\n"
+"Run the file cleanup in the background."
 
 #: View/CleanUp/delete.ctp:76
 msgid "File cleanup start date: %s"
@@ -107,7 +124,9 @@ msgstr ""
 
 #: View/CleanUp/delete.ctp:113
 msgid "Forcibly delete lock file description"
-msgstr ""
+msgstr "Forcibly delete the lock file. <br /> \n"
+"Please use it when the lock file is left behind due to suspension of file cleanup etc and can not be executed. <br /> \n"
+"Also, please confirm that the file cleanup has stopped from the execution result."
 
 #: View/CleanUp/delete.ctp:117
 msgid "Lock file"

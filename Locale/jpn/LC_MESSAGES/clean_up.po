@@ -1,0 +1,144 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Console/Command/CleanUpShell.php:111
+msgid "File cleanup command description"
+msgstr "ファイルクリーンアップ\n"
+"\n"
+"[コマンド]\n"
+"cake clean_up.clean_up clean_up [arguments]: ファイルクリーンアップ \n"
+"cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除\n"
+"\n"
+"使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。\n"
+"全ての引数はplugin_keyとして処理します。ファイルクリーンアップを\n"
+"実行する前に、こちらを参考に必ずバックアップして、\n"
+"いつでもリストアできるようにしてから実行してください。\n"
+"%s\n"
+"\n"
+"実行結果は下記にログ出力されます。\n"
+"%s\n"
+
+#: Console/Command/CleanUpShell.php:123
+msgid "File cleanup command arguments help"
+msgstr "クリーンアップする対象のプラグインキー。\n"
+"[通常以外で指定できるプラグインキー]\n"
+"unknown: プラグイン不明ファイル \n"
+"all: 全てのプラグイン"
+
+#: Controller/CleanUpController.php:59
+msgid "File cleanup was executed. Please check the execution result and wait for a while until completion."
+msgstr "ファイルクリーンアップを実行しました。実行結果をご確認の上、完了までしばらくお待ちください。"
+
+#: Controller/CleanUpController.php:130
+msgid "None."
+msgstr "ありません。"
+
+#: Controller/CleanUpController.php:150
+#: Utility/CleanUpUtility.php:128
+msgid "Lock file was deleted."
+msgstr "ロックファイルを削除しました。"
+
+#: Controller/CleanUpController.php:154
+#: Utility/CleanUpUtility.php:131
+msgid "No lock file."
+msgstr "ロックファイルはありません。"
+
+#: Model/CleanUp.php:96
+#: Test/Case/Model/CleanUp/ValidateTest.php:107
+msgid "Plugin"
+msgstr "プラグイン"
+
+#: Model/CleanUp.php:101
+#: View/CleanUp/delete.ctp:75
+msgid "There is a lock file. Please wait for a while because file cleanup is in progress."
+msgstr "ロックファイルがあります。ファイルクリーンアップ実行中のため、しばらくお待ちください。"
+
+#: Model/CleanUp.php:172
+msgid "Plugin unknown file"
+msgstr "プラグイン不明ファイル"
+
+#: Model/CleanUp.php:231
+msgid "Start cleanup process."
+msgstr "クリーンアップ処理を開始します。"
+
+#: Model/CleanUp.php:254
+msgid "[%s:%s] Start the cleanup process."
+msgstr "[%s:%s] クリーンアップ処理を開始します。"
+
+#: Model/CleanUp.php:270
+msgid "[%s:%s] There was no target file."
+msgstr "[%s:%s] 対象ファイルが一件もありませんでした。"
+
+#: Model/CleanUp.php:274
+msgid "[%s:%s] Cleanup processing is completed."
+msgstr "[%s:%s] クリーンアップ処理が完了しました。"
+
+#: Model/CleanUp.php:293
+msgid "Cleanup processing is completed."
+msgstr "クリーンアップ処理が完了しました。"
+
+#: Model/CleanUp.php:408
+msgid "[%s:%s]  Failed to delete \"%s\"."
+msgstr "[%s:%s] 「%s」の削除に失敗しました。"
+
+#: Model/CleanUp.php:411
+msgid "[%s:%s] \"%s\" deleted."
+msgstr "[%s:%s] 「%s」を削除しました。"
+
+#: Utility/CleanUpUtility.php:117
+msgid "Created a lock file."
+msgstr "ロックファイルを作成しました。"
+
+#: Utility/CleanUpUtility.php:145
+msgid "Start forcibly delete lock file processing."
+msgstr "ロックファイル強制削除処理を開始します。"
+
+#: View/CleanUp/delete.ctp:37
+msgid "File cleanup view description"
+msgstr "使用されていないアップロードファイルを削除します。\n"
+"対象のプラグインを選択して、[削除]を押してください。\n"
+"ファイルクリーンアップを実行する前に、<a href="%s" target="_blank" rel="noopener noreferrer">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span><br />\n"
+"ファイルクリーンアップはバックグラウンドで実行します。"
+
+#: View/CleanUp/delete.ctp:76
+msgid "File cleanup start date: %s"
+msgstr "ファイルクリーンアップ開始日：%s"
+
+#: View/CleanUp/delete.ctp:89
+msgid "Deletes unused upload files. Is it OK?"
+msgstr "使用されていないアップロードファイルを削除します。よろしいですか？"
+
+#: View/CleanUp/delete.ctp:107
+msgid "Forcibly delete lock file"
+msgstr "ロックファイル強制削除処理"
+
+#: View/CleanUp/delete.ctp:113
+msgid "Forcibly delete lock file description"
+msgstr "ロックファイルを強制削除します。<br />\n"
+"ファイルクリーンアップの途中停止等でロックファイルが残り、実行できなくなった場合にご利用ください。<br />\n"
+"また、実行結果からファイルクリーンアップが停止した事を確認した上で、ご利用ください。"
+
+#: View/CleanUp/delete.ctp:117
+msgid "Lock file"
+msgstr "ロックファイル"
+
+#: View/CleanUp/delete.ctp:126
+msgid "Execution result"
+msgstr "実行結果"
+
+#: View/CleanUp/delete.ctp:136
+msgid "Look"
+msgstr "見る"
+

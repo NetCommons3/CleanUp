@@ -114,7 +114,7 @@ class CleanUpUtility {
 		//時刻をロックファイルに書き込む
 		$now = NetCommonsTime::getNowDatetime();
 		file_put_contents(self::$lockFilePath, $now);
-		CakeLog::info(__d('clean_up', 'ロックファイルを作成しました。'), ['CleanUp']);
+		CakeLog::info(__d('clean_up', 'Created a lock file.'), ['CleanUp']);
 	}
 
 /**
@@ -125,10 +125,10 @@ class CleanUpUtility {
 	public static function deleteLockFile() {
 		if (file_exists(self::$lockFilePath)) {
 			unlink(self::$lockFilePath);
-			CakeLog::info(__d('clean_up', 'ロックファイルを削除しました。'), ['CleanUp']);
+			CakeLog::info(__d('clean_up', 'Lock file was deleted.'), ['CleanUp']);
 			return true;
 		}
-		CakeLog::info(__d('clean_up', 'ロックファイルはありません。'), ['CleanUp']);
+		CakeLog::info(__d('clean_up', 'No lock file.'), ['CleanUp']);
 		return false;
 	}
 
@@ -143,7 +143,7 @@ class CleanUpUtility {
 		$timezone = self::startLogTimezone();
 
 		CakeLog::info(__d('clean_up',
-			'ロックファイル強制削除処理を開始します。'), ['CleanUp']);
+			'Start forcibly delete lock file processing.'), ['CleanUp']);
 		$isDelete = self::deleteLockFile();
 
 		// ログ終了時にタイムゾーン戻す

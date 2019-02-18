@@ -56,7 +56,7 @@ class CleanUpController extends CleanUpAppController {
 				//$this->redirect($this->referer());
 				// 削除しましたFlashメッセージを設定
 				$this->NetCommons->setFlashNotification(
-					__d('clean_up', 'ファイルクリーンアップを実行しました。実行結果をご確認の上、完了までしばらくお待ちください'), array('class' => 'success')
+					__d('clean_up', 'File cleanup was executed. Please check the execution result and wait for a while until completion.'), array('class' => 'success')
 				);
 			} else {
 				// エラー
@@ -127,7 +127,7 @@ class CleanUpController extends CleanUpAppController {
 		if (file_exists($logPath)) {
 			$cleanUpLog = file_get_contents($logPath);
 		} else {
-			$cleanUpLog = __d('clean_up', 'ありません');
+			$cleanUpLog = __d('clean_up', 'None.');
 		}
 		return $cleanUpLog;
 	}
@@ -147,11 +147,11 @@ class CleanUpController extends CleanUpAppController {
 		if (CleanUpUtility::deleteLockFileAndSetupLog()) {
 			// メッセージ
 			$this->NetCommons->setFlashNotification(
-				__d('clean_up', 'ロックファイルを削除しました。'), array('class' => 'success')
+				__d('clean_up', 'Lock file was deleted.'), array('class' => 'success')
 			);
 		} else {
 			$this->NetCommons->setFlashNotification(
-				__d('clean_up', 'ロックファイルはありません。'), array('class' => 'warning')
+				__d('clean_up', 'No lock file.'), array('class' => 'warning')
 			);
 		}
 

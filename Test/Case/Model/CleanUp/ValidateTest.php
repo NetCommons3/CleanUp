@@ -104,7 +104,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 				'field' => 'plugin_key',
 				'value' => [],	//data[model名][field] = value
 				'message' => __d('net_commons', 'Please input %s.',
-					__d('clean_up', 'プラグイン'))
+					__d('clean_up', 'Plugin'))
 			],
 			'2.エラーなし' => [
 				'data' => [],

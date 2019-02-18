@@ -108,20 +108,10 @@ class CleanUpShell extends AppShell {
 
 		// 説明
 		$parser->description([
-			__d('clean_up', 'ファイルクリーンアップ'),
-			'',
-			__d('clean_up', '[コマンド]
-cake clean_up.clean_up clean_up [arguments]: ファイルクリーンアップ
-cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除'),
-			'',
-			__d('clean_up', '使用されていないアップロードファイルを削除します。対象のplugin_keyを指定してください。
-全ての引数はplugin_keyとして処理します。ファイルクリーンアップを
-実行する前に、こちらを参考に必ずバックアップして、
-いつでもリストアできるようにしてから実行してください。'),
-			CleanUp::HOW_TO_BACKUP_URL,
-			'',
-			__d('clean_up', '実行結果は下記にログ出力されます。'),
-			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log',
+			__d('clean_up', 'File cleanup command description', [
+				CleanUp::HOW_TO_BACKUP_URL,
+				ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log',
+			]),
 		]);
 
 		// プラグインキーの一覧
@@ -130,10 +120,7 @@ cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除'),
 
 		// 引数
 		$arguments[] = [
-			'help' => __d('clean_up', 'クリーンアップする対象のプラグインキー。
-[通常以外で指定できるプラグインキー]
-unknown: プラグイン不明ファイル
-all: 全てのプラグイン'),
+			'help' => __d('clean_up', 'File cleanup command arguments help'),
 			'required' => false,
 			'choices' => $pluginKeys,
 		];
