@@ -98,7 +98,10 @@ class CleanUp extends CleanUpAppModel {
 				),
 				'isLockFile' => array(
 					'rule' => array('isLockFile'),
+					// 多言語再利用のため
+					// @codingStandardsIgnoreStart
 					'message' => __d('clean_up', 'There is a lock file. Please wait for a while because file cleanup is in progress.'),
+					// @codingStandardsIgnoreEnd
 					'required' => false,
 				),
 			),
