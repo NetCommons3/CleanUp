@@ -93,8 +93,9 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		// 削除対象件数 初期値
 		$targetCount = 0;
 
-
+		//
 		//テスト実施
+		//
 		$result = $this->_testReflectionMethod(
 			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
 		);
@@ -141,8 +142,9 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		/* @see Cleanup::$deleteDelayDay */
 		$this->$model->deleteDelayDay = 9999;
 
-
+		//
 		//テスト実施
+		//
 		$result = $this->_testReflectionMethod(
 			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
 		);
@@ -190,8 +192,9 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		// 削除対象件数 初期値
 		$targetCount = 0;
 
-
+		//
 		//テスト実施
+		//
 		$result = $this->_testReflectionMethod(
 			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
 		);
