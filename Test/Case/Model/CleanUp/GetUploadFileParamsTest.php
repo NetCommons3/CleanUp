@@ -25,6 +25,7 @@ class CleanUpGetUploadFileParamsTest extends CleanUpModelTestCase {
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
+		'plugin.plugin_manager.plugin4test',
 	);
 
 /**
