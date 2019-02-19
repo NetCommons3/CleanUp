@@ -258,7 +258,7 @@ class CleanUp extends CleanUpAppModel {
 					[$pluginName, $model]), ['CleanUp']);
 
 				//アップロードファイルのfind条件 ゲット
-				$params = $this->__getUploadFileParams($cleanUp);
+				$params = $this->getUploadFileParams($cleanUp);
 				// $uploadFiles findでデータとれすぎてメモリ圧迫問題対応。 1000件づつ取得
 				$params = array_merge($params, array('limit' => self::FIND_LIMIT_UPLOAD_FILE, 'offset' => 0));
 
@@ -302,12 +302,13 @@ class CleanUp extends CleanUpAppModel {
 
 /**
  * アップロードファイルのfind条件 ゲット
+ * テスト利用のためpublicに変更
  *
  * @param array $cleanUp request->data 1件
  * @return array
  * @see UploadFile::deleteUploadFile() よりコピー
  */
-	private function __getUploadFileParams($cleanUp) {
+	public function getUploadFileParams($cleanUp) {
 		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイル
 			//
@@ -379,16 +380,7 @@ class CleanUp extends CleanUpAppModel {
  */
 	private function __deleteUploadFiles($uploadFiles, $cleanUp, $targetCount) {
 		foreach ($uploadFiles as $uploadFile) {
-			// 削除遅延日
-			//$delayTime = self::DELETE_DELAY_DAY * 24 * 60 * 60;
-			$delayTime = $this->deleteDelayDay * 24 * 60 * 60;
-
-			$now = NetCommonsTime::getNowDatetime();
-			$delayDate = date('Y-m-d H:i:s', strtotime($now) - $delayTime);
-			//var_dump($delayDate);
-
-			//var_dump($uploadFile['UploadFile']['modified']);
-			if ($uploadFile['UploadFile']['modified'] >= $delayDate) {
+			if ($this->__isOverDelayDate($uploadFile)) {
 				// 削除遅延日  x日前を例えば1日前を指定すると、今日アップしたファイルは消さなくなります
 				continue;
 			}
@@ -417,6 +409,29 @@ class CleanUp extends CleanUpAppModel {
 			$targetCount++;
 		}
 		return $targetCount;
+	}
+
+/**
+ * 削除遅延日以上かどうか<br />
+ * 該当するファイルは削除対象外になります
+ *
+ * @param array $uploadFile UploadFile
+ * @return bool true:削除遅延日以上|false:使ってない
+ */
+	private function __isOverDelayDate($uploadFile) {
+		// 削除遅延日
+		$delayTime = $this->deleteDelayDay * 24 * 60 * 60;
+
+		$now = NetCommonsTime::getNowDatetime();
+		$delayDate = date('Y-m-d H:i:s', strtotime($now) - $delayTime);
+		//var_dump($delayDate);
+
+		//var_dump($uploadFile['UploadFile']['modified']);
+		if ($uploadFile['UploadFile']['modified'] >= $delayDate) {
+			// 削除遅延日  x日前を例えば1日前を指定すると、今日アップしたファイルは消さなくなります
+			return true;
+		}
+		return false;
 	}
 
 /**
@@ -451,9 +466,6 @@ class CleanUp extends CleanUpAppModel {
  * @return bool true:使ってる|false:使ってない
  */
 	private function __isUseUploadFile($uploadFile, $cleanUp) {
-		//private function __isUseUploadFile($uploadFile, $cleanUp, $class, $fields) {
-		//* @param string $class クラス名
-		//* @param string $fields フィールド名
 		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイルは、ブロックキーなしやコンテンツキーなしで、使われていないため、false
 			return false;
