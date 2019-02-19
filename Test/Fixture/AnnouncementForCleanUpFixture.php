@@ -93,6 +93,22 @@ class AnnouncementForCleanUpFixture extends AnnouncementFixture {
 			'modified_user' => '1',
 			'modified' => '2014-10-09 16:07:57'
 		),
+		// wysiwyg で announcements アップファイル. 最新で有効
+		array(
+			'id' => '5',
+			'language_id' => '2',
+			'block_id' => '1001',
+			'key' => 'announcement_wysiwyg_5',
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '1',
+			'content' => '
+<p><img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/2/14/" alt="" />ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
 	);
 
 }

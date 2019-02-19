@@ -48,6 +48,16 @@ class BlockForCleanUpFixture extends BlockFixture {
 			'publish_start' => null,
 			'publish_end' => null,
 		),
+		//公開データ announcements
+		array(
+			'id' => '1001',
+			'room_id' => '2',
+			'plugin_key' => 'announcements',
+			'key' => 'block_1001',
+			'public_type' => '1',
+			'publish_start' => null,
+			'publish_end' => null,
+		),
 		//非公開データ
 		array(
 			'id' => '4',

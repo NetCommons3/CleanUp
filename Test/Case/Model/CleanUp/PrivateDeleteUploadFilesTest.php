@@ -26,6 +26,10 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
+		'plugin.clean_up.announcement_for_clean_up',
+		'plugin.clean_up.block_for_clean_up',
+		'plugin.clean_up.plugin_for_clean_up',
+		'plugin.clean_up.upload_file_for_clean_up',
 	);
 
 /**
@@ -59,13 +63,13 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __deleteUploadFiles()のテスト
+ * __deleteUploadFiles()のテスト. チェック対象unknow
  *
  * @return void
  * @throws ReflectionException
  * @see CleanUp::__deleteUploadFiles()
  */
-	public function testDeleteUploadFiles() {
+	public function testDeleteUploadFilesUnknow() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
@@ -101,7 +105,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __deleteUploadFiles()の削除遅延日テスト
+ * __deleteUploadFiles()の削除遅延日テスト. チェック対象unknow
  *
  * @return void
  * @throws ReflectionException
@@ -146,6 +150,56 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//チェック
 		//var_export($result);
 		$this->assertEquals(0, $result, 'ファイル削除なしで0件の想定');
+	}
+
+/**
+ * __deleteUploadFiles()のテスト. チェック対象announcement<br />
+ * __isUseUploadFile()=trueでcontinue通しテスト
+ *
+ * @return void
+ * @throws ReflectionException
+ * @see CleanUp::__deleteUploadFiles()
+ */
+	public function testDeleteUploadFilesAnnouncement() {
+		$model = $this->_modelName;
+		$methodName = $this->_methodName;
+
+		//テストデータ
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		$data['CleanUp']['plugin_key'] = [
+			'announcements'
+		];
+
+		// チェック対象プラグイン
+		/* @see Cleanup::getCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->getCleanUpsAndPlugin($data);
+		//var_dump($cleanUps);
+
+		// UploadFileインスタンスの準備
+		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
+
+		//アップロードデータ
+		/* @see Cleanup::getUploadFileParams() */
+		$params = $this->$model->getUploadFileParams($cleanUps[0]);
+		//var_dump($params);
+		$uploadFiles = $this->$model->UploadFile->find('all', $params);
+
+		// 削除対象件数 初期値
+		$targetCount = 0;
+
+
+		//テスト実施
+		$result = $this->_testReflectionMethod(
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
+		);
+
+		//チェック
+		//var_export($result);
+		$this->assertEquals(0, $result,
+			'アップロードファイル使ってるため、ファイル削除なしで0件の想定');
 	}
 
 }
