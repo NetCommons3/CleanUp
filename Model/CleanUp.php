@@ -508,7 +508,7 @@ class CleanUp extends CleanUpAppModel {
 			$model => $class,
 		));
 
-		// fileUrl, imageUrl使ってると件数取得する条件
+		// fileUrl, imageUrl使ってる条件
 		$checkConditions = [];
 		$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
 		foreach ($fieldsArray as $field) {
@@ -520,7 +520,17 @@ class CleanUp extends CleanUpAppModel {
 			);
 		}
 
-		// 最新とアクティブを取得する条件
+		// 最新とアクティブを取得する条件（多言語も取得される）
+		//
+		// 多言語
+		// announcementsテーブルで日英で同じkeyで2件ある場合の例。
+		// id,language_id,block_id,key,status,is_active,is_latest,is_origin,is_translation,is_original_copy,content,created_user,created,modified_user,modified
+		// 24,2,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,1,1,0,"<img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/1/" alt="" /><p> 日本語画像使ってる</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:25:43"
+		// 25,1,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,0,1,0,"<p>英語　画像削除</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:26:35"
+		// ※日本語（language_id=2）のcontentで画像は使っていて、英語（language_id=1）は画像削除した。
+		// ※日英ともに、is_active=1 and is_latest=1がありえる。つまり同じkeyでis_active=1 and is_latest=1が2件ある状態。
+		// 多言語であっても、is_active=1 or is_latest=1で画像orファイル使っているかの対象になり、該当すればcountされる。
+		// そのため、多言語（language_id=1 or 2）でもis_active=1 or is_latest=1でチェック対象になってる
 		$conditions = array(
 			array(
 				'OR' => array(
