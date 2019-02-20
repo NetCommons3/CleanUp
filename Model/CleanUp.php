@@ -547,6 +547,7 @@ class CleanUp extends CleanUpAppModel {
 			'recursive' => -1,
 			'conditions' => $conditions,
 		));
+		//var_dump($this->$model->find('all'));
 
 		if ($count) {
 			return true;

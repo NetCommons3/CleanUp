@@ -319,6 +319,28 @@ class UploadFileForCleanUpFixture extends UploadFileFixture {
 			'modified_user' => 1,
 			'modified' => '2016-02-25 03:44:14'
 		),
+		// wysiwyg で announcements アップファイル 英日
+		// /wysiwyg/image/download/2/15/
+		array(
+			'id' => 15,
+			'plugin_key' => 'wysiwyg',
+			'content_key' => 'announcement_wysiwyg_6',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.gif',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.gif',
+			'extension' => 'gif',
+			'mimetype' => 'image/gif',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			'block_key' => 'block_1002',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
 	);
 
 /**
