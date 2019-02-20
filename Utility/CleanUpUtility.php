@@ -28,11 +28,11 @@ class CleanUpUtility {
 	public static $lockFilePath = '';
 
 /**
- * ログ出力するか. テスト用
+ * ロガーキー
  *
- * @var bool true:ログ出力|false:ログ出力しない
+ * @var string
  */
-	public static $isOutputLog = true;
+	const LOGGER_KEY = 'CleanUpFile';
 
 /**
  * ログファイル名
@@ -208,17 +208,13 @@ class CleanUpUtility {
  * @see https://book.cakephp.org/2.0/ja/core-libraries/logging.html#id2 ログストリームの作成と設定, size,rotateのデフォルト値
  */
 	public static function setupLog() {
-		if (!self::$isOutputLog) {
-			// テスト時ログ出力しない
-			return;
-		}
 		// CakeLog::writeでファイルとコンソールに出力していた。
 		// Consoleに出力すると<tag></tag>で囲われ見辛い。
 		// @see
 		// https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
 		// CakeLog::infoをよびだし、debug.logとCleanUp.logの両方出力するようにした。
 		CakeLog::config(
-			'CleanUpFile',
+			self::LOGGER_KEY,
 			[
 				'engine' => 'FileLog',
 				'types' => ['info'],

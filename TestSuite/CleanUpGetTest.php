@@ -75,6 +75,6 @@ abstract class CleanUpGetTest extends NetCommonsGetTest {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CleanUpUtility::$isOutputLog = false;
+		CakeLog::drop(CleanUpUtility::LOGGER_KEY);
 	}
 }

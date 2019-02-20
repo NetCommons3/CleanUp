@@ -71,7 +71,7 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CleanUpUtility::$isOutputLog = false;
+		CakeLog::drop(CleanUpUtility::LOGGER_KEY);
 
 		// ロックファイルの出力先をtestに変更
 		CleanUpUtility::$lockFilePath =

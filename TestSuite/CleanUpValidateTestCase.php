@@ -61,6 +61,6 @@ abstract class CleanUpValidateTestCase extends NetCommonsValidateTest {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CleanUpUtility::$isOutputLog = false;
+		CakeLog::drop(CleanUpUtility::LOGGER_KEY);
 	}
 }
