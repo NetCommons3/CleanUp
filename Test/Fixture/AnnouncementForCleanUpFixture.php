@@ -142,6 +142,38 @@ class AnnouncementForCleanUpFixture extends AnnouncementFixture {
 			'modified_user' => '1',
 			'modified' => '2016-10-09 16:07:57'
 		),
+		// wysiwyg で announcements アップファイル. 日英あり。日でファイル使ってる
+		array(
+			'id' => '8',
+			'language_id' => '2',	// 日本語
+			'block_id' => '1003',
+			'key' => 'announcement_wysiwyg_8',	// is_active=1 and is_latest=1 でkey同一あり
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '1',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p><img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/2/16/" alt="" />ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => '9',
+			'language_id' => '1',	// 英語
+			'block_id' => '1003',
+			'key' => 'announcement_wysiwyg_8',	// is_active=1 and is_latest=1 でkey同一あり
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '1',
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
 	);
 
 }

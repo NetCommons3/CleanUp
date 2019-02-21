@@ -84,7 +84,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				'uploadFile' => [
 					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=14のwysiwygのお知らせアップロードデータを利用
 					 * @see AnnouncementForCleanUpFixture::$records id=5 がアップロード元お知らせ　is_active=1 and is_latest=1 */
-					'UploadFile' => $UploadFileFixture->records[13]
+					'UploadFile' => $UploadFileFixture->records[4]
 				],
 				'cleanUp' => $cleanUp,
 				'assertMessage' =>
@@ -94,11 +94,21 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				'uploadFile' => [
 					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=15のwysiwygのお知らせアップロードデータを利用
 					 * @see AnnouncementForCleanUpFixture::$records id=6,7 がアップロード元お知らせ　英日で英でファイル利用, is_active=1 and is_latest=1 */
-					'UploadFile' => $UploadFileFixture->records[14]
+					'UploadFile' => $UploadFileFixture->records[5]
 				],
 				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイル、お知らせ英語(is_active=1 and is_latest=1)で使われてるため、trueが戻る想定'
+			],
+			'3.お知らせで英日あり。日でファイル使ってる' => [
+				'uploadFile' => [
+					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=16のwysiwygのお知らせアップロードデータを利用
+					 * @see AnnouncementForCleanUpFixture::$records id=8,9 がアップロード元お知らせ　英日で日でファイル利用, is_active=1 and is_latest=1 */
+					'UploadFile' => $UploadFileFixture->records[6]
+				],
+				'cleanUp' => $cleanUp,
+				'assertMessage' =>
+					'ファイル、お知らせ日本語(is_active=1 and is_latest=1)で使われてるため、trueが戻る想定'
 			],
 		];
 	}
@@ -156,18 +166,36 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 		$UploadFileFixture = new UploadFileForCleanUpFixture();
 
 		return [
-			'1.お知らせで使われてない' => [
+			'1.お知らせで使われてない(block.id=null, block.plugin_key="announcements"なし)' => [
 				'uploadFile' => [
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12のwysiwygアップロードデータを利用 */
-					'UploadFile' => $UploadFileFixture->records[11]
+					'UploadFile' => $UploadFileFixture->records[2]
 				],
 				'cleanUp' => $cleanUp1,
 				'assertMessage' =>
-					'ファイル、お知らせで使われてないため、falseが戻る想定'
+					'ファイル(block.id=null, block.plugin_key="announcements"なし)で、お知らせで使われてないため、falseが戻る想定'
 			],
-			'2.プラグイン不明ファイルで使われてない' => [
+			'2.お知らせで使われてない(content_key="")' => [
 				'uploadFile' => [
-					'UploadFile' => $UploadFileFixture->records[11]
+					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=17のwysiwygアップロードデータを利用 */
+					'UploadFile' => $UploadFileFixture->records[7]
+				],
+				'cleanUp' => $cleanUp1,
+				'assertMessage' =>
+					'ファイル(content_key="")で、お知らせで使われてないため、falseが戻る想定'
+			],
+			'3.お知らせで使われてない(content_key=null)' => [
+				'uploadFile' => [
+					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=18のwysiwygアップロードデータを利用 */
+					'UploadFile' => $UploadFileFixture->records[8]
+				],
+				'cleanUp' => $cleanUp1,
+				'assertMessage' =>
+					'ファイル(content_key=null)で、お知らせで使われてないため、falseが戻る想定'
+			],
+			'4.プラグイン不明ファイルで使われてない(content_key=null)' => [
+				'uploadFile' => [
+					'UploadFile' => $UploadFileFixture->records[2]
 				],
 				'cleanUp' => $cleanUp2,
 				'assertMessage' =>
