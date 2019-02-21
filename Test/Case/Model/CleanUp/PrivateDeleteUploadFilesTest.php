@@ -88,6 +88,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//アップロードデータ
 		/* @see Cleanup::getUploadFileParams() */
 		$params = $this->$model->getUploadFileParams($cleanUp);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 13]]);
 		$uploadFiles = $this->$model->UploadFile->find('all', $params);
 
 		// 削除対象件数 初期値
@@ -131,6 +132,8 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//アップロードデータ
 		/* @see Cleanup::getUploadFileParams() */
 		$params = $this->$model->getUploadFileParams($cleanUp);
+		//var_dump($params);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 13]]);
 		$uploadFiles = $this->$model->UploadFile->find('all', $params);
 		//var_dump($uploadFiles);
 
@@ -155,7 +158,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __deleteUploadFiles()のテスト. チェック対象announcement<br />
+ * __deleteUploadFiles()のテスト. チェック対象:announcement<br />
  * __isUseUploadFile()=trueでcontinue通しテスト
  *
  * @return void
@@ -187,7 +190,10 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		/* @see Cleanup::getUploadFileParams() */
 		$params = $this->$model->getUploadFileParams($cleanUps[0]);
 		//var_dump($params);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => 14]);
+
 		$uploadFiles = $this->$model->UploadFile->find('all', $params);
+		//var_dump($uploadFiles);
 
 		// 削除対象件数 初期値
 		$targetCount = 0;
