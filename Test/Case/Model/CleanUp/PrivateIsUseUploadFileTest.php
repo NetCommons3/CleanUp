@@ -112,6 +112,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
  * @return void
  * @throws ReflectionException
  * @see CleanUp::__isUseUploadFile()
+ *
  * @dataProvider dataProviderUse
  */
 	public function testIsUseUploadFileUse($uploadFile, $cleanUp, $assertMessage = '') {
@@ -136,54 +137,66 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __isUseUploadFile()のファイル使ってないテスト
+ * testIsUseUploadFileUseのDataProvider
  *
- * @return void
- * @throws ReflectionException
- * @see CleanUp::__isUseUploadFile()
+ * @return array テストデータ
+ * @see CleanUpPrivateIsUseUploadFileTest::testIsUseUploadFileUse() テスト対象
  */
-	public function testIsUseUploadFileNotUse() {
-		$model = $this->_modelName;
-		$methodName = $this->_methodName;
-
-		//テストデータ
-		/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12, 13のwysiwygアップロードデータを利用 */
-		$uploadFile['UploadFile'] = (new UploadFileForCleanUpFixture())->records[11];
-		//$data['UploadFile'] = (new UploadFileForCleanUpFixture())->records[12];
-
+	public function dataProviderNotUse() {
 		// 'plugin_key' => 'announcements',
-		$cleanUp['CleanUp'] = (new CleanUpFixture())->records[0];
+		$cleanUp1['CleanUp'] = (new CleanUpFixture())->records[0];
 
-		//テスト実施
-		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFile, $cleanUp)
-		);
+		// プラグイン不明ファイル
+		// 'plugin_key' => 'unknow',
+		/* @see CleanUp::getUnknowCleanUp() */
+		$CleanUp = ClassRegistry::init('CleanUp.CleanUp', true);
+		$cleanUp2 = $CleanUp->getUnknowCleanUp();
+		//var_export($cleanUp2);
 
-		//チェック
-		//var_export($result);
-		$this->assertFalse($result, 'ファイル、お知らせで使われてないため、falseが戻る想定');
+		$UploadFileFixture = new UploadFileForCleanUpFixture();
+
+		return [
+			'1.お知らせで使われてない' => [
+				'uploadFile' => [
+					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12のwysiwygアップロードデータを利用 */
+					'UploadFile' => $UploadFileFixture->records[11]
+				],
+				'cleanUp' => $cleanUp1,
+				'assertMessage' =>
+					'ファイル、お知らせで使われてないため、falseが戻る想定'
+			],
+			'2.プラグイン不明ファイルで使われてない' => [
+				'uploadFile' => [
+					'UploadFile' => $UploadFileFixture->records[11]
+				],
+				'cleanUp' => $cleanUp2,
+				'assertMessage' =>
+					'$cleanUp[CleanUp][plugin_key] == unknownはブロックキーなしやコンテンツキーなしで、使われていないため、falseが戻る想定'
+			],
+		];
 	}
 
 /**
- * __isUseUploadFile()の プラグイン対象:unknowテスト
+ * __isUseUploadFile()のファイル使ってないテスト
  *
+ * @param array $uploadFile uploadFile
+ * @param string $cleanUp cleanUp
+ * @param string $assertMessage assertメッセージ
  * @return void
  * @throws ReflectionException
  * @see CleanUp::__isUseUploadFile()
+ *
+ * @dataProvider dataProviderNotUse
  */
-	public function testIsUseUploadFileUnknow() {
+	public function testIsUseUploadFileNotUse($uploadFile, $cleanUp, $assertMessage = '') {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
 		//テストデータ
-		/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12, 13のwysiwygアップロードデータを利用 */
-		$uploadFile['UploadFile'] = (new UploadFileForCleanUpFixture())->records[11];
-		//$data['UploadFile'] = (new UploadFileForCleanUpFixture())->records[12];
+		//$uploadFile['UploadFile'] = (new UploadFileForCleanUpFixture())->records[11];
 
-		// プラグイン不明ファイル データゲット unknow
-		/* @see CleanUp::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
-		//var_export($cleanUp);
+		// 'plugin_key' => 'announcements',
+		//$cleanUp['CleanUp'] = (new CleanUpFixture())->records[0];
 
 		//テスト実施
 		$result = $this->_testReflectionMethod(
@@ -192,6 +205,8 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 
 		//チェック
 		//var_export($result);
-		$this->assertFalse($result, '$cleanUp[CleanUp][plugin_key] == unknownはブロックキーなしやコンテンツキーなしで、使われていないため、falseが戻る想定');
+		//$this->assertFalse($result, 'ファイル、お知らせで使われてないため、falseが戻る想定');
+		$this->assertFalse($result, $assertMessage);
 	}
+
 }
