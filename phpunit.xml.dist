@@ -9,6 +9,7 @@
                 <directory suffix=".php">app/Plugin/CleanUp/Config/Schema</directory>
                 <directory suffix=".php">app/Plugin/CleanUp/Test/Case</directory>
                 <directory suffix=".php">app/Plugin/CleanUp/Test/Fixture</directory>
+                <directory suffix=".php">app/Plugin/CleanUp/TestSuite</directory>
             </exclude>
         </whitelist>
     </filter>
