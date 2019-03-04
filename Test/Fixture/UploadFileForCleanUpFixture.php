@@ -36,7 +36,7 @@ class UploadFileForCleanUpFixture extends UploadFileFixture {
  * @var array
  */
 	public $records = array(
-		array(
+		array( // plugin_key=ありえないデータ
 			'id' => 10,
 			'plugin_key' => 'Lorem ipsum dolor sit amet',
 			'content_key' => 'Lorem ipsum dolor sit amet',
@@ -218,6 +218,96 @@ class UploadFileForCleanUpFixture extends UploadFileFixture {
 			'total_download_count' => 13,
 			'room_id' => '2',
 			'block_key' => 'block_1001',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// wysiwyg で announcements アップファイル 日英あり。どちらもファイル使ってない
+		// /wysiwyg/image/download/2/19/
+		array(
+			'id' => 19,
+			'plugin_key' => 'wysiwyg',
+			'content_key' => 'announcement_wysiwyg_10',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.gif',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.gif',
+			'extension' => 'gif',
+			'mimetype' => 'image/gif',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			'block_key' => 'block_1004',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// wysiwyg で announcements アップファイル 日のみ. お知らせ(is_active=1)でファイル使ってる
+		// /wysiwyg/image/download/2/20/
+		array(
+			'id' => 20,
+			'plugin_key' => 'wysiwyg',
+			'content_key' => 'announcement_wysiwyg_12',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.gif',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.gif',
+			'extension' => 'gif',
+			'mimetype' => 'image/gif',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			'block_key' => 'block_1005',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// wysiwyg で announcements アップファイル 日のみ. お知らせ(is_latest=1)でファイル使ってる
+		// /wysiwyg/image/download/2/21/
+		array(
+			'id' => 21,
+			'plugin_key' => 'wysiwyg',
+			'content_key' => 'announcement_wysiwyg_14',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.gif',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.gif',
+			'extension' => 'gif',
+			'mimetype' => 'image/gif',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			'block_key' => 'block_1005',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// wysiwyg で announcements アップファイル 日のみ. (is_latest=1 or is_latest=1)でファイル使ってない
+		// /wysiwyg/image/download/2/22/
+		array(
+			'id' => 22,
+			'plugin_key' => 'wysiwyg',
+			// 例えばお知らせと合わせる
+			'content_key' => 'announcement_wysiwyg_16',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.gif',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.gif',
+			'extension' => 'gif',
+			'mimetype' => 'image/gif',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			// blockと合わせる
+			'block_key' => 'block_1006',
 			'created_user' => 1,
 			'created' => '2016-02-25 03:44:14',
 			'modified_user' => 1,

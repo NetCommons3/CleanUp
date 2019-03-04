@@ -110,6 +110,26 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				'assertMessage' =>
 					'ファイル、お知らせ日本語(is_active=1 and is_latest=1)で使われてるため、trueが戻る想定'
 			],
+			'4.お知らせ(is_active=1)でファイル使ってる' => [
+				'uploadFile' => [
+					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=20のwysiwygのお知らせアップロードデータを利用
+					 * @see AnnouncementForCleanUpFixture::$records id=12 がアップロード元お知らせ　is_active=1 */
+					'UploadFile' => $UploadFileFixture->records[10]
+				],
+				'cleanUp' => $cleanUp,
+				'assertMessage' =>
+					'ファイル、お知らせ(is_active=1)で使われてるため、trueが戻る想定'
+			],
+			'5.お知らせ(is_latest=1 & 一時保存)でファイル使ってる' => [
+				'uploadFile' => [
+					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=21のwysiwygのお知らせアップロードデータを利用
+					 * @see AnnouncementForCleanUpFixture::$records id=15 がアップロード元お知らせ　is_latest=1 */
+					'UploadFile' => $UploadFileFixture->records[11]
+				],
+				'cleanUp' => $cleanUp,
+				'assertMessage' =>
+					'ファイル、お知らせ(is_latest=1)で使われてるため、trueが戻る想定'
+			],
 		];
 	}
 
@@ -200,6 +220,25 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				'cleanUp' => $cleanUp2,
 				'assertMessage' =>
 					'$cleanUp[CleanUp][plugin_key] == unknownはブロックキーなしやコンテンツキーなしで、使われていないため、falseが戻る想定'
+			],
+			'5.お知らせで英日あり。どちらもファイル使ってない' => [
+				'uploadFile' => [
+					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=19のwysiwygアップロードデータを利用 */
+					'UploadFile' => $UploadFileFixture->records[9]
+				],
+				'cleanUp' => $cleanUp1,
+				'assertMessage' =>
+					'ファイルは、英日お知らせで使われてないため、falseが戻る想定'
+			],
+			'6.お知らせ(is_latest=1 or is_latest=1)でファイル使ってない' => [
+				'uploadFile' => [
+					/* @see UploadFileForCleanUpFixture::$records アップロードファイルのテストデータ. id=22のwysiwygのお知らせアップロードデータを利用
+					 * @see AnnouncementForCleanUpFixture::$records id=16,17,18 が該当お知らせ */
+					'UploadFile' => $UploadFileFixture->records[12]
+				],
+				'cleanUp' => $cleanUp1,
+				'assertMessage' =>
+					'ファイル、お知らせ(is_latest=1 or is_latest=1)でファイル使ってないため、falseが戻る想定'
 			],
 		];
 	}

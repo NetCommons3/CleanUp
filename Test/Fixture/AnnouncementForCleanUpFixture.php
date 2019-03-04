@@ -93,7 +93,7 @@ class AnnouncementForCleanUpFixture extends AnnouncementFixture {
 			'modified_user' => '1',
 			'modified' => '2014-10-09 16:07:57'
 		),
-		// wysiwyg で announcements アップファイル. 最新で有効
+		// wysiwyg で announcements アップファイル. (is_active=1 and is_latest=1)で有効
 		array(
 			'id' => '5',
 			'language_id' => '2',
@@ -167,6 +167,155 @@ class AnnouncementForCleanUpFixture extends AnnouncementFixture {
 			'status' => '2',
 			'is_active' => '1',
 			'is_latest' => '1',
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		// wysiwyg で announcements アップファイル. どちらもファイル使ってない
+		array(
+			'id' => '10',
+			'language_id' => '2',	// 日本語
+			'block_id' => '1004',
+			'key' => 'announcement_wysiwyg_10',	// is_active=1 and is_latest=1 でkey同一あり
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '1',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p>>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => '11',
+			'language_id' => '1',	// 英語
+			'block_id' => '1004',
+			'key' => 'announcement_wysiwyg_10',	// is_active=1 and is_latest=1 でkey同一あり
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '1',
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		// wysiwyg で announcements アップファイル. (is_active=1)でファイル利用
+		array(
+			'id' => 12,
+			'language_id' => '2',
+			'block_id' => '1005',
+			'key' => 'announcement_wysiwyg_12',
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '0',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p><img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/2/20/" alt="" />ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => 13,
+			'language_id' => '2',
+			'block_id' => '1005',
+			'key' => 'announcement_wysiwyg_12',
+			'status' => '2',
+			'is_active' => '0',
+			'is_latest' => '1',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		// wysiwyg で announcements アップファイル. (is_latest=1)でファイル利用
+		array(
+			'id' => 14,
+			'language_id' => '2',
+			'block_id' => '1006',
+			'key' => 'announcement_wysiwyg_14',
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '0',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => 15,
+			'language_id' => '2',
+			'block_id' => '1006',
+			'key' => 'announcement_wysiwyg_14',
+			// status=1：一時保存
+			'status' => '1',
+			'is_active' => '0',
+			'is_latest' => '1',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p><img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/2/21/" alt="" />ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		// wysiwyg で announcements アップファイル. (is_latest=1 or is_latest=1)でファイル使ってない
+		array(
+			'id' => 16,
+			'language_id' => '2',
+			'block_id' => '1007',
+			'key' => 'announcement_wysiwyg_16',
+			'status' => '2',
+			// 過去（is_active=0 and is_latest=0）にファイル使われてた
+			'is_active' => '0',
+			'is_latest' => '0',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p><img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/2/22/" alt="" />ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => 17,
+			'language_id' => '2',
+			'block_id' => '1007',
+			'key' => 'announcement_wysiwyg_16',
+			'status' => '2',
+			'is_active' => '1',
+			'is_latest' => '0',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
+			'content' => '
+<p>ｱｱｱ</p>',
+			'created_user' => '1',
+			'created' => '2016-10-09 16:07:57',
+			'modified_user' => '1',
+			'modified' => '2016-10-09 16:07:57'
+		),
+		array(
+			'id' => 18,
+			'language_id' => '2',
+			'block_id' => '1007',
+			'key' => 'announcement_wysiwyg_16',
+			'status' => '2',
+			'is_active' => '0',
+			'is_latest' => '1',
+			// contentのwysiwyg/image/download/<room_id>/<upload_id>/は、UploadFileForCleanUpFixtureと合わせる
 			'content' => '
 <p>ｱｱｱ</p>',
 			'created_user' => '1',
