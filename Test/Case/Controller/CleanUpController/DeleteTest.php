@@ -105,6 +105,27 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
 	}
 
 /**
+ * delete()アクションのGetリクエストのログファイルなし 表示テスト
+ *
+ * @return void
+ * @see CleanUpController::delete()
+ */
+	public function testDeleteGetNotFoundLog() {
+		// ログファイル削除
+		$log = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . CleanUpUtility::LOG_FILE_NAME;
+		unlink($log);
+
+		//テスト実行
+		$this->_testGetAction(
+			array('action' => 'delete'),
+			array('method' => 'assertNotEmpty'), null, 'view'
+		);
+
+		//チェック
+		//var_export($this->view);
+	}
+
+/**
  * delete()アクションのAjaxリクエストテスト
  *
  * @return void
