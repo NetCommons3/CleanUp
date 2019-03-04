@@ -85,6 +85,26 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
 	}
 
 /**
+ * delete()アクションのGetリクエストの削除ロック中 表示テスト
+ *
+ * @return void
+ * @see CleanUpController::delete()
+ */
+	public function testDeleteGetIsLock() {
+		// ロックファイル作成
+		CleanUpUtility::makeLockFile();
+
+		//テスト実行
+		$this->_testGetAction(
+			array('action' => 'delete'),
+			array('method' => 'assertNotEmpty'), null, 'view'
+		);
+
+		//チェック
+		//var_export($this->view);
+	}
+
+/**
  * delete()アクションのAjaxリクエストテスト
  *
  * @return void

@@ -9,6 +9,7 @@
  */
 
 App::uses('CleanUpControllerTestCase', 'CleanUp.TestSuite');
+App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
  * CleanUpController::unlock()のテスト
