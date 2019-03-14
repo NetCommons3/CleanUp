@@ -27,13 +27,19 @@ class CleanUpTestUtil {
 		//1) CleanUpConsoleCommandCleanUpShellCleanUpTest::testCleanUp
 		//finfo::file(/var/www/app/app/Uploads/files/upload_file/test/12/michel2.gif): failed to open stream: No such file or directory
 		//finfo::file(/var/www/app/app/Uploads/files/upload_file/test/13/michel2.gif): failed to open stream: No such file or directory
-		$fileName1 = 'michel2.gif';
-		$uploadIds = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22];
+		//$fileName1 = 'michel2.gif';
+		//$fileName2 = 'michel2.jpg';
+		$uploadIds = [12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24];
 		foreach ($uploadIds as $uploadId) {
 			//$path1 = ROOT . DS . APP_DIR . DS . 'Uploads' . DS . 'files' . DS . 'upload_file' . DS . 'test' . DS . '12';
 			//$path1 = ROOT . DS . APP_DIR . DS . 'Uploads' . DS . 'files' . DS . 'upload_file' . DS . 'test' . DS . '13';
 			$path1 = ROOT . DS . APP_DIR . DS . 'Uploads' . DS . 'files' . DS . 'upload_file' . DS . 'test' . DS . $uploadId;
-			$file1 = $path1 . DS . $fileName1;
+			if (in_array($uploadId, [23, 24])) {
+				$fileName = 'michel2.jpg';
+			} else {
+				$fileName = 'michel2.gif';
+			}
+			$file1 = $path1 . DS . $fileName;
 			$folder = new Folder();
 			$folder->create($path1);
 			touch($file1);

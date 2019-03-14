@@ -211,4 +211,143 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 			'アップロードファイル使ってるため、ファイル削除なしで0件の想定');
 	}
 
+/**
+ * DataProvider
+ *
+ * @return array テストデータ
+ * @see CleanUpPrivateDeleteUploadFilesTest::testDeleteUploadFilesDeleteExtension1() テスト対象
+ * @see CleanUpPrivateDeleteUploadFilesTest::testDeleteUploadFilesDeleteExtension2() テスト対象
+ */
+	public function dataProviderUnknowAndAnnouncement() {
+		return [
+			'1.削除する拡張子を指定jpg' => [
+				'deleteExtension' => 'jpg',
+				'resultDeleteCount' => 1,
+				'assertMessage' => '1件ファイル削除する想定'
+			],
+			'2.削除する拡張子を指定しない=全拡張子対象' => [
+				'deleteExtension' => '',
+				'resultDeleteCount' => 2,
+				'assertMessage' => '2件ファイル削除する想定'
+			],
+		];
+	}
+
+/**
+ * __deleteUploadFiles()のテスト. チェック対象unknow 削除対象. 削除する拡張子を指定
+ *
+ * @param string $deleteExtension 削除する拡張子
+ * @param int $resultDeleteCount 削除した件数
+ * @param string $assertMessage テスト想定メッセージ
+ * @return void
+ * @throws ReflectionException
+ * @see CleanUp::__deleteUploadFiles()
+ *
+ * @dataProvider dataProviderUnknowAndAnnouncement
+ */
+	public function testDeleteUploadFilesDeleteExtension1($deleteExtension, $resultDeleteCount,
+														  $assertMessage) {
+		$model = $this->_modelName;
+		$methodName = $this->_methodName;
+
+		//テストデータ
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		// 削除する拡張子を指定
+		//$this->$model->deleteExtension = 'jpg';
+		$this->$model->deleteExtension = $deleteExtension;
+
+		// チェック対象プラグイン
+		/* @see Cleanup::getUnknowCleanUp() */
+		$cleanUp = $this->$model->getUnknowCleanUp();
+
+		// UploadFileインスタンスの準備
+		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
+
+		//アップロードデータ
+		/* @see Cleanup::getUploadFileParams() */
+		$params = $this->$model->getUploadFileParams($cleanUp);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 23]]);
+		$uploadFiles = $this->$model->UploadFile->find('all', $params);
+
+		// 削除対象件数 初期値
+		$targetCount = 0;
+
+		//
+		//テスト実施
+		//
+		$result = $this->_testReflectionMethod(
+			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
+		);
+
+		//チェック
+		//var_export($result);
+		//$this->assertEquals(1, $result, '1件ファイル削除する想定');
+		$this->assertEquals($resultDeleteCount, $result, $assertMessage);
+	}
+
+/**
+ * __deleteUploadFiles()のテスト. チェック対象announcements 削除対象. 削除する拡張子を指定
+ *
+ * @param string $deleteExtension 削除する拡張子
+ * @param int $resultDeleteCount 削除した件数
+ * @param string $assertMessage テスト想定メッセージ
+ * @return void
+ * @throws ReflectionException
+ * @see CleanUp::__deleteUploadFiles()
+ *
+ * @dataProvider dataProviderUnknowAndAnnouncement
+ */
+	public function testDeleteUploadFilesDeleteExtension2($deleteExtension, $resultDeleteCount,
+														$assertMessage) {
+		$model = $this->_modelName;
+		$methodName = $this->_methodName;
+
+		//テストデータ
+
+		//アップロードファイルで、削除対象のファイルを用意
+		CleanUpTestUtil::makeTestUploadFiles();
+
+		// 削除する拡張子を指定
+		//$this->$model->deleteExtension = 'jpg';
+		$this->$model->deleteExtension = $deleteExtension;
+
+		$data['CleanUp']['plugin_key'] = [
+			'announcements'
+		];
+
+		// チェック対象プラグイン
+		/* @see Cleanup::getCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->getCleanUpsAndPlugin($data);
+		//var_dump($cleanUps);
+
+		// UploadFileインスタンスの準備
+		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
+
+		//アップロードデータ
+		/* @see Cleanup::getUploadFileParams() */
+		$params = $this->$model->getUploadFileParams($cleanUps[0]);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [22, 24]]);
+		$uploadFiles = $this->$model->UploadFile->find('all', $params);
+		//var_export($params);
+		//var_dump($uploadFiles);
+
+		// 削除対象件数 初期値
+		$targetCount = 0;
+
+		//
+		//テスト実施
+		//
+		$result = $this->_testReflectionMethod(
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
+		);
+
+		//チェック
+		//var_export($result);
+		//$this->assertEquals(1, $result, '1件ファイル削除する想定');
+		$this->assertEquals($resultDeleteCount, $result, $assertMessage);
+	}
+
 }

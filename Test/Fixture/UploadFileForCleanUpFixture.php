@@ -283,7 +283,7 @@ class UploadFileForCleanUpFixture extends UploadFileFixture {
 			'download_count' => 13,
 			'total_download_count' => 13,
 			'room_id' => '2',
-			'block_key' => 'block_1005',
+			'block_key' => 'block_1006',
 			'created_user' => 1,
 			'created' => '2016-02-25 03:44:14',
 			'modified_user' => 1,
@@ -307,7 +307,53 @@ class UploadFileForCleanUpFixture extends UploadFileFixture {
 			'total_download_count' => 13,
 			'room_id' => '2',
 			// blockと合わせる
-			'block_key' => 'block_1006',
+			'block_key' => 'block_1007',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// (jpgでunkown対象) wysiwyg 'content_key' => null,
+		array(
+			'id' => 23,
+			'plugin_key' => 'wysiwyg',
+			'content_key' => null,
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.jpg',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.jpg',
+			'extension' => 'jpg',
+			'mimetype' => 'image/jpeg',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			'block_key' => 'block_100',
+			'created_user' => 1,
+			'created' => '2016-02-25 03:44:14',
+			'modified_user' => 1,
+			'modified' => '2016-02-25 03:44:14'
+		),
+		// (jpgでannouncements対象)
+		// wysiwyg で announcements アップファイル 日のみ. (is_latest=1 or is_latest=1)でファイル使ってない
+		// /wysiwyg/image/download/2/24/
+		array(
+			'id' => 24,
+			'plugin_key' => 'wysiwyg',
+			// 例えばお知らせと合わせる
+			'content_key' => 'announcement_wysiwyg_16',
+			'field_name' => 'Wysiwyg.file',
+			'original_name' => 'michel2.jpg',
+			'path' => 'files/upload_file/test/',
+			'real_file_name' => 'michel2.jpg',
+			'extension' => 'jpg',
+			'mimetype' => 'image/jpeg',
+			'size' => 21229,
+			'download_count' => 13,
+			'total_download_count' => 13,
+			'room_id' => '2',
+			// blockと合わせる
+			'block_key' => 'block_1007',
 			'created_user' => 1,
 			'created' => '2016-02-25 03:44:14',
 			'modified_user' => 1,

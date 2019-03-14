@@ -107,7 +107,7 @@ class BlockForCleanUpFixture extends BlockFixture {
 			'id' => '1007',
 			'room_id' => '2',
 			'plugin_key' => 'announcements',
-			'key' => 'block_1006',
+			'key' => 'block_1007',
 			'public_type' => '1',
 			'publish_start' => null,
 			'publish_end' => null,

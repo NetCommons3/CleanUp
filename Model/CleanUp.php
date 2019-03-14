@@ -59,6 +59,21 @@ class CleanUp extends CleanUpAppModel {
 	public $deleteDelayDay = 0;
 
 /**
+ * 削除する拡張子の区切り文字
+ *
+ * @var string
+ */
+	const DELETE_EXTENSION_DELIMITER = ',';
+
+/**
+ * 削除する拡張子<br />
+ * (例 jpg、複数はカンマ区切り、空なら全ての拡張子が対象)
+ *
+ * @var string
+ */
+	public $deleteExtension = '';
+
+/**
  * Validation rules
  *
  * @var array
@@ -316,7 +331,7 @@ class CleanUp extends CleanUpAppModel {
 			// block_keyなしの場合、どのプラグインから投稿されたか不明
 			// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
 			$params = array(
-				'recursive' => 0,
+				'recursive' => -1,
 				'conditions' => array(
 					$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
 					'OR' => array(
@@ -343,7 +358,7 @@ class CleanUp extends CleanUpAppModel {
 		} else {
 			// block_keyあり、content_keyあり、コンテンツあり
 			$params = array(
-				'recursive' => 0,
+				'recursive' => -1,
 				'conditions' => array(
 					$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
 					'OR' => array(
@@ -366,6 +381,13 @@ class CleanUp extends CleanUpAppModel {
 					'UploadFile.path, UploadFile.original_name, UploadFile.modified',
 				'order' => 'UploadFile.id'
 			);
+		}
+
+		// 削除する拡張子が設定されていたら条件追加（空なら条件セットしない＝全ての拡張子が対象）
+		if ($this->deleteExtension) {
+			$deleteExtensionArray =
+				explode(self::DELETE_EXTENSION_DELIMITER, $this->deleteExtension);
+			$params['conditions'][$this->UploadFile->alias . '.extension'] = $deleteExtensionArray;
 		}
 		return $params;
 	}
