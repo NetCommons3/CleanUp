@@ -209,17 +209,6 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
- * バックグラウンドでファイルクリーンアップ
- *
- * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
- * @return mixed On success Model::$data if its not empty or true, false on failure
- * @deprecated 廃止予定. CleanUpExec::cleanUp($data)をコントローラに持っていくため、メソッド名を変更
- */
-	public function fileCleanUpExec($data) {
-		return $this->validatesOnly($data);
-	}
-
-/**
  * 入力チェックのみ行う
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
