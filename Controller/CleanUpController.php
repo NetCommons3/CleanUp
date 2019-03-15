@@ -11,6 +11,7 @@
 App::uses('CleanUpAppController', 'CleanUp.Controller');
 App::uses('CleanUp', 'CleanUp.Model');
 App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 App::uses('CleanUpLockFile', 'CleanUp.Lib');
 App::uses('Folder', 'Utility');
 
@@ -63,8 +64,6 @@ class CleanUpController extends CleanUpAppController {
 				// エラー
 				$this->NetCommons->handleValidationError($this->CleanUp->validationErrors);
 			}
-		} elseif ($this->request->is('ajax')) {
-			// ログの内容(実行結果)見る場合ajax. ajaxは何もしない
 		} else {
 			// チェックボックス初期値
 			//$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
@@ -80,8 +79,7 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('logFileNames', $logFileNames);
 
 		// ログの内容
-		$cleanUpLog = $this->__getCleanUpLog();
-		$this->set('cleanUpLog', $cleanUpLog);
+		$this->get_log();
 
 		// ロックファイル関係
 		$this->set('isLockFile', CleanUpLockFile::isLockFile());
@@ -89,39 +87,18 @@ class CleanUpController extends CleanUpAppController {
 	}
 
 /**
- * ログ表示 ajaxのみ
+ * ログ表示 (delete表示 & ajax)
  *
  * @return CakeResponse
  * @throws Exception
  */
-	public function clean_up_log() {
-		//		$cleanUps = $this->CleanUp->getCleanUpsAndUnknow();
-		//		// 'multiple' => 'checkbox'表示
-		//		$this->set('cleanUps', $cleanUps);
-
-		//		// ログファイル名
-		//		$logFileNames = $this->__getLogFileNames();
-		//		$this->set('logFileNames', $logFileNames);
-
-		// ログの内容
-		$cleanUpLog = $this->__getCleanUpLog();
-		$this->set('cleanUpLog', $cleanUpLog);
-
-		//		// ロックファイル関係
-		//		$this->set('isLockFile', CleanUpLockFile::isLockFile());
-		//		$this->set('cleanUpStart', CleanUpLockFile::readLockFile());
-	}
-
-/**
- * ログの内容
- *
- * @return string ログの内容
- */
-	private function __getCleanUpLog() {
+	public function get_log() {
 		$logFileNo = isset($this->params['named']['logFileNo'])
 			? $this->params['named']['logFileNo']
 			: 0;
-		return CleanUpLog::getLog($logFileNo);
+		$cleanUpLog = CleanUpLog::getLog($logFileNo);
+		$this->set('cleanUpLog', $cleanUpLog);
+		$this->view = 'delete';
 	}
 
 /**

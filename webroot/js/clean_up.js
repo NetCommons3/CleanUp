@@ -32,7 +32,7 @@ NetCommonsApp.controller('CleanUp', ['$scope', '$http', 'NC3_URL',
        * @return {void}
        */
     $scope.more = function() {
-      var url = '/clean_up/clean_up/delete';
+      var url = '/clean_up/clean_up/get_log';
       var logFileNo = $('select[name="data[_log_file]"]').val();
       url = url + '/logFileNo:' + logFileNo;
       //console.log(url);
