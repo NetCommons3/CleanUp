@@ -161,9 +161,14 @@ class CleanUp extends CleanUpAppModel {
 					)
 				)
 			),
-			// 配列に直す
-			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, ' .
-				'Plugin.key, Plugin.name',
+			'fields' => array(
+				'CleanUp.plugin_key',
+				'CleanUp.model',
+				'CleanUp.class',
+				'CleanUp.fields',
+				'Plugin.key',
+				'Plugin.name',
+			),
 			'order' => 'CleanUp.id'
 		);
 		// dataあれば条件追加
@@ -304,6 +309,8 @@ class CleanUp extends CleanUpAppModel {
 		} catch (Exception $ex) {
 			// ロック解除
 			CleanUpLockFile::deleteLockFile();
+			// 言語ファイル修正予定
+			CakeLog::info(__d('clean_up', 'クリーンアップ処理が異常終了しました。'), ['CleanUp']);
 			// タイムゾーンを元に戻す
 			CleanUpLog::endLogTimezone($timezone);
 			//トランザクションRollback
@@ -327,6 +334,15 @@ class CleanUp extends CleanUpAppModel {
  * @see UploadFile::deleteUploadFile() よりコピー
  */
 	public function getUploadFileParams($cleanUp) {
+		$fields = array(
+			'UploadFile.id',
+			'UploadFile.room_id',
+			'UploadFile.content_key',
+			'UploadFile.path',
+			'UploadFile.original_name',
+			'UploadFile.modified',
+		);
+
 		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイル
 			//
@@ -354,8 +370,7 @@ class CleanUp extends CleanUpAppModel {
 						)
 					)
 				),
-				'fields' => 'UploadFile.id, UploadFile.room_id, UploadFile.content_key, ' .
-					'UploadFile.path, UploadFile.original_name, UploadFile.modified',
+				'fields' => $fields,
 				'order' => 'UploadFile.id'
 			);
 		} else {
@@ -380,8 +395,7 @@ class CleanUp extends CleanUpAppModel {
 						)
 					)
 				),
-				'fields' => 'UploadFile.id, UploadFile.room_id, UploadFile.content_key, ' .
-					'UploadFile.path, UploadFile.original_name, UploadFile.modified',
+				'fields' => $fields,
 				'order' => 'UploadFile.id'
 			);
 		}
