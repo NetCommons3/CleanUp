@@ -8,14 +8,15 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
+App::uses('PluginsRoleFixture', 'PluginManager.Test/Fixture');
+
 /**
  * PluginsRoleForCleanUpFixture
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\PluginManager\Test\Fixture
- * @see PluginsRoleFixture からコピー
  */
-class PluginsRoleForCleanUpFixture extends CakeTestFixture {
+class PluginsRoleForCleanUpFixture extends PluginsRoleFixture {
 
 /**
  * Model name
@@ -29,7 +30,7 @@ class PluginsRoleForCleanUpFixture extends CakeTestFixture {
  *
  * @var string
  */
-	public $table = 'plugins_role';
+	public $table = 'plugins_roles';
 
 /**
  * Records
@@ -39,7 +40,6 @@ class PluginsRoleForCleanUpFixture extends CakeTestFixture {
 	public $records = array(
 		array(
 			'role_key' => 'system_administrator',
-			//'plugin_key' => 'test_plugin',
 			'plugin_key' => 'clean_up',
 		),
 	);
@@ -50,18 +50,6 @@ class PluginsRoleForCleanUpFixture extends CakeTestFixture {
  * @return void
  */
 	public function init() {
-		require_once App::pluginPath('PluginManager') . 'Config' . DS . 'Schema' . DS . 'schema.php';
-		$this->fields = (new PluginManagerSchema())->tables[Inflector::tableize($this->name)];
-		//		if (class_exists('NetCommonsTestSuite') && NetCommonsTestSuite::$plugin) {
-		//			//var_dump($this->records, NetCommonsTestSuite::$plugin);
-		//			$records = array_keys($this->records);
-		//			foreach ($records as $i) {
-		//				if ($this->records[$i]['plugin_key'] === 'test_plugin') {
-		//					$this->records[$i]['plugin_key'] = NetCommonsTestSuite::$plugin;
-		//				}
-		//			}
-		//		}
-		//		//var_dump($this->records, NetCommonsTestSuite::$plugin);
 		parent::init();
 	}
 

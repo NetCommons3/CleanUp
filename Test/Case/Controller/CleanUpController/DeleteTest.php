@@ -26,8 +26,6 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
-		//'plugin.plugin_manager.plugin4test',
-		//'plugin.plugin_manager.plugin',
 		'plugin.clean_up.plugin_for_clean_up',
 		'plugin.clean_up.plugins_role_for_clean_up',
 	);
