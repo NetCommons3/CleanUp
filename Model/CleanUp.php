@@ -11,7 +11,8 @@
 App::uses('CleanUpAppModel', 'CleanUp.Model');
 App::uses('NetCommonsUrl', 'NetCommons.Utility');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
-App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUp Model
@@ -89,7 +90,7 @@ class CleanUp extends CleanUpAppModel {
 		parent::__construct();
 
 		// ログ設定
-		CleanUpLib::setupLog();
+		CleanUpLog::setupLog();
 	}
 
 /**
@@ -136,7 +137,7 @@ class CleanUp extends CleanUpAppModel {
  */
 	public function isLockFile($check) {
 		// @codingStandardsIgnoreEnd
-		return !CleanUpLib::isLockFile();
+		return !CleanUpLockFile::isLockFile();
 	}
 
 /**
@@ -208,17 +209,6 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
- * バックグラウンドでファイルクリーンアップ
- *
- * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
- * @return mixed On success Model::$data if its not empty or true, false on failure
- * @deprecated 廃止予定. CleanUpLib::cleanUp($data)をコントローラに持っていくため、メソッド名を変更
- */
-	public function fileCleanUpExec($data) {
-		return $this->validatesOnly($data);
-	}
-
-/**
  * 入力チェックのみ行う
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
@@ -233,7 +223,7 @@ class CleanUp extends CleanUpAppModel {
 		}
 
 		// バックグラウンドでファイルクリーンアップ
-		//CleanUpLib::cleanUp($data);
+		//CleanUpExec::cleanUp($data);
 		return true;
 	}
 
@@ -258,11 +248,11 @@ class CleanUp extends CleanUpAppModel {
 			return false;
 		}
 		// タイムゾーンを日本に一時的に変更。ログ出力時間を日本時間に。
-		$timezone = CleanUpLib::startLogTimezone();
+		$timezone = CleanUpLog::startLogTimezone();
 		CakeLog::info(__d('clean_up', 'Start cleanup process.'), ['CleanUp']);
 
 		// 複数起動防止ロック
-		CleanUpLib::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->getCleanUpsAndPlugin($data);
@@ -313,17 +303,17 @@ class CleanUp extends CleanUpAppModel {
 
 		} catch (Exception $ex) {
 			// ロック解除
-			CleanUpLib::deleteLockFile();
+			CleanUpLockFile::deleteLockFile();
 			// タイムゾーンを元に戻す
-			CleanUpLib::endLogTimezone($timezone);
+			CleanUpLog::endLogTimezone($timezone);
 			//トランザクションRollback
 			$this->rollback($ex);
 		}
 		// ロック解除
-		CleanUpLib::deleteLockFile();
+		CleanUpLockFile::deleteLockFile();
 		CakeLog::info(__d('clean_up', 'Cleanup processing is completed.'), ['CleanUp']);
 		// タイムゾーンを元に戻す
-		CleanUpLib::endLogTimezone($timezone);
+		CleanUpLog::endLogTimezone($timezone);
 
 		return true;
 	}

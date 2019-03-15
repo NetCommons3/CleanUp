@@ -11,7 +11,8 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsConsoleTestCase', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
-App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
  * CleanUpConsoleTestCase TestCase
@@ -71,10 +72,10 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CakeLog::drop(CleanUpLib::LOGGER_KEY);
+		CakeLog::drop(CleanUpLog::LOGGER_KEY);
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpLib::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
+		CleanUpLockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
 	}
 
 /**
@@ -84,7 +85,7 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
  */
 	public function tearDown() {
 		// テスト後に必ずロックファイルあってもなくても削除する
-		CleanUpLib::deleteLockFile();
+		CleanUpLockFile::deleteLockFile();
 
 		parent::tearDown();
 	}

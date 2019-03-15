@@ -10,6 +10,7 @@
 
 App::uses('CleanUpControllerTestCase', 'CleanUp.TestSuite');
 App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUpController::unlock()のテスト
@@ -75,7 +76,7 @@ class CleanUpControllerUnlockTest extends CleanUpControllerTestCase {
  */
 	public function testUnlockGetLocked() {
 		// ロックファイル作成
-		CleanUpLib::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//テスト実行
 		$this->_testGetAction(

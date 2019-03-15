@@ -10,6 +10,8 @@
 
 App::uses('CleanUpControllerTestCase', 'CleanUp.TestSuite');
 App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
+App::uses('CleanUpLog', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUpController::delete()のテスト
@@ -93,7 +95,7 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public function testDeleteGetIsLock() {
 		// ロックファイル作成
-		CleanUpLib::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//テスト実行
 		$this->_testGetAction(
@@ -113,7 +115,7 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public function testDeleteGetNotFoundLog() {
 		// ログファイル削除
-		$log = LOGS . 'cleanup' . DS . CleanUpLib::LOG_FILE_NAME;
+		$log = LOGS . 'cleanup' . DS . CleanUpLog::LOG_FILE_NAME;
 		unlink($log);
 
 		//テスト実行

@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUp::fileCleanUpExec()のテスト
+ * CleanUp::validatesOnly()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -12,12 +12,12 @@ App::uses('CleanUpModelTestCase', 'CleanUp.TestSuite');
 App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
- * CleanUp::fileCleanUpExec()のテスト
+ * CleanUp::validatesOnly()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Model\CleanUp
  */
-class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
+class CleanUpValidatesOnlyTest extends CleanUpModelTestCase {
 
 /**
  * Fixtures
@@ -48,15 +48,15 @@ class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
  *
  * @var string
  */
-	protected $_methodName = 'fileCleanUpExec';
+	protected $_methodName = 'validatesOnly';
 
 /**
- * fileCleanUpExec()のテスト
+ * validatesOnly()のテスト
  *
  * @return void
- * @see CleanUp::fileCleanUpExec()
+ * @see CleanUp::validatesOnly()
  */
-	public function testFileCleanUpExec() {
+	public function testValidatesOnly() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
@@ -76,12 +76,12 @@ class CleanUpFileCleanUpExecTest extends CleanUpModelTestCase {
 	}
 
 /**
- * fileCleanUpExec()のvalidateErrorテスト
+ * validatesOnly()のvalidateErrorテスト
  *
  * @return void
- * @see CleanUp::fileCleanUpExec()
+ * @see CleanUp::validatesOnly()
  */
-	public function testFileCleanUpExecError() {
+	public function testValidatesOnlyError() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 

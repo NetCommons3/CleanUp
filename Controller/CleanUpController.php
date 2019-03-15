@@ -10,7 +10,8 @@
 
 App::uses('CleanUpAppController', 'CleanUp.Controller');
 App::uses('CleanUp', 'CleanUp.Model');
-App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 App::uses('Folder', 'Utility');
 
 /**
@@ -50,7 +51,7 @@ class CleanUpController extends CleanUpAppController {
 			//if ($this->CleanUp->fileCleanUp($data)) {
 			if ($this->CleanUp->validatesOnly($data)) {
 				// バックグラウンドでファイルクリーンアップ
-				CleanUpLib::cleanUp($data);
+				CleanUpExec::cleanUp($data);
 
 				// リダイレクトすると、チェック内容が消えるため、そのままreturn
 				//$this->redirect($this->referer());
@@ -75,7 +76,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ログファイル名
-		$logFileNames = CleanUpLib::getLogFileNames();
+		$logFileNames = CleanUpLog::getLogFileNames();
 		$this->set('logFileNames', $logFileNames);
 
 		// ログの内容
@@ -83,8 +84,8 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUpLog', $cleanUpLog);
 
 		// ロックファイル関係
-		$this->set('isLockFile', CleanUpLib::isLockFile());
-		$this->set('cleanUpStart', CleanUpLib::readLockFile());
+		$this->set('isLockFile', CleanUpLockFile::isLockFile());
+		$this->set('cleanUpStart', CleanUpLockFile::readLockFile());
 	}
 
 /**
@@ -107,8 +108,8 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUpLog', $cleanUpLog);
 
 		//		// ロックファイル関係
-		//		$this->set('isLockFile', CleanUpLib::isLockFile());
-		//		$this->set('cleanUpStart', CleanUpLib::readLockFile());
+		//		$this->set('isLockFile', CleanUpLockFile::isLockFile());
+		//		$this->set('cleanUpStart', CleanUpLockFile::readLockFile());
 	}
 
 /**
@@ -120,7 +121,7 @@ class CleanUpController extends CleanUpAppController {
 		$logFileNo = isset($this->params['named']['logFileNo'])
 			? $this->params['named']['logFileNo']
 			: 0;
-		return CleanUpLib::getLog($logFileNo);
+		return CleanUpLog::getLog($logFileNo);
 	}
 
 /**
@@ -135,7 +136,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ロックファイルの削除
-		if (CleanUpLib::deleteLockFileAndSetupLog()) {
+		if (CleanUpLockFile::deleteLockFileAndSetupLog()) {
 			// メッセージ
 			$this->NetCommons->setFlashNotification(
 				__d('clean_up', 'Lock file was deleted.'), array('class' => 'success')

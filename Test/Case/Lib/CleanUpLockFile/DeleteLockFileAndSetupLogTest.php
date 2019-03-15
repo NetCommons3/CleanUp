@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpLib::deleteLockFileAndSetupLog()のテスト
+ * CleanUpLockFile::deleteLockFileAndSetupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,14 +9,15 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
- * CleanUpLib::deleteLockFileAndSetupLog()のテスト
+ * CleanUpLockFile::deleteLockFileAndSetupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
  */
-class CleanUpUtilityCleanUpUtilityDeleteLockFileAndSetupLogTest extends CleanUpCakeTestCase {
+class CleanUpLibCleanUpLockFileDeleteLockFileAndSetupLogTest extends CleanUpCakeTestCase {
 
 /**
  * Plugin name
@@ -32,11 +33,11 @@ class CleanUpUtilityCleanUpUtilityDeleteLockFileAndSetupLogTest extends CleanUpC
  */
 	public function testDeleteLockFileAndSetupLog() {
 		//データ生成
-		CleanUpLib::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//テスト実施
 		//チェック
-		$this->assertTrue(CleanUpLib::deleteLockFileAndSetupLog(), 'ロックファイルが削除できtrueの想定');
+		$this->assertTrue(CleanUpLockFile::deleteLockFileAndSetupLog(), 'ロックファイルが削除できtrueの想定');
 	}
 
 }
