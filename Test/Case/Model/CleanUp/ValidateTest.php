@@ -9,6 +9,8 @@
  */
 
 App::uses('CleanUpValidateTestCase', 'CleanUp.TestSuite');
+App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('LockFile', 'CleanUp.Lib');
 
 /**
  * CleanUp::validate()のテスト
@@ -67,7 +69,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 		parent::setUp();
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpLib::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
+		LockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
 	}
 
 /**

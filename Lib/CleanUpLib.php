@@ -1,6 +1,6 @@
 <?php
 /**
- * ファイルクリーンアップ Utility
+ * ファイルクリーンアップ ライブラリ
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,23 +9,17 @@
  */
 
 App::uses('NetCommonsTime', 'NetCommons.Utility');
+App::uses('LockFile', 'CleanUp.Lib');
 
 /**
- * ファイルクリーンアップ Utility
+ * ファイルクリーンアップ ライブラリ
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Utility
+ * @package NetCommons\CleanUp\Lib
  * @see MailSend よりコピー
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CleanUpLib {
-
-/**
- * ロックファイルパス
- *
- * @var string
- */
-	public static $lockFilePath = '';
 
 /**
  * ロガーキー
@@ -53,11 +47,13 @@ class CleanUpLib {
  * 当クラス最下部で呼び出してる
  *
  * @return void
+ * @deprecated 廃止予定
  */
 	public static function initialize() {
 		// php5.4, 5.5対応 staticのメンバ変数に . 連結するとsyntax error
 		// https://travis-ci.org/NetCommons3/CleanUp/jobs/492013244#L866
-		self::$lockFilePath = TMP . 'CleanUp.lock';
+		//self::$lockFilePath = TMP . 'CleanUp.lock';
+		LockFile::$lockFilePath = TMP . 'CleanUp.lock';
 	}
 
 /**
@@ -107,75 +103,50 @@ class CleanUpLib {
  * ロックファイルの作成と時刻の書き込み。バッチ実行開始時
  *
  * @return void
+ * @deprecated
  */
 	public static function makeLockFile() {
-		touch(self::$lockFilePath);
-
-		//時刻をロックファイルに書き込む
-		$now = NetCommonsTime::getNowDatetime();
-		file_put_contents(self::$lockFilePath, $now);
-		CakeLog::info(__d('clean_up', 'Created a lock file.'), ['CleanUp']);
+		LockFile::makeLockFile();
 	}
 
 /**
  * ロックファイルの削除。バッチ終了時
  *
  * @return bool true:削除|false:ファイルなし
+ * @deprecated
  */
 	public static function deleteLockFile() {
-		if (file_exists(self::$lockFilePath)) {
-			unlink(self::$lockFilePath);
-			CakeLog::info(__d('clean_up', 'Lock file was deleted.'), ['CleanUp']);
-			return true;
-		}
-		CakeLog::info(__d('clean_up', 'No lock file.'), ['CleanUp']);
-		return false;
+		return LockFile::deleteLockFile();
 	}
 
 /**
  * ロックファイルの削除とログ出力設定。ロックファイル強制削除用
  *
  * @return bool true:削除|false:ファイルなし
+ * @deprecated
  */
 	public static function deleteLockFileAndSetupLog() {
-		self::setupLog();
-		// ログ開始時のタイムゾーン変更
-		$timezone = self::startLogTimezone();
-
-		CakeLog::info(__d('clean_up',
-			'Start forcibly delete lock file processing.'), ['CleanUp']);
-		$isDelete = self::deleteLockFile();
-
-		// ログ終了時にタイムゾーン戻す
-		self::endLogTimezone($timezone);
-		return $isDelete;
+		return LockFile::deleteLockFileAndSetupLog();
 	}
 
 /**
  * ロックファイルの存在確認
  *
  * @return bool true:ロックあり|false:ロックなし
+ * @deprecated
  */
 	public static function isLockFile() {
-		if (file_exists(self::$lockFilePath)) {
-			return true;
-		}
-		return false;
+		return LockFile::isLockFile();
 	}
 
 /**
  * ロックファイルの読み込み
  *
  * @return string ファイルクリーンアップ開始時刻
+ * @deprecated
  */
 	public static function readLockFile() {
-		if (file_exists(self::$lockFilePath)) {
-			//return file_get_contents(self::$lockFilePath);
-			$cleanUpStart = file_get_contents(self::$lockFilePath);
-			$cleanUpStart = date('m/d G:i', strtotime($cleanUpStart));
-			return $cleanUpStart;
-		}
-		return '';
+		return LockFile::readLockFile();
 	}
 
 /**
