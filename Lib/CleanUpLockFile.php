@@ -16,7 +16,7 @@ App::uses('NetCommonsTime', 'NetCommons.Utility');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Lib
  */
-class LockFile {
+class CleanUpLockFile {
 
 /**
  * ロックファイルパス
@@ -115,4 +115,4 @@ class LockFile {
 }
 
 // 自作のstatic initialize
-LockFile::initialize();
+CleanUpLockFile::initialize();

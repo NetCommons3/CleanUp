@@ -9,7 +9,7 @@
  */
 
 App::uses('NetCommonsTime', 'NetCommons.Utility');
-App::uses('LockFile', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * ファイルクリーンアップ ライブラリ
@@ -53,7 +53,7 @@ class CleanUpLib {
 		// php5.4, 5.5対応 staticのメンバ変数に . 連結するとsyntax error
 		// https://travis-ci.org/NetCommons3/CleanUp/jobs/492013244#L866
 		//self::$lockFilePath = TMP . 'CleanUp.lock';
-		LockFile::$lockFilePath = TMP . 'CleanUp.lock';
+		CleanUpLockFile::$lockFilePath = TMP . 'CleanUp.lock';
 	}
 
 /**
@@ -106,7 +106,7 @@ class CleanUpLib {
  * @deprecated
  */
 	public static function makeLockFile() {
-		LockFile::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 	}
 
 /**
@@ -116,7 +116,7 @@ class CleanUpLib {
  * @deprecated
  */
 	public static function deleteLockFile() {
-		return LockFile::deleteLockFile();
+		return CleanUpLockFile::deleteLockFile();
 	}
 
 /**
@@ -126,7 +126,7 @@ class CleanUpLib {
  * @deprecated
  */
 	public static function deleteLockFileAndSetupLog() {
-		return LockFile::deleteLockFileAndSetupLog();
+		return CleanUpLockFile::deleteLockFileAndSetupLog();
 	}
 
 /**
@@ -136,7 +136,7 @@ class CleanUpLib {
  * @deprecated
  */
 	public static function isLockFile() {
-		return LockFile::isLockFile();
+		return CleanUpLockFile::isLockFile();
 	}
 
 /**
@@ -146,7 +146,7 @@ class CleanUpLib {
  * @deprecated
  */
 	public static function readLockFile() {
-		return LockFile::readLockFile();
+		return CleanUpLockFile::readLockFile();
 	}
 
 /**

@@ -12,7 +12,7 @@
 App::uses('NetCommonsControllerTestCase', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
 App::uses('CleanUpLib', 'CleanUp.Lib');
-App::uses('LockFile', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUpControllerTestCase TestCase
@@ -65,7 +65,7 @@ abstract class CleanUpControllerTestCase extends NetCommonsControllerTestCase {
 		CakeLog::drop(CleanUpLib::LOGGER_KEY);
 
 		// ロックファイルの出力先をtestに変更
-		LockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
+		CleanUpLockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
 	}
 
 /**
