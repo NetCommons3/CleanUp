@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpUtility::cleanUp()のテスト
+ * CleanUpLib::cleanUp()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,14 +9,14 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpLib', 'CleanUp.Lib');
 App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
 
 /**
- * CleanUpUtility::cleanUp()のテスト
+ * CleanUpLib::cleanUp()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpUtility
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
  */
 class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
 
@@ -108,7 +108,7 @@ class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
 
 		//テスト実施
 		// execを実行してるだけなので、ロジックが通る事を確認
-		CleanUpUtility::cleanUp($data);
+		CleanUpLib::cleanUp($data);
 
 		//チェック
 		$this->assertTrue(true);

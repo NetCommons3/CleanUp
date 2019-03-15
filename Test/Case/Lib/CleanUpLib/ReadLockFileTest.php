@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpUtility::readLockFile()のテスト
+ * CleanUpLib::readLockFile()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -11,10 +11,10 @@
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
 
 /**
- * CleanUpUtility::readLockFile()のテスト
+ * CleanUpLib::readLockFile()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpUtility
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
  */
 class CleanUpUtilityCleanUpUtilityReadLockFileTest extends CleanUpCakeTestCase {
 
@@ -32,10 +32,10 @@ class CleanUpUtilityCleanUpUtilityReadLockFileTest extends CleanUpCakeTestCase {
  */
 	public function testReadLockFile() {
 		//データ生成
-		CleanUpUtility::makeLockFile();
+		CleanUpLib::makeLockFile();
 
 		//テスト実施
-		$reseult = CleanUpUtility::readLockFile();
+		$reseult = CleanUpLib::readLockFile();
 
 		//チェック
 		$this->assertNotEmpty($reseult, 'ロックファイルに書かれた値が取得できる想定');
@@ -48,7 +48,7 @@ class CleanUpUtilityCleanUpUtilityReadLockFileTest extends CleanUpCakeTestCase {
  */
 	public function testReadLockFileCannotFile() {
 		//テスト実施
-		$reseult = CleanUpUtility::readLockFile();
+		$reseult = CleanUpLib::readLockFile();
 
 		//チェック
 		$this->assertEmpty($reseult, 'ロックファイルなしで空文字の想定');

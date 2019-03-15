@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpUtility::initialize()のテスト
+ * CleanUpLib::setupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,15 +9,15 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpLib', 'CleanUp.Lib');
 
 /**
- * CleanUpUtility::initialize()のテスト
+ * CleanUpLib::setupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpUtility
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
  */
-class CleanUpUtilityCleanUpUtilityiIntializeTest extends CleanUpCakeTestCase {
+class CleanUpUtilityCleanUpUtilitySetupLogTest extends CleanUpCakeTestCase {
 
 /**
  * Plugin name
@@ -27,14 +27,14 @@ class CleanUpUtilityCleanUpUtilityiIntializeTest extends CleanUpCakeTestCase {
 	public $plugin = 'clean_up';
 
 /**
- * initialize()のテスト
+ * setupLog()のテスト
  *
  * @return void
  */
-	public function testInitialize() {
+	public function testSetupLog() {
 		//テスト実施
-		// CakeLog::initialize()を実行してるだけなので、ロジックが通る事を確認
-		CleanUpUtility::initialize();
+		// CakeLog::config()を実行してるだけなので、ロジックが通る事を確認
+		CleanUpLib::setupLog();
 
 		//チェック
 		$this->assertTrue(true);

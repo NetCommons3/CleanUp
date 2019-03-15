@@ -11,7 +11,7 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsValidateTest', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
-App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpLib', 'CleanUp.Lib');
 
 /**
  * CleanUpValidateTest TestCase
@@ -61,6 +61,6 @@ abstract class CleanUpValidateTestCase extends NetCommonsValidateTest {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CakeLog::drop(CleanUpUtility::LOGGER_KEY);
+		CakeLog::drop(CleanUpLib::LOGGER_KEY);
 	}
 }

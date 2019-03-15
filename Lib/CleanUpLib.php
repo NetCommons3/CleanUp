@@ -18,7 +18,7 @@ App::uses('NetCommonsTime', 'NetCommons.Utility');
  * @see MailSend よりコピー
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class CleanUpUtility {
+class CleanUpLib {
 
 /**
  * ロックファイルパス
@@ -241,9 +241,9 @@ class CleanUpUtility {
  */
 	public static function getLog($logFileNo = 0) {
 		if ($logFileNo == 0) {
-			$logFile = CleanUpUtility::LOG_FILE_NAME;
+			$logFile = CleanUpLib::LOG_FILE_NAME;
 		} else {
-			$logFile = CleanUpUtility::LOG_FILE_NAME . '.' . $logFileNo;
+			$logFile = CleanUpLib::LOG_FILE_NAME . '.' . $logFileNo;
 		}
 		$logPath = LOGS . 'cleanup' . DS . $logFile;
 
@@ -282,4 +282,4 @@ class CleanUpUtility {
 }
 
 // 自作のstatic initialize
-CleanUpUtility::initialize();
+CleanUpLib::initialize();

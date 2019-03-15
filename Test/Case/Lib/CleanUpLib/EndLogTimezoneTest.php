@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpUtility::endLogTimezone()のテスト
+ * CleanUpLib::endLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,13 +9,13 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpLib', 'CleanUp.Lib');
 
 /**
- * CleanUpUtility::endLogTimezone()のテスト
+ * CleanUpLib::endLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpUtility
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
  */
 class CleanUpUtilityCleanUpUtilityEndLogTimezoneTest extends CleanUpCakeTestCase {
 
@@ -33,10 +33,10 @@ class CleanUpUtilityCleanUpUtilityEndLogTimezoneTest extends CleanUpCakeTestCase
  */
 	public function testEndLogTimezone() {
 		//データ生成
-		$timezone = CleanUpUtility::TIMEZONE;
+		$timezone = CleanUpLib::TIMEZONE;
 
 		//テスト実施
-		CleanUpUtility::endLogTimezone($timezone);
+		CleanUpLib::endLogTimezone($timezone);
 
 		//チェック
 		$this->assertEquals($timezone, date_default_timezone_get(),

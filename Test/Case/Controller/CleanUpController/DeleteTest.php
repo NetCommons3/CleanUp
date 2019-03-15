@@ -93,7 +93,7 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public function testDeleteGetIsLock() {
 		// ロックファイル作成
-		CleanUpUtility::makeLockFile();
+		CleanUpLib::makeLockFile();
 
 		//テスト実行
 		$this->_testGetAction(
@@ -113,7 +113,7 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public function testDeleteGetNotFoundLog() {
 		// ログファイル削除
-		$log = LOGS . 'cleanup' . DS . CleanUpUtility::LOG_FILE_NAME;
+		$log = LOGS . 'cleanup' . DS . CleanUpLib::LOG_FILE_NAME;
 		unlink($log);
 
 		//テスト実行

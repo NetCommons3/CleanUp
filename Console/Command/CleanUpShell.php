@@ -10,7 +10,7 @@
 
 App::uses('Current', 'NetCommons.Utility');
 App::uses('CleanUp', 'CleanUp.Model');
-App::uses('CleanUpUtility', 'CleanUp.Utility');
+App::uses('CleanUpLib', 'CleanUp.Lib');
 
 /**
  * CleanUp Shell
@@ -93,7 +93,7 @@ class CleanUpShell extends AppShell {
  */
 	public function unlock() {
 		// ロックファイルの削除
-		CleanUpUtility::deleteLockFileAndSetupLog();
+		CleanUpLib::deleteLockFileAndSetupLog();
 	}
 
 /**
@@ -110,7 +110,7 @@ class CleanUpShell extends AppShell {
 		$parser->description([
 			__d('clean_up', 'File cleanup command description', [
 				CleanUp::HOW_TO_BACKUP_URL,
-				LOGS . 'cleanup' . DS . CleanUpUtility::LOG_FILE_NAME,
+				LOGS . 'cleanup' . DS . CleanUpLib::LOG_FILE_NAME,
 			]),
 		]);
 
