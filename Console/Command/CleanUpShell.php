@@ -110,7 +110,7 @@ class CleanUpShell extends AppShell {
 		$parser->description([
 			__d('clean_up', 'File cleanup command description', [
 				CleanUp::HOW_TO_BACKUP_URL,
-				ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . 'CleanUp.log',
+				LOGS . 'cleanup' . DS . CleanUpUtility::LOG_FILE_NAME,
 			]),
 		]);
 

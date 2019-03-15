@@ -57,7 +57,7 @@ class CleanUpUtility {
 	public static function initialize() {
 		// php5.4, 5.5対応 staticのメンバ変数に . 連結するとsyntax error
 		// https://travis-ci.org/NetCommons3/CleanUp/jobs/492013244#L866
-		self::$lockFilePath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'CleanUp.lock';
+		self::$lockFilePath = TMP . 'CleanUp.lock';
 	}
 
 /**
@@ -208,10 +208,16 @@ class CleanUpUtility {
  * @see https://book.cakephp.org/2.0/ja/core-libraries/logging.html#id2 ログストリームの作成と設定, size,rotateのデフォルト値
  */
 	public static function setupLog() {
+		// ログ出力フォルダ作成
+		$logPath = LOGS . 'cleanup' . DS;
+		if (! file_exists($logPath)) {
+			$folder = new Folder();
+			$folder->create($logPath);
+		}
+
 		// CakeLog::writeでファイルとコンソールに出力していた。
 		// Consoleに出力すると<tag></tag>で囲われ見辛い。
-		// @see
-		// https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
+		// @see https://github.com/cakephp/cakephp/blob/2.9.4/lib/Cake/Console/ConsoleOutput.php#L230-L241
 		// CakeLog::infoをよびだし、debug.logとCleanUp.logの両方出力するようにした。
 		CakeLog::config(
 			self::LOGGER_KEY,
@@ -220,8 +226,9 @@ class CleanUpUtility {
 				'types' => ['info'],
 				'scopes' => ['CleanUp'],
 				'file' => self::LOG_FILE_NAME,
-				'size ' => '10MB',	// デフォルト値
-				'rotate ' => 10,	// デフォルト値
+				'size ' => '10MB',	// デフォルト値 10MB
+				'rotate ' => 20,	// デフォルト値 10
+				'path' => $logPath,
 			]
 		);
 	}

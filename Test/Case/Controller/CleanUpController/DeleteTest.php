@@ -113,7 +113,7 @@ class CleanUpControllerDeleteTest extends CleanUpControllerTestCase {
  */
 	public function testDeleteGetNotFoundLog() {
 		// ログファイル削除
-		$log = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . CleanUpUtility::LOG_FILE_NAME;
+		$log = LOGS . 'cleanup' . DS . CleanUpUtility::LOG_FILE_NAME;
 		unlink($log);
 
 		//テスト実行

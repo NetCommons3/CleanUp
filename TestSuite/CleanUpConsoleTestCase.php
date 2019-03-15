@@ -74,8 +74,7 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
 		CakeLog::drop(CleanUpUtility::LOGGER_KEY);
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpUtility::$lockFilePath =
-			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
+		CleanUpUtility::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
 	}
 
 /**

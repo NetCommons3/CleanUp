@@ -118,7 +118,7 @@ class CleanUpController extends CleanUpAppController {
  */
 	private function __getLogFileNames() {
 		//インスタンスを作成
-		$dir = new Folder(ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS);
+		$dir = new Folder(LOGS);
 		$files = $dir->read();
 		$logFileNames = [];
 		foreach ($files[1] as $file) {
@@ -149,7 +149,7 @@ class CleanUpController extends CleanUpAppController {
 		} else {
 			$logFile = CleanUpUtility::LOG_FILE_NAME . '.' . $logFileNo;
 		}
-		$logPath = ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'logs' . DS . $logFile;
+		$logPath = LOGS . 'cleanup' . DS . $logFile;
 
 		$cleanUpLog = '';
 		if (file_exists($logPath)) {
