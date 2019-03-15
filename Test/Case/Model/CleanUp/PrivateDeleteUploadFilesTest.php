@@ -246,7 +246,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
  * @dataProvider dataProviderUnknowAndAnnouncement
  */
 	public function testDeleteUploadFilesDeleteExtension1($deleteExtension, $resultDeleteCount,
-														  $assertMessage) {
+														$assertMessage) {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
