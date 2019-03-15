@@ -17,7 +17,7 @@ App::uses('CleanUpLog', 'CleanUp.Lib');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
  */
-class CleanUpUtilityCleanUpUtilitySetupLogTest extends CleanUpCakeTestCase {
+class CleanUpLibCleanUpLogSetupLogTest extends CleanUpCakeTestCase {
 
 /**
  * Plugin name

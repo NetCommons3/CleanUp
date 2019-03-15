@@ -18,7 +18,7 @@ App::uses('CleanUpTestUtil', 'CleanUp.Test/Case');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
  */
-class CleanUpUtilityCleanUpUtilityCleanUpTest extends CleanUpCakeTestCase {
+class CleanUpLibCleanUpExecCleanUpTest extends CleanUpCakeTestCase {
 
 /**
  * Fixtures

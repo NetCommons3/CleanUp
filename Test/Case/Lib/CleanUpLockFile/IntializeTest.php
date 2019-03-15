@@ -17,7 +17,7 @@ App::uses('CleanUpLockFile', 'CleanUp.Lib');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
  */
-class CleanUpUtilityCleanUpUtilityiIntializeTest extends CleanUpCakeTestCase {
+class CleanUpLibCleanUpLockFileiIntializeTest extends CleanUpCakeTestCase {
 
 /**
  * Plugin name
