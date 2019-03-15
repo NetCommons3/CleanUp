@@ -66,13 +66,6 @@ abstract class CleanUpControllerTestCase extends NetCommonsControllerTestCase {
 		// ロックファイルの出力先をtestに変更
 		CleanUpUtility::$lockFilePath =
 			ROOT . DS . APP_DIR . DS . 'tmp' . DS . 'tests' . DS . 'CleanUp.lock';
-
-		// コントローラー動かすならPluginsRoleテーブルにcleanup必須
-		Current::$current['PluginsRole'][] = array(
-			'id' => '1',
-			'role_key' => 'system_administrator',
-			'plugin_key' => 'clean_up',
-		);
 	}
 
 /**
