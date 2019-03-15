@@ -9,6 +9,7 @@
  */
 
 App::uses('NetCommonsTime', 'NetCommons.Utility');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
  * ファイルクリーンアップ ライブラリ
@@ -72,16 +73,16 @@ class CleanUpLockFile {
  * @return bool true:削除|false:ファイルなし
  */
 	public static function deleteLockFileAndSetupLog() {
-		CleanUpExec::setupLog();
+		CleanUpLog::setupLog();
 		// ログ開始時のタイムゾーン変更
-		$timezone = CleanUpExec::startLogTimezone();
+		$timezone = CleanUpLog::startLogTimezone();
 
 		CakeLog::info(__d('clean_up',
 			'Start forcibly delete lock file processing.'), ['CleanUp']);
 		$isDelete = self::deleteLockFile();
 
 		// ログ終了時にタイムゾーン戻す
-		CleanUpExec::endLogTimezone($timezone);
+		CleanUpLog::endLogTimezone($timezone);
 		return $isDelete;
 	}
 

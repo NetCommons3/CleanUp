@@ -9,6 +9,7 @@
  */
 
 App::uses('CleanUpConsoleTestCase', 'CleanUp.TestSuite');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUpShell::unlock()のテスト
@@ -49,7 +50,7 @@ class CleanUpConsoleCommandCleanUpShellUnlockTest extends CleanUpConsoleTestCase
 		$this->$shell = $this->loadShell($shell);
 
 		//データ生成
-		CleanUpExec::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//$this->$shell->expects($this->at(0))->method('out')
 		//	->with('ここに出力内容を書く');

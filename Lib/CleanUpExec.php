@@ -22,17 +22,6 @@ App::uses('CleanUpLog', 'CleanUp.Lib');
 class CleanUpExec {
 
 /**
- * 自作のstatic initialize<br />
- * 当クラス最下部で呼び出してる
- *
- * @return void
- * @deprecated 廃止予定
- */
-	public static function initialize() {
-		CleanUpLockFile::initialize();
-	}
-
-/**
  * ファイルクリーンアップ呼び出し
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
@@ -73,56 +62,6 @@ class CleanUpExec {
 			return true;
 		}
 		return false;
-	}
-
-/**
- * ロックファイルの作成と時刻の書き込み。バッチ実行開始時
- *
- * @return void
- * @deprecated
- */
-	public static function makeLockFile() {
-		CleanUpLockFile::makeLockFile();
-	}
-
-/**
- * ロックファイルの削除。バッチ終了時
- *
- * @return bool true:削除|false:ファイルなし
- * @deprecated
- */
-	public static function deleteLockFile() {
-		return CleanUpLockFile::deleteLockFile();
-	}
-
-/**
- * ロックファイルの削除とログ出力設定。ロックファイル強制削除用
- *
- * @return bool true:削除|false:ファイルなし
- * @deprecated
- */
-	public static function deleteLockFileAndSetupLog() {
-		return CleanUpLockFile::deleteLockFileAndSetupLog();
-	}
-
-/**
- * ロックファイルの存在確認
- *
- * @return bool true:ロックあり|false:ロックなし
- * @deprecated
- */
-	public static function isLockFile() {
-		return CleanUpLockFile::isLockFile();
-	}
-
-/**
- * ロックファイルの読み込み
- *
- * @return string ファイルクリーンアップ開始時刻
- * @deprecated
- */
-	public static function readLockFile() {
-		return CleanUpLockFile::readLockFile();
 	}
 
 /**
@@ -181,6 +120,3 @@ class CleanUpExec {
 	}
 
 }
-
-// 自作のstatic initialize
-CleanUpExec::initialize();

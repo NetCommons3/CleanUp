@@ -12,6 +12,7 @@ App::uses('CleanUpAppModel', 'CleanUp.Model');
 App::uses('NetCommonsUrl', 'NetCommons.Utility');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
 App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUp Model
@@ -136,7 +137,7 @@ class CleanUp extends CleanUpAppModel {
  */
 	public function isLockFile($check) {
 		// @codingStandardsIgnoreEnd
-		return !CleanUpExec::isLockFile();
+		return !CleanUpLockFile::isLockFile();
 	}
 
 /**
@@ -262,7 +263,7 @@ class CleanUp extends CleanUpAppModel {
 		CakeLog::info(__d('clean_up', 'Start cleanup process.'), ['CleanUp']);
 
 		// 複数起動防止ロック
-		CleanUpExec::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->getCleanUpsAndPlugin($data);
@@ -313,14 +314,14 @@ class CleanUp extends CleanUpAppModel {
 
 		} catch (Exception $ex) {
 			// ロック解除
-			CleanUpExec::deleteLockFile();
+			CleanUpLockFile::deleteLockFile();
 			// タイムゾーンを元に戻す
 			CleanUpExec::endLogTimezone($timezone);
 			//トランザクションRollback
 			$this->rollback($ex);
 		}
 		// ロック解除
-		CleanUpExec::deleteLockFile();
+		CleanUpLockFile::deleteLockFile();
 		CakeLog::info(__d('clean_up', 'Cleanup processing is completed.'), ['CleanUp']);
 		// タイムゾーンを元に戻す
 		CleanUpExec::endLogTimezone($timezone);

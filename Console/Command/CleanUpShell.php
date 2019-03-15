@@ -10,8 +10,8 @@
 
 App::uses('Current', 'NetCommons.Utility');
 App::uses('CleanUp', 'CleanUp.Model');
-App::uses('CleanUpExec', 'CleanUp.Lib');
 App::uses('CleanUpLog', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
  * CleanUp Shell
@@ -94,7 +94,7 @@ class CleanUpShell extends AppShell {
  */
 	public function unlock() {
 		// ロックファイルの削除
-		CleanUpExec::deleteLockFileAndSetupLog();
+		CleanUpLockFile::deleteLockFileAndSetupLog();
 	}
 
 /**

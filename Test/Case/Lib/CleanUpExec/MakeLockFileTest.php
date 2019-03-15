@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpExec::makeLockFile()のテスト
+ * CleanUpLockFile::makeLockFile()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,10 +9,10 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
- * CleanUpExec::makeLockFile()のテスト
+ * CleanUpLockFile::makeLockFile()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
@@ -35,10 +35,10 @@ class CleanUpUtilityCleanUpUtilityMakeLockFileTest extends CleanUpCakeTestCase {
  */
 	public function testMakeLockFile() {
 		//テスト実施
-		CleanUpExec::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//チェック
-		$this->assertTrue(CleanUpExec::isLockFile(), 'ロックファイルが存在ありtrueの想定');
+		$this->assertTrue(CleanUpLockFile::isLockFile(), 'ロックファイルが存在ありtrueの想定');
 	}
 
 }

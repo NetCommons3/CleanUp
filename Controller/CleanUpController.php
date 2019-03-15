@@ -11,6 +11,7 @@
 App::uses('CleanUpAppController', 'CleanUp.Controller');
 App::uses('CleanUp', 'CleanUp.Model');
 App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLockFile', 'CleanUp.Lib');
 App::uses('Folder', 'Utility');
 
 /**
@@ -83,8 +84,8 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUpLog', $cleanUpLog);
 
 		// ロックファイル関係
-		$this->set('isLockFile', CleanUpExec::isLockFile());
-		$this->set('cleanUpStart', CleanUpExec::readLockFile());
+		$this->set('isLockFile', CleanUpLockFile::isLockFile());
+		$this->set('cleanUpStart', CleanUpLockFile::readLockFile());
 	}
 
 /**
@@ -107,8 +108,8 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUpLog', $cleanUpLog);
 
 		//		// ロックファイル関係
-		//		$this->set('isLockFile', CleanUpExec::isLockFile());
-		//		$this->set('cleanUpStart', CleanUpExec::readLockFile());
+		//		$this->set('isLockFile', CleanUpLockFile::isLockFile());
+		//		$this->set('cleanUpStart', CleanUpLockFile::readLockFile());
 	}
 
 /**
@@ -135,7 +136,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ロックファイルの削除
-		if (CleanUpExec::deleteLockFileAndSetupLog()) {
+		if (CleanUpLockFile::deleteLockFileAndSetupLog()) {
 			// メッセージ
 			$this->NetCommons->setFlashNotification(
 				__d('clean_up', 'Lock file was deleted.'), array('class' => 'success')

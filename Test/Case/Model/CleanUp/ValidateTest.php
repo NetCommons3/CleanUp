@@ -9,7 +9,6 @@
  */
 
 App::uses('CleanUpValidateTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpExec', 'CleanUp.Lib');
 App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
@@ -79,7 +78,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
  */
 	public function tearDown() {
 		// テスト後に必ずロックファイルあってもなくても削除する
-		CleanUpExec::deleteLockFile();
+		CleanUpLockFile::deleteLockFile();
 
 		parent::tearDown();
 	}
@@ -140,7 +139,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 		// 入力値は正常
 		$data['CleanUp']['plugin_key'] = ['unknown'];
 		// ロックファイル作成 = ロック中
-		CleanUpExec::makeLockFile();
+		CleanUpLockFile::makeLockFile();
 
 		//validate処理実行
 		$model = $this->_modelName;

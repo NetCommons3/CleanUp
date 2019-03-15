@@ -11,7 +11,6 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsConsoleTestCase', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
-App::uses('CleanUpExec', 'CleanUp.Lib');
 App::uses('CleanUpLockFile', 'CleanUp.Lib');
 App::uses('CleanUpLog', 'CleanUp.Lib');
 
@@ -86,7 +85,7 @@ abstract class CleanUpConsoleTestCase extends NetCommonsConsoleTestCase {
  */
 	public function tearDown() {
 		// テスト後に必ずロックファイルあってもなくても削除する
-		CleanUpExec::deleteLockFile();
+		CleanUpLockFile::deleteLockFile();
 
 		parent::tearDown();
 	}
