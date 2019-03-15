@@ -75,7 +75,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ログファイル名
-		$logFileNames = $this->__getLogFileNames();
+		$logFileNames = CleanUpUtility::getLogFileNames();
 		$this->set('logFileNames', $logFileNames);
 
 		// ログの内容
@@ -112,29 +112,6 @@ class CleanUpController extends CleanUpAppController {
 	}
 
 /**
- * ログファイル名
- *
- * @return array ログファイル名
- */
-	private function __getLogFileNames() {
-		//インスタンスを作成
-		$dir = new Folder(LOGS);
-		$files = $dir->read();
-		$logFileNames = [];
-		foreach ($files[1] as $file) {
-			if (strpos($file, CleanUpUtility::LOG_FILE_NAME) !== false) {
-				$logFileNames[] = $file;
-			}
-		}
-
-		// 空の場合セット
-		if (empty($logFileNames)) {
-			$logFileNames[] = CleanUpUtility::LOG_FILE_NAME;
-		}
-		return $logFileNames;
-	}
-
-/**
  * ログの内容
  *
  * @return string ログの内容
@@ -143,21 +120,7 @@ class CleanUpController extends CleanUpAppController {
 		$logFileNo = isset($this->params['named']['logFileNo'])
 			? $this->params['named']['logFileNo']
 			: 0;
-
-		if ($logFileNo == 0) {
-			$logFile = CleanUpUtility::LOG_FILE_NAME;
-		} else {
-			$logFile = CleanUpUtility::LOG_FILE_NAME . '.' . $logFileNo;
-		}
-		$logPath = LOGS . 'cleanup' . DS . $logFile;
-
-		$cleanUpLog = '';
-		if (file_exists($logPath)) {
-			$cleanUpLog = file_get_contents($logPath);
-		} else {
-			$cleanUpLog = __d('clean_up', 'None.');
-		}
-		return $cleanUpLog;
+		return CleanUpUtility::getLog($logFileNo);
 	}
 
 /**

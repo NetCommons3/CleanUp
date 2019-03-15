@@ -233,6 +233,52 @@ class CleanUpUtility {
 		);
 	}
 
+/**
+ * ログの内容
+ *
+ * @param int $logFileNo ログ番号
+ * @return string ログの内容
+ */
+	public static function getLog($logFileNo = 0) {
+		if ($logFileNo == 0) {
+			$logFile = CleanUpUtility::LOG_FILE_NAME;
+		} else {
+			$logFile = CleanUpUtility::LOG_FILE_NAME . '.' . $logFileNo;
+		}
+		$logPath = LOGS . 'cleanup' . DS . $logFile;
+
+		$cleanUpLog = '';
+		if (file_exists($logPath)) {
+			$cleanUpLog = file_get_contents($logPath);
+		} else {
+			$cleanUpLog = __d('clean_up', 'None.');
+		}
+		return $cleanUpLog;
+	}
+
+/**
+ * ログファイル名 ゲット
+ *
+ * @return array ログファイル名
+ */
+	public static function getLogFileNames() {
+		//インスタンスを作成
+		$dir = new Folder(LOGS);
+		$files = $dir->read();
+		$logFileNames = [];
+		foreach ($files[1] as $file) {
+			if (strpos($file, self::LOG_FILE_NAME) !== false) {
+				$logFileNames[] = $file;
+			}
+		}
+
+		// 空の場合セット
+		if (empty($logFileNames)) {
+			$logFileNames[] = self::LOG_FILE_NAME;
+		}
+		return $logFileNames;
+	}
+
 }
 
 // 自作のstatic initialize

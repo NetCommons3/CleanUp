@@ -160,7 +160,7 @@ class CleanUp extends CleanUpAppModel {
 					)
 				)
 			),
-			// 配列に直す　TODO
+			// 配列に直す
 			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, ' .
 				'Plugin.key, Plugin.name',
 			'order' => 'CleanUp.id'
