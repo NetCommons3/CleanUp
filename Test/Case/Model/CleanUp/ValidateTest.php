@@ -116,6 +116,21 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 	}
 
 /**
+ * Validatesのテスト
+ *
+ * @param array $data 登録データ
+ * @param string $field フィールド名
+ * @param string $value セットする値
+ * @param string $message エラーメッセージ
+ * @param array $overwrite 上書きするデータ
+ * @dataProvider dataProviderValidationError
+ * @return void
+ */
+	public function testValidationError($data, $field, $value, $message, $overwrite = array()) {
+		parent::testValidationError($data, $field, $value, $message, $overwrite);
+	}
+
+/**
  * Validates ロック中エラー
  *
  * @return void

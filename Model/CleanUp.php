@@ -102,7 +102,8 @@ class CleanUp extends CleanUpAppModel {
  * @see Model::save()
  */
 	public function beforeValidate($options = array()) {
-		$this->validate = Hash::merge(array(
+		//$this->validate = Hash::merge(array(
+		$this->validate = array_merge_recursive(array(
 			'plugin_key' => array(
 				'multiple' => array(
 					'rule' => array('multiple', array('min' => 1)),
@@ -159,6 +160,7 @@ class CleanUp extends CleanUpAppModel {
 					)
 				)
 			),
+			// 配列に直す　TODO
 			'fields' => 'CleanUp.plugin_key, CleanUp.model, CleanUp.class, CleanUp.fields, ' .
 				'Plugin.key, Plugin.name',
 			'order' => 'CleanUp.id'
@@ -210,8 +212,19 @@ class CleanUp extends CleanUpAppModel {
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
  * @return mixed On success Model::$data if its not empty or true, false on failure
+ * @deprecated 廃止予定. CleanUpUtility::cleanUp($data)をコントローラに持っていくため、メソッド名を変更
  */
 	public function fileCleanUpExec($data) {
+		return $this->validatesOnly($data);
+	}
+
+/**
+ * 入力チェックのみ行う
+ *
+ * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
+ * @return mixed On success Model::$data if its not empty or true, false on failure
+ */
+	public function validatesOnly($data) {
 		//バリデーション
 		$this->set($data);
 		/* @see beforeValidate() */
@@ -220,7 +233,7 @@ class CleanUp extends CleanUpAppModel {
 		}
 
 		// バックグラウンドでファイルクリーンアップ
-		CleanUpUtility::cleanUp($data);
+		//CleanUpUtility::cleanUp($data);
 		return true;
 	}
 

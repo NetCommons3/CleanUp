@@ -45,13 +45,13 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('cleanUps', $cleanUps);
 
 		if ($this->request->is('post')) {
-			// 仮で画面からのみ30分設定
-			//set_time_limit(1800);
-
 			$data = $this->request->data;
 			//var_dump($data);
 			//if ($this->CleanUp->fileCleanUp($data)) {
-			if ($this->CleanUp->fileCleanUpExec($data)) {
+			if ($this->CleanUp->validatesOnly($data)) {
+				// バックグラウンドでファイルクリーンアップ
+				CleanUpUtility::cleanUp($data);
+
 				// リダイレクトすると、チェック内容が消えるため、そのままreturn
 				//$this->redirect($this->referer());
 				// 削除しましたFlashメッセージを設定
@@ -66,7 +66,11 @@ class CleanUpController extends CleanUpAppController {
 			// ログの内容(実行結果)見る場合ajax. ajaxは何もしない
 		} else {
 			// チェックボックス初期値
-			$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
+			//$default = Hash::extract($cleanUps, '{n}.CleanUp.plugin_key');
+			$default = [];
+			foreach ($cleanUps as $cleanUp) {
+				$default[] = $cleanUp['CleanUp']['plugin_key'];
+			}
 			$this->request->data['CleanUp']['plugin_key'] = $default;
 		}
 
@@ -75,12 +79,36 @@ class CleanUpController extends CleanUpAppController {
 		$this->set('logFileNames', $logFileNames);
 
 		// ログの内容
-		$cleanUpLog = $this->__getleanUpLog();
+		$cleanUpLog = $this->__getCleanUpLog();
 		$this->set('cleanUpLog', $cleanUpLog);
 
 		// ロックファイル関係
 		$this->set('isLockFile', CleanUpUtility::isLockFile());
 		$this->set('cleanUpStart', CleanUpUtility::readLockFile());
+	}
+
+/**
+ * ログ表示 ajaxのみ
+ *
+ * @return CakeResponse
+ * @throws Exception
+ */
+	public function clean_up_log() {
+		//		$cleanUps = $this->CleanUp->getCleanUpsAndUnknow();
+		//		// 'multiple' => 'checkbox'表示
+		//		$this->set('cleanUps', $cleanUps);
+
+		//		// ログファイル名
+		//		$logFileNames = $this->__getLogFileNames();
+		//		$this->set('logFileNames', $logFileNames);
+
+		// ログの内容
+		$cleanUpLog = $this->__getCleanUpLog();
+		$this->set('cleanUpLog', $cleanUpLog);
+
+		//		// ロックファイル関係
+		//		$this->set('isLockFile', CleanUpUtility::isLockFile());
+		//		$this->set('cleanUpStart', CleanUpUtility::readLockFile());
 	}
 
 /**
@@ -111,7 +139,7 @@ class CleanUpController extends CleanUpAppController {
  *
  * @return string ログの内容
  */
-	private function __getleanUpLog() {
+	private function __getCleanUpLog() {
 		$logFileNo = isset($this->params['named']['logFileNo'])
 			? $this->params['named']['logFileNo']
 			: 0;

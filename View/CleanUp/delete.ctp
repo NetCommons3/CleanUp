@@ -49,9 +49,13 @@ echo $this->NetCommonsHtml->script(array(
 					<div class="clearfix">
 						<?php
 						//チェックボックスの設定
-						$options = Hash::combine(
-							$cleanUps, '{n}.Plugin.key', '{n}.Plugin.name'
-						);
+						//$options = Hash::combine(
+						//	$cleanUps, '{n}.Plugin.key', '{n}.Plugin.name'
+						//);
+						$options = [];
+						foreach ($cleanUps as $cleanUp) {
+							$options[$cleanUp['Plugin']['key']] = $cleanUp['Plugin']['name'];
+						}
 						echo $this->NetCommonsForm->select(
 							'CleanUp.plugin_key',
 							$options,
