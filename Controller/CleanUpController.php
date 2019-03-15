@@ -76,7 +76,7 @@ class CleanUpController extends CleanUpAppController {
 		}
 
 		// ログファイル名
-		$logFileNames = CleanUpExec::getLogFileNames();
+		$logFileNames = CleanUpLog::getLogFileNames();
 		$this->set('logFileNames', $logFileNames);
 
 		// ログの内容
@@ -121,7 +121,7 @@ class CleanUpController extends CleanUpAppController {
 		$logFileNo = isset($this->params['named']['logFileNo'])
 			? $this->params['named']['logFileNo']
 			: 0;
-		return CleanUpExec::getLog($logFileNo);
+		return CleanUpLog::getLog($logFileNo);
 	}
 
 /**

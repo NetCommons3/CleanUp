@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpExec::startLogTimezone()のテスト
+ * CleanUpLog::startLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,11 +9,10 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpExec', 'CleanUp.Lib');
 App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
- * CleanUpExec::startLogTimezone()のテスト
+ * CleanUpLog::startLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
@@ -34,7 +33,7 @@ class CleanUpUtilityCleanUpUtilityStartLogTimezoneTest extends CleanUpCakeTestCa
  */
 	public function testStartLogTimezone() {
 		//テスト実施
-		$result = CleanUpExec::startLogTimezone();
+		$result = CleanUpLog::startLogTimezone();
 
 		//チェック
 		$this->assertEquals('UTC', $result,

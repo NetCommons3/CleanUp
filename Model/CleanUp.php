@@ -11,7 +11,7 @@
 App::uses('CleanUpAppModel', 'CleanUp.Model');
 App::uses('NetCommonsUrl', 'NetCommons.Utility');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
-App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 App::uses('CleanUpLockFile', 'CleanUp.Lib');
 
 /**
@@ -90,7 +90,7 @@ class CleanUp extends CleanUpAppModel {
 		parent::__construct();
 
 		// ログ設定
-		CleanUpExec::setupLog();
+		CleanUpLog::setupLog();
 	}
 
 /**
@@ -259,7 +259,7 @@ class CleanUp extends CleanUpAppModel {
 			return false;
 		}
 		// タイムゾーンを日本に一時的に変更。ログ出力時間を日本時間に。
-		$timezone = CleanUpExec::startLogTimezone();
+		$timezone = CleanUpLog::startLogTimezone();
 		CakeLog::info(__d('clean_up', 'Start cleanup process.'), ['CleanUp']);
 
 		// 複数起動防止ロック
@@ -316,7 +316,7 @@ class CleanUp extends CleanUpAppModel {
 			// ロック解除
 			CleanUpLockFile::deleteLockFile();
 			// タイムゾーンを元に戻す
-			CleanUpExec::endLogTimezone($timezone);
+			CleanUpLog::endLogTimezone($timezone);
 			//トランザクションRollback
 			$this->rollback($ex);
 		}
@@ -324,7 +324,7 @@ class CleanUp extends CleanUpAppModel {
 		CleanUpLockFile::deleteLockFile();
 		CakeLog::info(__d('clean_up', 'Cleanup processing is completed.'), ['CleanUp']);
 		// タイムゾーンを元に戻す
-		CleanUpExec::endLogTimezone($timezone);
+		CleanUpLog::endLogTimezone($timezone);
 
 		return true;
 	}

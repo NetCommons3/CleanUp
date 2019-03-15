@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpExec::setupLog()のテスト
+ * CleanUpLog::setupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,10 +9,10 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
- * CleanUpExec::setupLog()のテスト
+ * CleanUpLog::setupLog()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
@@ -34,7 +34,7 @@ class CleanUpUtilityCleanUpUtilitySetupLogTest extends CleanUpCakeTestCase {
 	public function testSetupLog() {
 		//テスト実施
 		// CakeLog::config()を実行してるだけなので、ロジックが通る事を確認
-		CleanUpExec::setupLog();
+		CleanUpLog::setupLog();
 
 		//チェック
 		$this->assertTrue(true);
