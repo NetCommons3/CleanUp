@@ -49,7 +49,7 @@ class CleanUpConsoleCommandCleanUpShellUnlockTest extends CleanUpConsoleTestCase
 		$this->$shell = $this->loadShell($shell);
 
 		//データ生成
-		CleanUpLib::makeLockFile();
+		CleanUpExec::makeLockFile();
 
 		//$this->$shell->expects($this->at(0))->method('out')
 		//	->with('ここに出力内容を書く');

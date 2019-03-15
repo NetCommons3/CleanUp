@@ -11,7 +11,8 @@
 //@codeCoverageIgnoreStart;
 App::uses('NetCommonsGetTest', 'NetCommons.TestSuite');
 //@codeCoverageIgnoreEnd;
-App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
  * CleanUpGetTest TestCase
@@ -75,6 +76,6 @@ abstract class CleanUpGetTest extends NetCommonsGetTest {
 		parent::setUp();
 
 		// テスト時はログ出力しない
-		CakeLog::drop(CleanUpLib::LOGGER_KEY);
+		CakeLog::drop(CleanUpLog::LOGGER_KEY);
 	}
 }

@@ -19,7 +19,7 @@ App::uses('CleanUpLog', 'CleanUp.Lib');
  * @see MailSend よりコピー
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
-class CleanUpLib {
+class CleanUpExec {
 
 /**
  * 自作のstatic initialize<br />
@@ -183,4 +183,4 @@ class CleanUpLib {
 }
 
 // 自作のstatic initialize
-CleanUpLib::initialize();
+CleanUpExec::initialize();

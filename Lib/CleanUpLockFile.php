@@ -72,16 +72,16 @@ class CleanUpLockFile {
  * @return bool true:削除|false:ファイルなし
  */
 	public static function deleteLockFileAndSetupLog() {
-		CleanUpLib::setupLog();
+		CleanUpExec::setupLog();
 		// ログ開始時のタイムゾーン変更
-		$timezone = CleanUpLib::startLogTimezone();
+		$timezone = CleanUpExec::startLogTimezone();
 
 		CakeLog::info(__d('clean_up',
 			'Start forcibly delete lock file processing.'), ['CleanUp']);
 		$isDelete = self::deleteLockFile();
 
 		// ログ終了時にタイムゾーン戻す
-		CleanUpLib::endLogTimezone($timezone);
+		CleanUpExec::endLogTimezone($timezone);
 		return $isDelete;
 	}
 

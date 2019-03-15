@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUpLib::startLogTimezone()のテスト
+ * CleanUpExec::startLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -9,13 +9,14 @@
  */
 
 App::uses('CleanUpCakeTestCase', 'CleanUp.TestSuite');
-App::uses('CleanUpLib', 'CleanUp.Lib');
+App::uses('CleanUpExec', 'CleanUp.Lib');
+App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /**
- * CleanUpLib::startLogTimezone()のテスト
+ * CleanUpExec::startLogTimezone()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
- * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpLib
+ * @package NetCommons\CleanUp\Test\Case\Utility\CleanUpExec
  */
 class CleanUpUtilityCleanUpUtilityStartLogTimezoneTest extends CleanUpCakeTestCase {
 
@@ -33,13 +34,13 @@ class CleanUpUtilityCleanUpUtilityStartLogTimezoneTest extends CleanUpCakeTestCa
  */
 	public function testStartLogTimezone() {
 		//テスト実施
-		$result = CleanUpLib::startLogTimezone();
+		$result = CleanUpExec::startLogTimezone();
 
 		//チェック
 		$this->assertEquals('UTC', $result,
 			'戻り値は、date_default_timezoneの初期値でUTCの想定');
-		$this->assertEquals(CleanUpLib::TIMEZONE, date_default_timezone_get(),
-			'date_default_timezoneは、CleanUpLib::TIMEZONEに変更されてる想定');
+		$this->assertEquals(CleanUpLog::TIMEZONE, date_default_timezone_get(),
+			'date_default_timezoneは、CleanUpLog::TIMEZONEに変更されてる想定');
 	}
 
 }

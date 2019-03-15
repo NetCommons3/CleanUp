@@ -75,7 +75,7 @@ class CleanUpControllerUnlockTest extends CleanUpControllerTestCase {
  */
 	public function testUnlockGetLocked() {
 		// ロックファイル作成
-		CleanUpLib::makeLockFile();
+		CleanUpExec::makeLockFile();
 
 		//テスト実行
 		$this->_testGetAction(
