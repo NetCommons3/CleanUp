@@ -68,7 +68,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 		parent::setUp();
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpLockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
+		CleanUpLockFile::$cacheKey = 'CleanUpTest.lock';
 	}
 
 /**

@@ -73,7 +73,7 @@ abstract class CleanUpCakeTestCase extends NetCommonsCakeTestCase {
 		CakeLog::drop(CleanUpLog::LOGGER_KEY);
 
 		// ロックファイルの出力先をtestに変更
-		CleanUpLockFile::$lockFilePath = TMP . 'tests' . DS . 'CleanUp.lock';
+		CleanUpLockFile::$cacheKey = 'CleanUpTest.lock';
 	}
 
 /**

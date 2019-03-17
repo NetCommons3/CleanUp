@@ -8,8 +8,25 @@
  * @copyright Copyright 2014, NetCommons Project
  */
 
+App::uses('Cache', 'Cache');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
 App::uses('CleanUpLog', 'CleanUp.Lib');
+
+/**
+ * Configure the cache used for general framework caching. Path information,
+ * object listings, and translation cache files are stored with this configuration.
+ */
+$cacheSetting = Cache::settings('_cake_core_');
+//$cacheSetting['prefix'] =
+//	preg_replace('/cake_core_/', 'netcommons_clean_up_lock_', $cacheSetting['prefix']);
+Cache::config(CleanUpLockFile::$cacheConfigName, array(
+	'engine' => $cacheSetting['engine'],
+	//'prefix' => $cacheSetting['prefix'],
+	'prefix' => 'netcommons_clean_up_lock_',
+	'path' => CACHE,
+	'serialize' => $cacheSetting['serialize'],
+	'duration' => '+7 days'
+));
 
 /**
  * ファイルクリーンアップ ライブラリ
@@ -20,23 +37,18 @@ App::uses('CleanUpLog', 'CleanUp.Lib');
 class CleanUpLockFile {
 
 /**
- * ロックファイルパス
+ * ロックファイルの設定名
  *
  * @var string
  */
-	public static $lockFilePath = '';
+	public static $cacheConfigName = 'netcommons_clean_up_lock';
 
 /**
- * 自作のstatic initialize<br />
- * 当クラス最下部で呼び出してる
+ * ロックファイルのキャッシュキー
  *
- * @return void
+ * @var string
  */
-	public static function initialize() {
-		// php5.4, 5.5対応 staticのメンバ変数に . 連結するとsyntax error
-		// https://travis-ci.org/NetCommons3/CleanUp/jobs/492013244#L866
-		self::$lockFilePath = TMP . 'CleanUp.lock';
-	}
+	public static $cacheKey = 'CleanUp.lock';
 
 /**
  * ロックファイルの作成と時刻の書き込み。バッチ実行開始時
@@ -44,11 +56,14 @@ class CleanUpLockFile {
  * @return void
  */
 	public static function makeLockFile() {
-		touch(self::$lockFilePath);
+		//touch(self::$lockFilePath);
 
 		//時刻をロックファイルに書き込む
 		$now = NetCommonsTime::getNowDatetime();
-		file_put_contents(self::$lockFilePath, $now);
+		//file_put_contents(self::$lockFilePath, $now);
+		//Cache::write('CleanUp.lock', $now, 'netcommons_clean_up_lock');
+		Cache::write(self::$cacheKey, $now, self::$cacheConfigName);
+
 		CakeLog::info(__d('clean_up', 'Created a lock file.'), ['CleanUp']);
 	}
 
@@ -58,8 +73,10 @@ class CleanUpLockFile {
  * @return bool true:削除|false:ファイルなし
  */
 	public static function deleteLockFile() {
-		if (file_exists(self::$lockFilePath)) {
-			unlink(self::$lockFilePath);
+		//if (file_exists(self::$lockFilePath)) {
+		if (Cache::read(self::$cacheKey, self::$cacheConfigName)) {
+			//unlink(self::$lockFilePath);
+			Cache::delete(self::$cacheKey, self::$cacheConfigName);
 			CakeLog::info(__d('clean_up', 'Lock file was deleted.'), ['CleanUp']);
 			return true;
 		}
@@ -92,7 +109,8 @@ class CleanUpLockFile {
  * @return bool true:ロックあり|false:ロックなし
  */
 	public static function isLockFile() {
-		if (file_exists(self::$lockFilePath)) {
+		//if (file_exists(self::$lockFilePath)) {
+		if (Cache::read(self::$cacheKey, self::$cacheConfigName)) {
 			return true;
 		}
 		return false;
@@ -104,9 +122,10 @@ class CleanUpLockFile {
  * @return string ファイルクリーンアップ開始時刻
  */
 	public static function readLockFile() {
-		if (file_exists(self::$lockFilePath)) {
-			//return file_get_contents(self::$lockFilePath);
-			$cleanUpStart = file_get_contents(self::$lockFilePath);
+		//if (file_exists(self::$lockFilePath)) {
+		$cleanUpStart = Cache::read(self::$cacheKey, self::$cacheConfigName);
+		if ($cleanUpStart) {
+			//$cleanUpStart = file_get_contents(self::$lockFilePath);
 			$cleanUpStart = date('m/d G:i', strtotime($cleanUpStart));
 			return $cleanUpStart;
 		}
@@ -114,6 +133,3 @@ class CleanUpLockFile {
 	}
 
 }
-
-// 自作のstatic initialize
-CleanUpLockFile::initialize();
