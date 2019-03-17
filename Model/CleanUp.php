@@ -310,7 +310,8 @@ class CleanUp extends CleanUpAppModel {
 			// ロック解除
 			CleanUpLockFile::deleteLockFile();
 			// 言語ファイル修正予定
-			CakeLog::info(__d('clean_up', 'クリーンアップ処理が異常終了しました。'), ['CleanUp']);
+			CakeLog::info(__d('clean_up',
+				'Cleanup processing terminated abnormally.'), ['CleanUp']);
 			// タイムゾーンを元に戻す
 			CleanUpLog::endLogTimezone($timezone);
 			//トランザクションRollback

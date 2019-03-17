@@ -142,3 +142,5 @@ msgstr "実行結果"
 msgid "Look"
 msgstr "見る"
 
+msgid "Cleanup processing terminated abnormally."
+msgstr "クリーンアップ処理が異常終了しました。"

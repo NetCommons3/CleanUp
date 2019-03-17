@@ -140,3 +140,5 @@ msgstr ""
 msgid "Look"
 msgstr ""
 
+msgid "Cleanup processing terminated abnormally."
+msgstr ""
