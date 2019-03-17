@@ -12,10 +12,7 @@ App::uses('Cache', 'Cache');
 App::uses('NetCommonsTime', 'NetCommons.Utility');
 App::uses('CleanUpLog', 'CleanUp.Lib');
 
-/**
- * Configure the cache used for general framework caching. Path information,
- * object listings, and translation cache files are stored with this configuration.
- */
+/* @see https://github.com/NetCommons3/NetCommons3/blob/6451c4b5ee2a17c74ea65eb7e4d757d148cd1835/app/Config/core.php#L368 */
 $cacheSetting = Cache::settings('_cake_core_');
 //$cacheSetting['prefix'] =
 //	preg_replace('/cake_core_/', 'netcommons_clean_up_lock_', $cacheSetting['prefix']);
