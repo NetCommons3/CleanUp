@@ -101,9 +101,11 @@ class CleanUpLibCleanUpExecCleanUpTest extends CleanUpCakeTestCase {
 		// 下記エラーになった。
 		// Error: "announcements" is not a valid value for 0. Please use one of "unknown, all"
 		// コンソールのテストは、別途コンソール側で行うため、ここで指定するプラグインキーはテーブルをfind
-		// しなくてもある、unknownを指定する
+		// しなくてもある、空を指定する
+		// また、開発環境で announcements を指定した場合、正常終了する。
 		$data['CleanUp']['plugin_key'] = [
-			'unknown'
+			//'announcements'
+			''
 		];
 
 		//テスト実施

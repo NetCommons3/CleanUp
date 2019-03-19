@@ -49,10 +49,6 @@ msgstr ""
 msgid "There is a lock file. Please wait for a while because file cleanup is in progress."
 msgstr ""
 
-#: Model/CleanUp.php:172
-msgid "Plugin unknown file"
-msgstr ""
-
 #: Model/CleanUp.php:231
 msgid "Start cleanup process."
 msgstr ""

@@ -109,7 +109,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
 			'2.エラーなし' => [
 				'data' => [],
 				'field' => 'plugin_key',
-				'value' => ['unknown'],	//data[model名][field] = value
+				'value' => ['announcements'],	//data[model名][field] = value
 				'message' => true
 			],
 		];
@@ -137,7 +137,7 @@ class CleanUpValidateTest extends CleanUpValidateTestCase {
  */
 	public function testValidationErrorLock() {
 		// 入力値は正常
-		$data['CleanUp']['plugin_key'] = ['unknown'];
+		$data['CleanUp']['plugin_key'] = ['announcements'];
 		// ロックファイル作成 = ロック中
 		CleanUpLockFile::makeLockFile();
 

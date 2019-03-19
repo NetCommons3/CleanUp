@@ -212,7 +212,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				],
 				'cleanUp' => $cleanUp,
 				'assertMessage' =>
-					'$cleanUp[CleanUp][plugin_key] == unknownはブロックキーなしやコンテンツキーなしで、使われていないため、falseが戻る想定'
+					'コンテンツキーなしで、使われていないため、falseが戻る想定'
 			],
 			'5.お知らせで英日あり。どちらもファイル使ってない' => [
 				'uploadFile' => [

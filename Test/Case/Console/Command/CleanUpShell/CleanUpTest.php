@@ -54,8 +54,7 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 
 		//データ生成
 		//$this->$shell->args[] = 'all';
-		//$this->$shell->args[] = 'announcements';
-		$this->$shell->args[] = 'unknown';
+		$this->$shell->args[] = 'announcements';
 
 		//アップロードファイルで、削除対象のファイルを用意
 		CleanUpTestUtil::makeTestUploadFiles();
@@ -80,7 +79,6 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 		//データ生成
 		//$this->$shell->args[] = 'all';
 		$this->$shell->args[] = 'announcements';
-		$this->$shell->args[] = 'unknown';
 
 		//アップロードファイルで、削除対象のファイルを用意
 		CleanUpTestUtil::makeTestUploadFiles();
@@ -105,7 +103,6 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 		//データ生成
 		$this->$shell->args[] = 'all';
 		//$this->$shell->args[] = 'announcements';
-		//$this->$shell->args[] = 'unknown';
 
 		//アップロードファイルで、削除対象のファイルを用意
 		CleanUpTestUtil::makeTestUploadFiles();
@@ -129,8 +126,7 @@ class CleanUpConsoleCommandCleanUpShellCleanUpTest extends CleanUpConsoleTestCas
 
 		//データ生成
 		$this->$shell->args[] = 'all';
-		//$this->$shell->args[] = 'announcements';
-		$this->$shell->args[] = 'unknown';
+		$this->$shell->args[] = 'announcements';
 
 		//アップロードファイルで、削除対象のファイルを用意
 		CleanUpTestUtil::makeTestUploadFiles();

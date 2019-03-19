@@ -62,7 +62,7 @@ class CleanUpValidatesOnlyTest extends CleanUpModelTestCase {
 
 		//データ生成
 		$data['CleanUp']['plugin_key'] = [
-			'unknown'
+			'announcements'
 		];
 
 		//アップロードファイルで、削除対象のファイルを用意
