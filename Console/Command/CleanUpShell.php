@@ -149,7 +149,7 @@ class CleanUpShell extends AppShell {
  */
 	private function __getPluginKeys() {
 		// プラグインキーの一覧
-		$cleanUps = $this->CleanUp->findCleanUpsAndUnknow();
+		$cleanUps = $this->CleanUp->findCleanUpsAndPlugin();
 		$pluginKeys = [];
 		foreach ($cleanUps as $cleanUp) {
 			$pluginKeys[] = $cleanUp['CleanUp']['plugin_key'];

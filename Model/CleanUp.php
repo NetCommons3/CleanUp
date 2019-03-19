@@ -38,13 +38,6 @@ class CleanUp extends CleanUpAppModel {
 	const FIND_LIMIT_UPLOAD_FILE = 1000;
 
 /**
- * プラグイン不明ファイル のプラグインキー
- *
- * @var string
- */
-	const PLUGIN_KEY_UNKNOWN = 'unknown';
-
-/**
  * バックアップ方法URL
  *
  * @var string
@@ -182,38 +175,6 @@ class CleanUp extends CleanUpAppModel {
 	}
 
 /**
- * プラグイン不明ファイル データゲット
- *
- * @return array
- */
-	public function getUnknowCleanUp() {
-		$unknowCleanUp = [
-			'CleanUp' => [
-				'plugin_key' => self::PLUGIN_KEY_UNKNOWN,
-				'model' => self::PLUGIN_KEY_UNKNOWN, //ログ出力のみで利用
-			],
-			'Plugin' => [
-				'key' => self::PLUGIN_KEY_UNKNOWN,
-				// Plugin unknown file
-				'name' => __d('clean_up', 'Plugin unknown file'),
-			],
-		];
-		return $unknowCleanUp;
-	}
-
-/**
- * プラグイン不明ファイルを含むCleanUp一覧 ゲット
- *
- * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
- * @return array
- */
-	public function findCleanUpsAndUnknow($data = null) {
-		$cleanUps = $this->findCleanUpsAndPlugin($data);
-		$cleanUps[] = $this->getUnknowCleanUp();
-		return $cleanUps;
-	}
-
-/**
  * 入力チェックのみ行う
  *
  * @param array $data received post data. ['CleanUp']['plugin_key'][] = 'announcements'
@@ -261,13 +222,6 @@ class CleanUp extends CleanUpAppModel {
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
 		$cleanUps = $this->findCleanUpsAndPlugin($data);
-		foreach ($data['CleanUp']['plugin_key'] as $pluginKey) {
-			// プラグイン不明ファイルがチェックされてたら、プラグイン不明ファイル データ追加
-			if ($pluginKey == self::PLUGIN_KEY_UNKNOWN) {
-				$cleanUps[] = $this->getUnknowCleanUp();
-				break;
-			}
-		}
 
 		try {
 			foreach ($cleanUps as $cleanUp) {
@@ -309,7 +263,6 @@ class CleanUp extends CleanUpAppModel {
 		} catch (Exception $ex) {
 			// ロック解除
 			CleanUpLockFile::deleteLockFile();
-			// 言語ファイル修正予定
 			CakeLog::info(__d('clean_up',
 				'Cleanup processing terminated abnormally.'), ['CleanUp']);
 			// タイムゾーンを元に戻す
@@ -344,74 +297,24 @@ class CleanUp extends CleanUpAppModel {
 			'UploadFile.modified',
 		);
 
-		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
-			// プラグイン不明ファイル
-			$params = $this->getUploadFileUnKnownParams($fields);
-		} else {
-			// block_keyあり、content_keyあり、コンテンツあり
-			$params = array(
-				'recursive' => -1,
-				'conditions' => array(
-					$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-					'OR' => array(
-						array($this->UploadFile->alias . '.content_key !=' => null),
-						array($this->UploadFile->alias . '.content_key !=' => ''),
-					),
-					'Block.plugin_key' => $cleanUp['CleanUp']['plugin_key']
-				),
-				//'callbacks' => false,
-				'joins' => array(
-					array('table' => 'blocks',
-						'alias' => 'Block',
-						'type' => 'inner',
-						'conditions' => array(
-							$this->UploadFile->alias . '.block_key = Block.key',
-						)
-					)
-				),
-				'fields' => $fields,
-				'order' => 'UploadFile.id'
-			);
-		}
-
-		// 削除する拡張子が設定されていたら条件追加（空なら条件セットしない＝全ての拡張子が対象）
-		if ($this->deleteExtension) {
-			$deleteExtensionArray =
-				explode(self::DELETE_EXTENSION_DELIMITER, $this->deleteExtension);
-			$params['conditions'][$this->UploadFile->alias . '.extension'] = $deleteExtensionArray;
-		}
-		return $params;
-	}
-
-/**
- * プラグイン不明ファイルのアップロードファイルのfind条件 ゲット
- *
- * @param array $fields DB項目
- * @return array find条件
- */
-	public function getUploadFileUnKnownParams($fields) {
-		// プラグイン不明ファイル
+		// block_keyあり(Blockと結合するためblock_keyは必ずあり)、content_keyありorなし
 		//
-		// block_keyなし or content_keyなし
-		// block_keyなしの場合、どのプラグインから投稿されたか不明
-		// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
+		// * content_keyなし対象データは、this->__isUseUploadFile()チェック不要。content_keyなしで
+		//   使われてない事がわかっているため。
+		// * block_keyなしのデータが存在する。 3.1.3より以前はblock_keyなしでアップロードされていたため、
+		//   そのデータは削除対象にしない。
+		// * block_keyなしは、blockテーブルと結合できないため、どのプラグインから投稿されたかわからない。
 		$params = array(
 			'recursive' => -1,
 			'conditions' => array(
 				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-				'OR' => array(
-					array('Block.id' => null),
-					array($this->UploadFile->alias . '.content_key' => null),
-					array($this->UploadFile->alias . '.content_key' => ''),
-				),
+				'Block.plugin_key' => $cleanUp['CleanUp']['plugin_key']
 			),
-			//'callbacks' => false,
 			'joins' => array(
 				array('table' => 'blocks',
 					'alias' => 'Block',
-					'type' => 'left',
+					'type' => 'inner',
 					'conditions' => array(
-						$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
 						$this->UploadFile->alias . '.block_key = Block.key',
 					)
 				)
@@ -419,6 +322,13 @@ class CleanUp extends CleanUpAppModel {
 			'fields' => $fields,
 			'order' => 'UploadFile.id'
 		);
+
+		// 削除する拡張子が設定されていたら条件追加（空なら条件セットしない＝全ての拡張子が対象）
+		if ($this->deleteExtension) {
+			$deleteExtensionArray =
+				explode(self::DELETE_EXTENSION_DELIMITER, $this->deleteExtension);
+			$params['conditions'][$this->UploadFile->alias . '.extension'] = $deleteExtensionArray;
+		}
 		return $params;
 	}
 
@@ -445,7 +355,7 @@ class CleanUp extends CleanUpAppModel {
 			//var_dump($uploadFile);
 
 			// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
-			// とりあえずupload_files_contents削除処理は、なしで進める。
+			// upload_files_contents削除処理は、なし
 
 			// ファイル削除
 			$pluginName = $cleanUp['Plugin']['name'];
@@ -518,8 +428,8 @@ class CleanUp extends CleanUpAppModel {
  * @return bool true:使ってる|false:使ってない
  */
 	private function __isUseUploadFile($uploadFile, $cleanUp) {
-		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
-			// プラグイン不明ファイルは、ブロックキーなしやコンテンツキーなしで、使われていないため、false
+		if (! $uploadFile['UploadFile']['content_key']) {
+			// コンテンツキーなしで、使われていないため、false
 			return false;
 		}
 
