@@ -564,6 +564,7 @@ class CleanUp extends CleanUpAppModel {
 		$checkConditions = [];
 		$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
 		foreach ($fieldsArray as $field) {
+			$field = trim($field);
 			$checkConditions[] = array(
 				'OR' => array(
 					array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%'),
