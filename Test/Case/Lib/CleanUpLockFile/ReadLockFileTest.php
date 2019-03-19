@@ -39,6 +39,7 @@ class CleanUpLibCleanUpLockFileReadLockFileTest extends CleanUpCakeTestCase {
 		$reseult = CleanUpLockFile::readLockFile();
 
 		//チェック
+		//var_export($reseult);
 		$this->assertNotEmpty($reseult, 'ロックファイルに書かれた値が取得できる想定');
 	}
 

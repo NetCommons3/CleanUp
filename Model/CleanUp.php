@@ -346,34 +346,7 @@ class CleanUp extends CleanUpAppModel {
 
 		if ($cleanUp['CleanUp']['plugin_key'] == self::PLUGIN_KEY_UNKNOWN) {
 			// プラグイン不明ファイル
-			//
-			// block_keyなし、content_keyなし
-			// block_keyなしの場合、どのプラグインから投稿されたか不明
-			// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
-			$params = array(
-				'recursive' => -1,
-				'conditions' => array(
-					$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-					'OR' => array(
-						array('Block.id' => null),
-						array($this->UploadFile->alias . '.content_key' => null),
-						array($this->UploadFile->alias . '.content_key' => ''),
-					),
-				),
-				//'callbacks' => false,
-				'joins' => array(
-					array('table' => 'blocks',
-						'alias' => 'Block',
-						'type' => 'left',
-						'conditions' => array(
-							$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-							$this->UploadFile->alias . '.block_key = Block.key',
-						)
-					)
-				),
-				'fields' => $fields,
-				'order' => 'UploadFile.id'
-			);
+			$params = $this->getUploadFileUnKnownParams($fields);
 		} else {
 			// block_keyあり、content_keyあり、コンテンツあり
 			$params = array(
@@ -407,6 +380,45 @@ class CleanUp extends CleanUpAppModel {
 				explode(self::DELETE_EXTENSION_DELIMITER, $this->deleteExtension);
 			$params['conditions'][$this->UploadFile->alias . '.extension'] = $deleteExtensionArray;
 		}
+		return $params;
+	}
+
+/**
+ * プラグイン不明ファイルのアップロードファイルのfind条件 ゲット
+ *
+ * @param array $fields DB項目
+ * @return array find条件
+ */
+	public function getUploadFileUnKnownParams($fields) {
+		// プラグイン不明ファイル
+		//
+		// block_keyなし or content_keyなし
+		// block_keyなしの場合、どのプラグインから投稿されたか不明
+		// この対象データは、this->__isUseUploadFile()チェック不要。block_keyなし、content_keyなしで使われてない事がわかっているため。
+		$params = array(
+			'recursive' => -1,
+			'conditions' => array(
+				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+				'OR' => array(
+					array('Block.id' => null),
+					array($this->UploadFile->alias . '.content_key' => null),
+					array($this->UploadFile->alias . '.content_key' => ''),
+				),
+			),
+			//'callbacks' => false,
+			'joins' => array(
+				array('table' => 'blocks',
+					'alias' => 'Block',
+					'type' => 'left',
+					'conditions' => array(
+						$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
+						$this->UploadFile->alias . '.block_key = Block.key',
+					)
+				)
+			),
+			'fields' => $fields,
+			'order' => 'UploadFile.id'
+		);
 		return $params;
 	}
 
