@@ -73,8 +73,8 @@ class CleanUpRecords extends NetCommonsMigration {
 			//カレンダー
 			array (
 				'plugin_key' => 'calendars',
-				'model' => 'CalendarActionPlan',
-				'class' => 'Calendars.CalendarActionPlan',
+				'model' => 'CalendarEvent',
+				'class' => 'Calendars.CalendarEvent',
 				'fields' => 'description',
 				'created_user' => '1',
 				'modified_user' => '1',
@@ -169,8 +169,8 @@ class CleanUpRecords extends NetCommonsMigration {
 			),
 			array (
 				'plugin_key' => 'reservations',
-				'model' => 'ReservationActionPlan',
-				'class' => 'Reservations.ReservationActionPlan',
+				'model' => 'ReservationEvent',
+				'class' => 'Reservations.ReservationEvent',
 				'fields' => 'description',
 				'created_user' => '1',
 				'modified_user' => '1',
