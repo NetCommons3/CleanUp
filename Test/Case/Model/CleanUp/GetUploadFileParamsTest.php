@@ -89,9 +89,10 @@ class CleanUpGetUploadFileParamsTest extends CleanUpModelTestCase {
 
 		//チェック
 		//var_export($params);
-		//var_export($params['conditions']['OR'][0]);
-		$this->assertNotEquals($params['conditions']['OR'][0], ['Block.id' => null],
-			'プラグイン対象:announcementsはblock_id = nullの条件を含まない想定');
+		//var_export($params['joins'][0]);
+		$this->assertEquals([$params['joins'][0]['table'], $params['joins'][0]['type']],
+			['blocks', 'inner'],
+			'プラグイン対象:announcementsはblockテーブルと結合条件を含む想定');
 	}
 
 }
