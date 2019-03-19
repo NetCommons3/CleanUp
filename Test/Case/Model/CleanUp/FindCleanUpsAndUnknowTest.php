@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUp::getCleanUpsAndUnknow()のテスト
+ * CleanUp::findCleanUpsAndUnknow()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -11,12 +11,12 @@
 App::uses('CleanUpGetTest', 'CleanUp.TestSuite');
 
 /**
- * CleanUp::getCleanUpsAndUnknow()のテスト
+ * CleanUp::findCleanUpsAndUnknow()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Model\CleanUp
  */
-class CleanUpGetCleanUpsAndUnknowTest extends CleanUpGetTest {
+class CleanUpFindCleanUpsAndUnknowTest extends CleanUpGetTest {
 
 /**
  * Fixtures
@@ -45,15 +45,15 @@ class CleanUpGetCleanUpsAndUnknowTest extends CleanUpGetTest {
  *
  * @var string
  */
-	protected $_methodName = 'getCleanUpsAndUnknow';
+	protected $_methodName = 'findCleanUpsAndUnknow';
 
 /**
- * getCleanUpsAndUnknow()のテスト
+ * findCleanUpsAndUnknow()のテスト
  *
  * @return void
- * @see CleanUp::getCleanUpsAndUnknow()
+ * @see CleanUp::findCleanUpsAndUnknow()
  */
-	public function testGetCleanUpsAndUnknow() {
+	public function testFindCleanUpsAndUnknow() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 

@@ -42,7 +42,7 @@ class CleanUpController extends CleanUpAppController {
  * @throws Exception
  */
 	public function delete() {
-		$cleanUps = $this->CleanUp->getCleanUpsAndUnknow();
+		$cleanUps = $this->CleanUp->findCleanUpsAndUnknow();
 		// 'multiple' => 'checkbox'表示
 		$this->set('cleanUps', $cleanUps);
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * CleanUp::getCleanUpsAndPlugin()のテスト
+ * CleanUp::findCleanUpsAndPlugin()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @link http://www.netcommons.org NetCommons Project
@@ -11,12 +11,12 @@
 App::uses('CleanUpGetTest', 'CleanUp.TestSuite');
 
 /**
- * CleanUp::getCleanUpsAndPlugin()のテスト
+ * CleanUp::findCleanUpsAndPlugin()のテスト
  *
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Test\Case\Model\CleanUp
  */
-class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
+class CleanUpFindCleanUpsAndPluginTest extends CleanUpGetTest {
 
 /**
  * Fixtures
@@ -45,15 +45,15 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
  *
  * @var string
  */
-	protected $_methodName = 'getCleanUpsAndPlugin';
+	protected $_methodName = 'findCleanUpsAndPlugin';
 
 /**
- * getCleanUpsAndPlugin()のCleanup対象プラグインを全件取得テスト
+ * findCleanUpsAndPlugin()のCleanup対象プラグインを全件取得テスト
  *
  * @return void
- * @see CleanUp::getCleanUpsAndPlugin()
+ * @see CleanUp::findCleanUpsAndPlugin()
  */
-	public function testGetCleanUpsAndPlugin() {
+	public function testFindCleanUpsAndPlugin() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
@@ -71,12 +71,12 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
 	}
 
 /**
- * getCleanUpsAndPlugin()のCleanup対象プラグインを1取得テスト
+ * findCleanUpsAndPlugin()のCleanup対象プラグインを1取得テスト
  *
  * @return void
- * @see CleanUp::getCleanUpsAndPlugin()
+ * @see CleanUp::findCleanUpsAndPlugin()
  */
-	public function testGetCleanUpsAndPluginCount() {
+	public function testFindCleanUpsAndPluginCount() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 
@@ -100,12 +100,12 @@ class CleanUpGetCleanUpsAndPluginTest extends CleanUpGetTest {
 	}
 
 /**
- * getCleanUpsAndPlugin()のCleanup対象プラグインを複数取得テスト
+ * findCleanUpsAndPlugin()のCleanup対象プラグインを複数取得テスト
  *
  * @return void
- * @see CleanUp::getCleanUpsAndPlugin()
+ * @see CleanUp::findCleanUpsAndPlugin()
  */
-	public function testGetCleanUpsAndPluginCounts() {
+	public function testFindCleanUpsAndPluginCounts() {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;
 

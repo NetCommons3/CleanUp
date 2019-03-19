@@ -146,7 +146,7 @@ class CleanUp extends CleanUpAppModel {
  * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
  * @return array
  */
-	public function getCleanUpsAndPlugin($data = null) {
+	public function findCleanUpsAndPlugin($data = null) {
 		$params = array(
 			'recursive' => -1,
 			//'conditions' => array(),
@@ -207,8 +207,8 @@ class CleanUp extends CleanUpAppModel {
  * @param array $data received post data. ex) ['CleanUp']['plugin_key'][] = 'announcements'
  * @return array
  */
-	public function getCleanUpsAndUnknow($data = null) {
-		$cleanUps = $this->getCleanUpsAndPlugin($data);
+	public function findCleanUpsAndUnknow($data = null) {
+		$cleanUps = $this->findCleanUpsAndPlugin($data);
 		$cleanUps[] = $this->getUnknowCleanUp();
 		return $cleanUps;
 	}
@@ -260,7 +260,7 @@ class CleanUp extends CleanUpAppModel {
 		CleanUpLockFile::makeLockFile();
 
 		// ファイルクリーンアップ対象のプラグイン設定を取得
-		$cleanUps = $this->getCleanUpsAndPlugin($data);
+		$cleanUps = $this->findCleanUpsAndPlugin($data);
 		foreach ($data['CleanUp']['plugin_key'] as $pluginKey) {
 			// プラグイン不明ファイルがチェックされてたら、プラグイン不明ファイル データ追加
 			if ($pluginKey == self::PLUGIN_KEY_UNKNOWN) {

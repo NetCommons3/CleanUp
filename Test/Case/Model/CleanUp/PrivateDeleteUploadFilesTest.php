@@ -179,8 +179,8 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		];
 
 		// チェック対象プラグイン
-		/* @see Cleanup::getCleanUpsAndPlugin() */
-		$cleanUps = $this->$model->getCleanUpsAndPlugin($data);
+		/* @see Cleanup::findCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
 		//var_dump($cleanUps);
 
 		// UploadFileインスタンスの準備
@@ -319,8 +319,8 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		];
 
 		// チェック対象プラグイン
-		/* @see Cleanup::getCleanUpsAndPlugin() */
-		$cleanUps = $this->$model->getCleanUpsAndPlugin($data);
+		/* @see Cleanup::findCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
 		//var_dump($cleanUps);
 
 		// UploadFileインスタンスの準備
