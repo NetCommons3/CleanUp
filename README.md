@@ -23,7 +23,7 @@ $ Console/cake clean_up.clean_up clean_up --help
 
 --- 実行結果
 
-Welcome to CakePHP v2.10.14 Console
+Welcome to CakePHP v2.10.16 Console
 ---------------------------------------------------------------
 App : app
 Path: /var/www/app/app/
@@ -41,7 +41,7 @@ cake clean_up.clean_up unlock: 実行中ロックファイルの強制削除
 https://www.netcommons.org/NetCommons3/download#!#frame-362
 
 実行結果は下記にログ出力されます。
-/var/www/app/app/tmp/logs/CleanUp.log
+/var/www/app/app/tmp/logs/cleanup/CleanUp.log
 
 
 Usage:
@@ -59,10 +59,10 @@ Arguments:
     [通常以外で指定できるプラグインキー]
     unknown: プラグイン不明ファイル
     all: 全てのプラグイン (optional) (choices:
-    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|unknown|all)
+    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|all)
 1    (optional) (choices:
-    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|unknown|all)
+    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|all)
 (省略)
-19   (optional) (choices:
-    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|unknown|all)
+18   (optional) (choices:
+    announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|all)
 ```
