@@ -19,9 +19,8 @@ echo $this->NetCommonsHtml->script(array(
 	<div class="form-group">
 		<div class="clearfix">
 			<div class="pull-right">
-				<?php echo $this->NetCommonsForm->create(false, [
+				<?php echo $this->NetCommonsForm->create('CleanUpDeleteGet', [
 					'url' => array('controller' => 'clean_up', 'action' => 'delete'),
-					'id' => 'CleanUpDeleteGet',
 					'type' => 'get',
 				]); ?>
 					<?php echo $this->NetCommonsForm->button('<span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>', [
@@ -39,9 +38,8 @@ echo $this->NetCommonsHtml->script(array(
 
 	<?php /* チェックボックス */ ?>
 	<div class="panel panel-default">
-		<?php echo $this->NetCommonsForm->create('CleanUp', [
+		<?php echo $this->NetCommonsForm->create('CleanUpDeletePost', [
 			'url' => array('controller' => 'clean_up', 'action' => 'delete'),
-			'id' => 'CleanUpDeletePost',
 		]); ?>
 
 			<div class="panel-body">
@@ -99,9 +97,8 @@ echo $this->NetCommonsHtml->script(array(
 
 	<?php /* 実行中ロックファイル強制削除処理 */ ?>
 	<div class="nc-danger-zone" ng-init="dangerZone=false;">
-		<?php echo $this->NetCommonsForm->create(false, [
+		<?php echo $this->NetCommonsForm->create('CleanUpLock', [
 			'url' => array('controller' => 'clean_up', 'action' => 'unlock'),
-			'id' => 'CleanUpLock',
 			'type' => 'get',
 		]); ?>
 			<uib-accordion close-others="false">
