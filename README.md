@@ -57,7 +57,6 @@ Arguments:
 
 0   クリーンアップする対象のプラグインキー。
     [通常以外で指定できるプラグインキー]
-    unknown: プラグイン不明ファイル
     all: 全てのプラグイン (optional) (choices:
     announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|all)
 1    (optional) (choices:

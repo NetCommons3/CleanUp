@@ -33,7 +33,7 @@ msgstr "File cleanup \n"
 msgid "File cleanup command arguments help"
 msgstr "Plugin key to be cleaned up. \n"
 "[Plug-in key that can be specified other than normal] \n"
-"unknown: Plugin unknown file \n all: All plugins"
+"all: All plugins"
 
 #: Controller/CleanUpController.php:59
 msgid "File cleanup was executed. Please check the execution result and wait for a while until completion."

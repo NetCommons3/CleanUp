@@ -34,7 +34,6 @@ msgstr "ファイルクリーンアップ\n"
 msgid "File cleanup command arguments help"
 msgstr "クリーンアップする対象のプラグインキー。\n"
 "[通常以外で指定できるプラグインキー]\n"
-"unknown: プラグイン不明ファイル \n"
 "all: 全てのプラグイン"
 
 #: Controller/CleanUpController.php:59
