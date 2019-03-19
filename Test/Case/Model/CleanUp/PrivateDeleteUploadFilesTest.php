@@ -63,51 +63,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __deleteUploadFiles()のテスト. チェック対象unknow
- *
- * @return void
- * @throws ReflectionException
- * @see CleanUp::__deleteUploadFiles()
- */
-	public function testDeleteUploadFilesUnknow() {
-		$model = $this->_modelName;
-		$methodName = $this->_methodName;
-
-		//テストデータ
-
-		//アップロードファイルで、削除対象のファイルを用意
-		CleanUpTestUtil::makeTestUploadFiles();
-
-		// チェック対象プラグイン
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
-
-		// UploadFileインスタンスの準備
-		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
-
-		//アップロードデータ
-		/* @see Cleanup::getUploadFileParams() */
-		$params = $this->$model->getUploadFileParams($cleanUp);
-		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 13]]);
-		$uploadFiles = $this->$model->UploadFile->find('all', $params);
-
-		// 削除対象件数 初期値
-		$targetCount = 0;
-
-		//
-		//テスト実施
-		//
-		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
-		);
-
-		//チェック
-		//var_export($result);
-		$this->assertEquals(2, $result, '2件ファイル削除する想定');
-	}
-
-/**
- * __deleteUploadFiles()の削除遅延日以上テスト. チェック対象unknow
+ * __deleteUploadFiles()の削除遅延日以上テスト. チェック対象 announcement
  *
  * @return void
  * @throws ReflectionException
@@ -123,17 +79,21 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		CleanUpTestUtil::makeTestUploadFiles();
 
 		// チェック対象プラグイン
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
+		$data['CleanUp']['plugin_key'] = [
+			'announcements'
+		];
+		/* @see Cleanup::findCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
+		//var_dump($cleanUps);
 
 		// UploadFileインスタンスの準備
 		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
 
 		//アップロードデータ
 		/* @see Cleanup::getUploadFileParams() */
-		$params = $this->$model->getUploadFileParams($cleanUp);
+		$params = $this->$model->getUploadFileParams($cleanUps[0]);
 		//var_dump($params);
-		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 13]]);
+		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [22, 24]]);
 		$uploadFiles = $this->$model->UploadFile->find('all', $params);
 		//var_dump($uploadFiles);
 
@@ -149,7 +109,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//テスト実施
 		//
 		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
 		);
 
 		//チェック
@@ -174,11 +134,10 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//アップロードファイルで、削除対象のファイルを用意
 		CleanUpTestUtil::makeTestUploadFiles();
 
+		// チェック対象プラグイン
 		$data['CleanUp']['plugin_key'] = [
 			'announcements'
 		];
-
-		// チェック対象プラグイン
 		/* @see Cleanup::findCleanUpsAndPlugin() */
 		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
 		//var_dump($cleanUps);
@@ -215,10 +174,9 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
  * DataProvider
  *
  * @return array テストデータ
- * @see CleanUpPrivateDeleteUploadFilesTest::testDeleteUploadFilesDeleteExtension1() テスト対象
- * @see CleanUpPrivateDeleteUploadFilesTest::testDeleteUploadFilesDeleteExtension2() テスト対象
+ * @see CleanUpPrivateDeleteUploadFilesTest::testDeleteUploadFilesDeleteExtension() テスト対象
  */
-	public function dataProviderUnknowAndAnnouncement() {
+	public function dataProviderAnnouncement() {
 		return [
 			'1.削除する拡張子を指定jpg' => [
 				'deleteExtension' => 'jpg',
@@ -234,61 +192,6 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __deleteUploadFiles()のテスト. チェック対象unknow 削除対象. 削除する拡張子を指定
- *
- * @param string $deleteExtension 削除する拡張子
- * @param int $resultDeleteCount 削除した件数
- * @param string $assertMessage テスト想定メッセージ
- * @return void
- * @throws ReflectionException
- * @see CleanUp::__deleteUploadFiles()
- *
- * @dataProvider dataProviderUnknowAndAnnouncement
- */
-	public function testDeleteUploadFilesDeleteExtension1($deleteExtension, $resultDeleteCount,
-														$assertMessage) {
-		$model = $this->_modelName;
-		$methodName = $this->_methodName;
-
-		//テストデータ
-
-		//アップロードファイルで、削除対象のファイルを用意
-		CleanUpTestUtil::makeTestUploadFiles();
-
-		// 削除する拡張子を指定
-		//$this->$model->deleteExtension = 'jpg';
-		$this->$model->deleteExtension = $deleteExtension;
-
-		// チェック対象プラグイン
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
-
-		// UploadFileインスタンスの準備
-		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
-
-		//アップロードデータ
-		/* @see Cleanup::getUploadFileParams() */
-		$params = $this->$model->getUploadFileParams($cleanUp);
-		$params['conditions'] = array_merge($params['conditions'], ['UploadFile.id' => [12, 23]]);
-		$uploadFiles = $this->$model->UploadFile->find('all', $params);
-
-		// 削除対象件数 初期値
-		$targetCount = 0;
-
-		//
-		//テスト実施
-		//
-		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUp, $targetCount)
-		);
-
-		//チェック
-		//var_export($result);
-		//$this->assertEquals(1, $result, '1件ファイル削除する想定');
-		$this->assertEquals($resultDeleteCount, $result, $assertMessage);
-	}
-
-/**
  * __deleteUploadFiles()のテスト. チェック対象announcements 削除対象. 削除する拡張子を指定
  *
  * @param string $deleteExtension 削除する拡張子
@@ -298,9 +201,9 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
  * @throws ReflectionException
  * @see CleanUp::__deleteUploadFiles()
  *
- * @dataProvider dataProviderUnknowAndAnnouncement
+ * @dataProvider dataProviderAnnouncement
  */
-	public function testDeleteUploadFilesDeleteExtension2($deleteExtension, $resultDeleteCount,
+	public function testDeleteUploadFilesDeleteExtension($deleteExtension, $resultDeleteCount,
 														$assertMessage) {
 		$model = $this->_modelName;
 		$methodName = $this->_methodName;

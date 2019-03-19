@@ -63,7 +63,7 @@ class CleanUpPrivateIsOverDelayDateTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __isOverDelayDate()のテスト. チェック対象unknow
+ * __isOverDelayDate()のテスト. チェック対象:announcement
  *
  * @return void
  * @throws ReflectionException
@@ -79,8 +79,13 @@ class CleanUpPrivateIsOverDelayDateTest extends CleanUpModelTestCase {
 		CleanUpTestUtil::makeTestUploadFiles();
 
 		// チェック対象プラグイン
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
+		$data['CleanUp']['plugin_key'] = [
+			'announcements'
+		];
+		/* @see Cleanup::findCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
+		//var_dump($cleanUps);
+		$cleanUp = $cleanUps[0];
 
 		// UploadFileインスタンスの準備
 		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
@@ -104,7 +109,7 @@ class CleanUpPrivateIsOverDelayDateTest extends CleanUpModelTestCase {
 	}
 
 /**
- * __isOverDelayDate()の削除遅延日以上テスト. チェック対象unknow
+ * __isOverDelayDate()の削除遅延日以上テスト. チェック対象:announcement
  *
  * @return void
  * @throws ReflectionException
@@ -120,8 +125,13 @@ class CleanUpPrivateIsOverDelayDateTest extends CleanUpModelTestCase {
 		CleanUpTestUtil::makeTestUploadFiles();
 
 		// チェック対象プラグイン
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
+		$data['CleanUp']['plugin_key'] = [
+			'announcements'
+		];
+		/* @see Cleanup::findCleanUpsAndPlugin() */
+		$cleanUps = $this->$model->findCleanUpsAndPlugin($data);
+		//var_dump($cleanUps);
+		$cleanUp = $cleanUps[0];
 
 		// UploadFileインスタンスの準備
 		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);

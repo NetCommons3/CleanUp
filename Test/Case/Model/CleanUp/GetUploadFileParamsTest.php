@@ -59,37 +59,6 @@ class CleanUpGetUploadFileParamsTest extends CleanUpModelTestCase {
 	}
 
 /**
- * getUploadFileParams()のテスト プラグイン対象:unknow
- *
- * @return void
- */
-	public function testGetUploadFileParamsUnknow() {
-		$model = $this->_modelName;
-		//$methodName = $this->_methodName;
-
-		//テストデータ
-
-		// チェック対象プラグイン:unknow
-		/* @see Cleanup::getUnknowCleanUp() */
-		$cleanUp = $this->$model->getUnknowCleanUp();
-
-		// UploadFileインスタンスの準備
-		$this->$model->UploadFile = ClassRegistry::init('Files.UploadFile', true);
-
-		//
-		//テスト実施
-		//
-		/* @see Cleanup::getUploadFileParams() */
-		$params = $this->$model->getUploadFileParams($cleanUp);
-
-		//チェック
-		//var_export($params);
-		//var_export($params['conditions']['OR'][0]);
-		$this->assertEquals($params['conditions']['OR'][0], ['Block.id' => null],
-			'プラグイン対象:unknowはblock_id = nullの条件を含む想定');
-	}
-
-/**
  * getUploadFileParams()のテスト プラグイン対象:announcements
  *
  * @return void

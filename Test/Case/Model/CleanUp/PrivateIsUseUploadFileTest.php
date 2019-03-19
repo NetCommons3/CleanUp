@@ -174,14 +174,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
  */
 	public function dataProviderNotUse() {
 		// 'plugin_key' => 'announcements',
-		$cleanUp1['CleanUp'] = (new CleanUpFixture())->records[0];
-
-		// プラグイン不明ファイル
-		// 'plugin_key' => 'unknow',
-		/* @see CleanUp::getUnknowCleanUp() */
-		$CleanUp = ClassRegistry::init('CleanUp.CleanUp', true);
-		$cleanUp2 = $CleanUp->getUnknowCleanUp();
-		//var_export($cleanUp2);
+		$cleanUp['CleanUp'] = (new CleanUpFixture())->records[0];
 
 		$UploadFileFixture = new UploadFileForCleanUpFixture();
 
@@ -191,7 +184,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12のwysiwygアップロードデータを利用 */
 					'UploadFile' => $UploadFileFixture->records[2]
 				],
-				'cleanUp' => $cleanUp1,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイル(block.id=null, block.plugin_key="announcements"なし)で、お知らせで使われてないため、falseが戻る想定'
 			],
@@ -200,7 +193,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=17のwysiwygアップロードデータを利用 */
 					'UploadFile' => $UploadFileFixture->records[7]
 				],
-				'cleanUp' => $cleanUp1,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイル(content_key="")で、お知らせで使われてないため、falseが戻る想定'
 			],
@@ -209,7 +202,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=18のwysiwygアップロードデータを利用 */
 					'UploadFile' => $UploadFileFixture->records[8]
 				],
-				'cleanUp' => $cleanUp1,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイル(content_key=null)で、お知らせで使われてないため、falseが戻る想定'
 			],
@@ -217,7 +210,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 				'uploadFile' => [
 					'UploadFile' => $UploadFileFixture->records[2]
 				],
-				'cleanUp' => $cleanUp2,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'$cleanUp[CleanUp][plugin_key] == unknownはブロックキーなしやコンテンツキーなしで、使われていないため、falseが戻る想定'
 			],
@@ -226,7 +219,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=19のwysiwygアップロードデータを利用 */
 					'UploadFile' => $UploadFileFixture->records[9]
 				],
-				'cleanUp' => $cleanUp1,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイルは、英日お知らせで使われてないため、falseが戻る想定'
 			],
@@ -236,7 +229,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 					 * @see AnnouncementForCleanUpFixture::$records id=16,17,18 が該当お知らせ */
 					'UploadFile' => $UploadFileFixture->records[12]
 				],
-				'cleanUp' => $cleanUp1,
+				'cleanUp' => $cleanUp,
 				'assertMessage' =>
 					'ファイル、お知らせ(is_latest=1 or is_latest=1)でファイル使ってないため、falseが戻る想定'
 			],
