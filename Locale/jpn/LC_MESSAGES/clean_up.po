@@ -102,7 +102,7 @@ msgstr "ロックファイル強制削除処理を開始します。"
 
 #: View/CleanUp/delete.ctp:37
 msgid "File cleanup view description"
-msgstr "使用されていないアップロードファイルを削除します。\n"
+msgstr "Wysiwygで使用されていない画像や添付ファイルを削除します。\n"
 "対象のプラグインを選択して、[削除]を押してください。\n"
 "ファイルクリーンアップを実行する前に、<a href="%s" target="_blank" rel="noopener noreferrer">こちら</a>を参考に<span class="text-danger"><u>必ずバックアップして、いつでもリストアできるようにしてから実行してください。</u></span><br />\n"
 "ファイルクリーンアップはバックグラウンドで実行します。"

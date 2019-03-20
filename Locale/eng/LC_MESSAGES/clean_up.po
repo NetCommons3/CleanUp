@@ -101,7 +101,7 @@ msgstr ""
 
 #: View/CleanUp/delete.ctp:37
 msgid "File cleanup view description"
-msgstr "Deletes unused upload files. \n"
+msgstr "Delete unused images and attachments in Wysiwyg. \n"
 "Select the target plug-in and press [Delete]. \n"
 "Please do <a href="%s" target="_blank" rel="noopener noreferrer">here</a> before executing file cleanup <span class="text-danger"><u>Be sure to backup and restore it at any time before running it. </u></span><br />\n"
 "Run the file cleanup in the background."
