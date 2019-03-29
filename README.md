@@ -8,6 +8,8 @@ CleanUp for NetCommons3
 
 * [画面](#画面)
 * [コンソール](#コンソール)
+* [Tips](#Tips)
+  * [削除する拡張子を指定する](#削除する拡張子を指定する)
 
 ### 画面
 
@@ -64,4 +66,20 @@ Arguments:
 (省略)
 18   (optional) (choices:
     announcements|bbses|blogs|calendars|circular_notices|faqs|multidatabases|questionnaires|questionnaires|quizzes|quizzes|registrations|registrations|reservations|reservations|tasks|videos|all)
+```
+
+### Tips
+#### 削除する拡張子を指定する
+
+CleanUp/Model/CleanUp.phpの下記箇所を変更する事で、削除する拡張子を指定できます。
+
+https://github.com/NetCommons3/CleanUp/blob/243562e8d5da31b3c828c153bdcfa519657b5d89/Model/CleanUp.php#L68
+```php
+/**
+ * 削除する拡張子<br />
+ * (例 jpg、複数はカンマ区切り、空なら全ての拡張子が対象)
+ *
+ * @var string
+ */
+	public $deleteExtension = '';
 ```
