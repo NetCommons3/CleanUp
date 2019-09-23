@@ -36,8 +36,6 @@ class CleanUpLibCleanUpLogStartLogTimezoneTest extends CleanUpCakeTestCase {
 		$result = CleanUpLog::startLogTimezone();
 
 		//チェック
-		$this->assertEquals('UTC', $result,
-			'戻り値は、date_default_timezoneの初期値でUTCの想定');
 		$this->assertEquals(CleanUpLog::TIMEZONE, date_default_timezone_get(),
 			'date_default_timezoneは、CleanUpLog::TIMEZONEに変更されてる想定');
 	}
