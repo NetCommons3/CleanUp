@@ -33,7 +33,7 @@ class CleanUpLibCleanUpLogStartLogTimezoneTest extends CleanUpCakeTestCase {
  */
 	public function testStartLogTimezone() {
 		//テスト実施
-		$result = CleanUpLog::startLogTimezone();
+		CleanUpLog::startLogTimezone();
 
 		//チェック
 		$this->assertEquals(CleanUpLog::TIMEZONE, date_default_timezone_get(),
