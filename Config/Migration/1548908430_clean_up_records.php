@@ -102,8 +102,7 @@ class CleanUpRecords extends NetCommonsMigration {
 				'plugin_key' => 'multidatabases',
 				'model' => 'MultidatabaseContent',
 				'class' => 'Multidatabases.MultidatabaseContent',
-				'fields' => 'value80,value81,value82,value83,value84,value85,value86,value87,value88,value89,' .
-					'value90,value91,value92,value93,value94,value95,value96,value97,value98,value99,value100',
+				'fields' => 'value80,value81,value82,value83,value84,value85,value86,value87,value88,value89,value90,value91,value92,value93,value94,value95,value96,value97,value98,value99,value100',
 				'created_user' => '1',
 				'modified_user' => '1',
 			),
