@@ -475,12 +475,10 @@ class CleanUp extends CleanUpAppModel {
 		$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
 		foreach ($fieldsArray as $field) {
 			$field = trim($field);
-			$checkConditions[] = array(
-				'OR' => array(
-					array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%'),
-					array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%'),
-				),
-			);
+			$checkConditions['OR'][]
+					= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%');
+			$checkConditions['OR'][]
+					= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%');
 		}
 
 		// 最新とアクティブを取得する条件（多言語も取得される）
