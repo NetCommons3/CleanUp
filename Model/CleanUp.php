@@ -436,10 +436,10 @@ class CleanUp extends CleanUpAppModel {
 			// 対応ブロックがないならば、すでに対象データが削除されている false
 			return false;
 		}
-		if (! $uploadFile['UploadFile']['content_key']) {
-			// コンテンツキーなしで、使われていないため、false
-			return false;
-		}
+		//if (! $uploadFile['UploadFile']['content_key']) {
+		//	// コンテンツキーなしで、使われていないため、false
+		//	return false;
+		//}
 
 		$model = $cleanUp['CleanUp']['model'];
 		$class = $cleanUp['CleanUp']['class'];
