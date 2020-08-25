@@ -439,8 +439,9 @@ class CleanUp extends CleanUpAppModel {
 			return false;
 		}
 		if (! $uploadFile['UploadFile']['content_key']) {
-			// コンテンツキーなしで、使われていないため、false
-			return false;
+			// 既存バグでコンテンツキーなしで登録されているデータがすでに発生している可能性あり
+			// 使用中ファイルを消さないようにするため、ノーチェックでtrueリターンする
+			return true;
 		}
 
 		$model = $cleanUp['CleanUp']['model'];
