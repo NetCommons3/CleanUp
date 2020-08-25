@@ -295,6 +295,7 @@ class CleanUp extends CleanUpAppModel {
 			'UploadFile.path',
 			'UploadFile.original_name',
 			'UploadFile.modified',
+			'Block.plugin_key',	
 		);
 
 		// block_keyあり(Blockと結合するためblock_keyは必ずあり)、content_keyありorなし
@@ -308,12 +309,15 @@ class CleanUp extends CleanUpAppModel {
 			'recursive' => -1,
 			'conditions' => array(
 				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
-				'Block.plugin_key' => $cleanUp['CleanUp']['plugin_key']
+				'OR' => array(
+					'Block.plugin_key' => $cleanUp['CleanUp']['plugin_key'],
+					'Block.plugin_key is null',
+				)
 			),
 			'joins' => array(
 				array('table' => 'blocks',
 					'alias' => 'Block',
-					'type' => 'inner',
+					'type' => 'left',
 					'conditions' => array(
 						$this->UploadFile->alias . '.block_key = Block.key',
 					)
@@ -428,6 +432,10 @@ class CleanUp extends CleanUpAppModel {
  * @return bool true:使ってる|false:使ってない
  */
 	private function __isUseUploadFile($uploadFile, $cleanUp) {
+		if (empty($uploadFile['Block']['plugin_key'])) {
+			// 対応ブロックがないならば、すでに対象データが削除されている false
+			return false;
+		}
 		if (! $uploadFile['UploadFile']['content_key']) {
 			// コンテンツキーなしで、使われていないため、false
 			return false;
