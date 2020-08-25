@@ -241,9 +241,11 @@ class CleanUp extends CleanUpAppModel {
 
 				while ($uploadFiles = $this->UploadFile->find('all', $params)) {
 					// ファイル削除
-					$targetCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp, $targetCount);
+					$deleteCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp);
+					// これまでの削除ファイル数
+					$targetCount += $deleteCount;
 					// 次のn件取得
-					$params['offset'] = self::FIND_LIMIT_UPLOAD_FILE;
+					$params['offset'] += (self::FIND_LIMIT_UPLOAD_FILE - $deleteCount);
 				}
 
 				if ($targetCount === 0) {
@@ -341,10 +343,10 @@ class CleanUp extends CleanUpAppModel {
  *
  * @param array $uploadFiles UploadFiles
  * @param array $cleanUp request->data 1件
- * @param int $targetCount 削除対象件数
- * @return int 削除対象件数
+ * @return int 削除した件数
  */
-	private function __deleteUploadFiles($uploadFiles, $cleanUp, $targetCount) {
+	private function __deleteUploadFiles($uploadFiles, $cleanUp) {
+		$deletedCount = 0;
 		foreach ($uploadFiles as $uploadFile) {
 			if ($this->__isOverDelayDate($uploadFile)) {
 				// 削除遅延日  x日前を例えば1日前を指定すると、今日アップしたファイルは消さなくなります
@@ -372,9 +374,9 @@ class CleanUp extends CleanUpAppModel {
 				CakeLog::info(__d('clean_up', '[%s:%s] "%s" deleted.',
 					[$pluginName, $model, $fileName]), ['CleanUp']);
 			}
-			$targetCount++;
+			$deletedCount++;
 		}
-		return $targetCount;
+		return $deletedCount;
 	}
 
 /**
