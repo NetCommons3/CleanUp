@@ -330,6 +330,13 @@ class CleanUp extends CleanUpAppModel {
 		//   使われてない事がわかっているため。
 		// * block_keyなしのデータが存在する。 3.1.3より以前はblock_keyなしでアップロードされていたため、
 		//   そのデータは削除対象にしない。
+		// * ↑
+		//   それをしてしまうとブロック本体を削除したような場合に一気に大量の浮きリソースが発生します。
+		//   wysiwygのupload_filesでblock_keyがNULL（空）のもの、また、JOIN相手のblocksレコードが見つからないものは
+		//   削除対象とします
+		//   しかし、そのままやると3.1.3よりまえのバージョンで運営されていたUPファイルを消してしまう可能性があるので
+		//   3.1.3より前のバージョンでUPされていたファイルは消さないように3.1.3より前にUPされていたファイルは
+		//   CleanUp対象外とするようにします
 		// * block_keyなしは、blockテーブルと結合できないため、どのプラグインから投稿されたかわからない。
 		$params = array(
 			'recursive' => -1,
@@ -534,7 +541,19 @@ class CleanUp extends CleanUpAppModel {
 			// 多言語であっても、is_active=1 or is_latest=1で画像orファイル使っているかの対象になり、該当すればcountされる。
 			// そのため、多言語（language_id=1 or 2）でもis_active=1 or is_latest=1でチェック対象になってる
 	
+			// is_activeやis_latestフィールドを持たないModelもある
+			// そのようなイリーガルなModelは自分自身で独自の生死判断メソッドをもつことが要求される
+			// かつ、その生死判断メソッドをclean_upsテーブルのalive_funcフィールドに登録する
 			if ($func) {
+				// 生死判断関数をテーブルに登録しているのに実装していない！
+				if (! method_exists($model, $func)) {
+					// エラーログを出力して、
+					CakeLog::error(__d('clean_up', '[%s:%s] model does not have method.',
+					$model->alias, $func));
+					// TODO ログファイルにエラーのことを出力できないでしょうか？
+					// 実情判断できないので、使用中ということにする
+					return true;
+				}
 				$judgeConditions = $model->$func($uploadFile['UploadFile']['content_key']);
 				$conditions = array_merge(Hash::get($judgeConditions, 'conditions', array()), $checkConditions);
 			} else {
