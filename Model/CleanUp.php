@@ -159,6 +159,7 @@ class CleanUp extends CleanUpAppModel {
 				'CleanUp.model',
 				'CleanUp.class',
 				'CleanUp.fields',
+				'CleanUp.alive_func',
 				'Plugin.key',
 				'Plugin.name',
 			),
@@ -171,6 +172,8 @@ class CleanUp extends CleanUpAppModel {
 			];
 		}
 
+		// プラグインの中に存在する全モデルでチェックするために
+		// プラグイン単位でまとめなおした配列にする
 		return $this->find('all', $params);
 	}
 
@@ -204,8 +207,6 @@ class CleanUp extends CleanUpAppModel {
 		$this->loadModels(array(
 			'UploadFile' => 'Files.UploadFile',
 		));
-		//トランザクションBegin
-		$this->begin();
 
 		//バリデーション
 		$this->set($data);
@@ -220,14 +221,34 @@ class CleanUp extends CleanUpAppModel {
 		// 複数起動防止ロック
 		CleanUpLockFile::makeLockFile();
 
+		//トランザクションBegin
+		$this->begin();
+
 		// ファイルクリーンアップ対象のプラグイン設定を取得
+		// プラグイン単位にまとめなおされたクリーンアップ配列情報を作成
+		// プラグイン単位で処理を行わないと間違ったファイルを消す恐れがある
+		// UploadFileはどのプラグインで使用している、の情報は載っているが
+		// どのモデルで使用しているの情報がないため、間違って巻き込み判断をするので。
 		$cleanUps = $this->findCleanUpsAndPlugin($data);
+		$cleanUpsByPlugin = array();
+		foreach ($cleanUps as $cleanUp) {
+			$pluginKey = $cleanUp['CleanUp']['plugin_key'];
+			if (! isset($cleanUpsByPlugin[$pluginKey])) {
+				$cleanUpsByPlugin[$pluginKey] = [];
+			}
+			$cleanUpsByPlugin[$pluginKey][] = $cleanUp;
+		}
 
 		try {
-			foreach ($cleanUps as $cleanUp) {
+			foreach ($cleanUpsByPlugin as $pluginKey => $cleanUps) {
+
+				// プラグイン中の代表Model
+				// 最低１つは絶対存在するので安心して「０」を取り出している
+				$cleanUp = $cleanUps[0];
+
 				// 削除対象件数
 				$targetCount = 0;
-				//var_dump($cleanUp);
+
 				$pluginName = $cleanUp['Plugin']['name'];
 				$model = $cleanUp['CleanUp']['model'];
 
@@ -239,9 +260,11 @@ class CleanUp extends CleanUpAppModel {
 				// $uploadFiles findでデータとれすぎてメモリ圧迫問題対応。 1000件づつ取得
 				$params = array_merge($params, array('limit' => self::FIND_LIMIT_UPLOAD_FILE, 'offset' => 0));
 
+				// このプラグインに関するアップロードファイルが全部見つかる
 				while ($uploadFiles = $this->UploadFile->find('all', $params)) {
 					// ファイル削除
-					$deleteCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp);
+					// 削除していいかどうかは、このプラグインに関する全Modelを見て判断する[$cleanUps]
+					$deleteCount = $this->__deleteUploadFiles($uploadFiles, $cleanUp, $cleanUps);
 					// これまでの削除ファイル数
 					$targetCount += $deleteCount;
 					// 次のn件取得
@@ -301,6 +324,7 @@ class CleanUp extends CleanUpAppModel {
 		);
 
 		// block_keyあり(Blockと結合するためblock_keyは必ずあり)、content_keyありorなし
+		// blockが存在しない場合もあり得るのでleft joinとしている
 		//
 		// * content_keyなし対象データは、this->__isUseUploadFile()チェック不要。content_keyなしで
 		//   使われてない事がわかっているため。
@@ -343,9 +367,10 @@ class CleanUp extends CleanUpAppModel {
  *
  * @param array $uploadFiles UploadFiles
  * @param array $cleanUp request->data 1件
+ * @param array $cleanUps cleanUpで指定されたモデルが属するプラグインがチェックすべき全モデル情報
  * @return int 削除した件数
  */
-	private function __deleteUploadFiles($uploadFiles, $cleanUp) {
+	private function __deleteUploadFiles($uploadFiles, $cleanUp, $cleanUps) {
 		$deletedCount = 0;
 		foreach ($uploadFiles as $uploadFile) {
 			if ($this->__isOverDelayDate($uploadFile)) {
@@ -355,7 +380,7 @@ class CleanUp extends CleanUpAppModel {
 
 			// このコンテンツでアップロードファイルを使っているかどうか。
 			// 該当あり => 該当ファイルは使ってるため削除しない
-			if ($this->__isUseUploadFile($uploadFile, $cleanUp)) {
+			if ($this->__isUseUploadFile($uploadFile, $cleanUps)) {
 				continue;
 			}
 			//var_dump($uploadFile);
@@ -430,23 +455,20 @@ class CleanUp extends CleanUpAppModel {
  * このコンテンツでアップロードファイルを使っているかどうか。
  *
  * @param array $uploadFile UploadFile
- * @param array $cleanUp [CleanUp][...]
+ * @param array $cleanUps [n][CleanUp][...]
  * @return bool true:使ってる|false:使ってない
  */
-	private function __isUseUploadFile($uploadFile, $cleanUp) {
+	private function __isUseUploadFile($uploadFile, $cleanUps) {
 		if (empty($uploadFile['Block']['plugin_key'])) {
-			// 対応ブロックがないならば、すでに対象データが削除されている false
+			// 対応ブロックがないならば、すでに対象データが削除されている 絶対使われていない false
 			return false;
 		}
 		if (! $uploadFile['UploadFile']['content_key']) {
-			// 既存バグでコンテンツキーなしで登録されているデータがすでに発生している可能性あり
-			// 使用中ファイルを消さないようにするため、ノーチェックでtrueリターンする
+			// 既存バグでコンテンツキーなしで登録されているデータがすでに発生している可能性があります
+			// 使用中ファイルを消さないようにするため、安全を考え、ノーチェックでtrueリターンする
 			return true;
 		}
 
-		$model = $cleanUp['CleanUp']['model'];
-		$class = $cleanUp['CleanUp']['class'];
-		$fields = $cleanUp['CleanUp']['fields'];
 		// このコンテンツでアップロードファイルを使っているかどうか。
 		/*
 		SELECT * FROM nc3.announcements
@@ -477,54 +499,73 @@ class CleanUp extends CleanUpAppModel {
 			false
 		);
 
-		$this->loadModels(array(
-			$model => $class,
-		));
-
-		// fileUrl, imageUrl使ってる条件
-		$checkConditions = [];
-		$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
-		foreach ($fieldsArray as $field) {
-			$field = trim($field);
-			$checkConditions['OR'][]
-					= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%');
-			$checkConditions['OR'][]
-					= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%');
+		$count = 0;
+		// プラグイン単位でまとめられた全Modelについてチェックする
+		foreach ($cleanUps as $cleanUp) {
+			$model = $cleanUp['CleanUp']['model'];
+			$class = $cleanUp['CleanUp']['class'];
+			$fields = $cleanUp['CleanUp']['fields'];
+			$func = $cleanUp['CleanUp']['alive_func'];
+	
+			$this->loadModels(array(
+				$model => $class,
+			));
+	
+			// fileUrl, imageUrl使ってる条件
+			$checkConditions = [];
+			$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
+			foreach ($fieldsArray as $field) {
+				$field = trim($field);
+				$checkConditions['OR'][]
+						= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkFileUrl . '%');
+				$checkConditions['OR'][]
+						= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%');
+			}
+	
+			// 最新とアクティブを取得する条件（多言語も取得される）
+			//
+			// 多言語
+			// announcementsテーブルで日英で同じkeyで2件ある場合の例。
+			// id,language_id,block_id,key,status,is_active,is_latest,is_origin,is_translation,is_original_copy,content,created_user,created,modified_user,modified
+			// 24,2,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,1,1,0,"<img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/1/" alt="" /><p> 日本語画像使ってる</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:25:43"
+			// 25,1,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,0,1,0,"<p>英語　画像削除</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:26:35"
+			// ※日本語（language_id=2）のcontentで画像は使っていて、英語（language_id=1）は画像削除した。
+			// ※日英ともに、is_active=1 and is_latest=1がありえる。つまり同じkeyでis_active=1 and is_latest=1が2件ある状態。
+			// 多言語であっても、is_active=1 or is_latest=1で画像orファイル使っているかの対象になり、該当すればcountされる。
+			// そのため、多言語（language_id=1 or 2）でもis_active=1 or is_latest=1でチェック対象になってる
+	
+			if ($func) {
+				$judgeConditions = $model->$func($uploadFile['UploadFile']['content_key']);
+				$conditions = array_merge(Hash::get($judgeConditions, 'conditions', array()), $checkConditions);
+			} else {
+				$conditions = array(
+					array(
+						'OR' => array(
+							$this->$model->alias . '.is_active' => '1',
+							$this->$model->alias . '.is_latest' => '1',
+						),
+					),
+					$this->$model->alias . '.key' => $uploadFile['UploadFile']['content_key'],
+				);
+				$conditions = array_merge_recursive($conditions, $checkConditions);
+			}
+			try {
+				// 多言語, 最新とアクティブ, のコンテンツで複数件ある
+					$count += $this->$model->find('count', 
+						array_merge(array('recursive' => -1), $conditions)
+					);
+					//var_dump($this->$model->find('all'));
+			} catch (Exception $e) {
+				// チェック用フォーマットの記述ミスがあった場合、SQLエラーになる可能性がある
+				// SQLエラーでファイルを削除してしまうのはよくないので、とりあえず使用中とする
+				// SQLエラーの内容はログに残しておく
+				CakeLog::error($e->getMessage());
+				return true;
+			}
 		}
-
-		// 最新とアクティブを取得する条件（多言語も取得される）
-		//
-		// 多言語
-		// announcementsテーブルで日英で同じkeyで2件ある場合の例。
-		// id,language_id,block_id,key,status,is_active,is_latest,is_origin,is_translation,is_original_copy,content,created_user,created,modified_user,modified
-		// 24,2,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,1,1,0,"<img class="img-responsive nc3-img nc3-img-block" title="" src="{{__BASE_URL__}}/wysiwyg/image/download/1/" alt="" /><p> 日本語画像使ってる</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:25:43"
-		// 25,1,6,9b73e6340136d5e86e631696f3fe859e,1,1,1,0,1,0,"<p>英語　画像削除</p>",1,"2019-01-25 04:46:16",1,"2019-02-20 06:26:35"
-		// ※日本語（language_id=2）のcontentで画像は使っていて、英語（language_id=1）は画像削除した。
-		// ※日英ともに、is_active=1 and is_latest=1がありえる。つまり同じkeyでis_active=1 and is_latest=1が2件ある状態。
-		// 多言語であっても、is_active=1 or is_latest=1で画像orファイル使っているかの対象になり、該当すればcountされる。
-		// そのため、多言語（language_id=1 or 2）でもis_active=1 or is_latest=1でチェック対象になってる
-		$conditions = array(
-			array(
-				'OR' => array(
-					$this->$model->alias . '.is_active' => '1',
-					$this->$model->alias . '.is_latest' => '1',
-				),
-			),
-			$this->$model->alias . '.key' => $uploadFile['UploadFile']['content_key'],
-		);
-		$conditions = array_merge_recursive($conditions, $checkConditions);
-
-		// 多言語, 最新とアクティブ, のコンテンツで複数件ある
-		$count = $this->$model->find('count', array(
-			'recursive' => -1,
-			'conditions' => $conditions,
-		));
-		//var_dump($this->$model->find('all'));
-
 		if ($count) {
 			return true;
 		}
 		return false;
 	}
-
 }
