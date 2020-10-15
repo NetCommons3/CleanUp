@@ -64,6 +64,8 @@ class AddAliveFuncColumn extends NetCommonsMigration {
 		'CleanUp' => array(
 			//汎用データベース
 			array (
+				'plugin_key' => 'multidatabases',
+				'model' => 'MultidatabaseContent',
 				'class' => 'Multidatabases.MultidatabaseContent',
 				'fields' => 'value2,value3,value4,value5,value6,value7,value8,value9,value10,' . 
 				'value11,value12,value13,value14,value15,value16,value17,value18,value19,value20,' . 
@@ -74,31 +76,58 @@ class AddAliveFuncColumn extends NetCommonsMigration {
 				'value61,value62,value63,value64,value65,value66,value67,value68,value69,value70,' . 
 				'value71,value72,value73,value74,value75,value76,value77,value78,value79,value80,' . 
 				'value81,value82,value83,value84,value85,value86,value87,value88,value89,value90,' . 
-					'value91,value92,value93,value94,value95,value96,value97,value98,value99,value100',
+				'value91,value92,value93,value94,value95,value96,value97,value98,value99,value100',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 			//アンケート
 			array (
+				'plugin_key' => 'questionnaires',
+				'model' => 'QuestionnaireQuestion',
 				'class' => 'Questionnaires.QuestionnaireQuestion',
+				'fields' => 'description',
 				'alive_func' => 'getAliveCondition',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 			//小テスト
 			array (
+				'plugin_key' => 'quizzes',
+				'model' => 'QuizQuestion',
 				'class' => 'Quizzes.QuizQuestion',
+				'fields' => 'commentary, question_value',
 				'alive_func' => 'getAliveCondition',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 			array (
+				'plugin_key' => 'quizzes',
+				'model' => 'QuizPage',
 				'class' => 'Quizzes.QuizPage',
+				'fields' => 'page_description',
 				'alive_func' => 'getAliveCondition',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 			//登録フォーム
 			array (
+				'plugin_key' => 'registrations',
+				'model' => 'Registration',
 				'class' => 'Registrations.RegistrationQuestion',
+				'fields' => 'thanks_content',
 				'alive_func' => 'getAliveCondition',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 			//施設予約
 			array (
+				'plugin_key' => 'reservations',
+				'model' => 'ReservationLocation',
 				'class' => 'Reservations.ReservationLocation',
+				'fields' => 'detail',
 				'alive_func' => 'getAliveCondition',
+				'created_user' => '1',
+				'modified_user' => '1',
 			),
 		),
 	);
