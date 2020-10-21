@@ -593,8 +593,10 @@ public $nc314InstallDatetime = '';
 					return true;
 				}
 				$judgeConditions = $this->$model->$func($uploadFile['UploadFile']['content_key']);
-				$conditions = array_merge(Hash::get($judgeConditions, 'conditions', array()), $checkConditions);
-				$joins = Hash::get($judgeConditions, 'conditions', array());
+				$conditions = array_merge_recursive(
+					Hash::get($judgeConditions, 'conditions', array()), 
+					array($checkConditions));
+				$joins = Hash::get($judgeConditions, 'joins', array());
 			} else {
 				$conditions = array(
 					array(
@@ -610,11 +612,18 @@ public $nc314InstallDatetime = '';
 			}
 			try {
 				// 多言語, 最新とアクティブ, のコンテンツで複数件ある
-					$count += $this->$model->find('count', 
-						array_merge(array('recursive' => -1), $conditions, $joins)
+					$count = $this->$model->find('count', 
+						array_merge(
+							array('recursive' => -1), 
+							array('conditions' => $conditions), 
+							array('joins' => $joins)
+						)
 					);
 					$this->log($this->getDataSource()->getLog(), 'debug');
 					$this->log($count, 'debug');
+					if ($count > 0) {
+						return true;
+					}
 					//var_dump($this->$model->find('all'));
 			} catch (Exception $e) {
 				// チェック用フォーマットの記述ミスがあった場合、SQLエラーになる可能性がある
@@ -623,9 +632,6 @@ public $nc314InstallDatetime = '';
 				CakeLog::error($e->getMessage());
 				return true;
 			}
-		}
-		if ($count) {
-			return true;
 		}
 		return false;
 	}
