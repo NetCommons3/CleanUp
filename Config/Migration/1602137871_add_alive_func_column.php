@@ -53,13 +53,14 @@ class AddAliveFuncColumn extends NetCommonsMigration {
 			),
 		),
 	);
-	/**
-	 * records<br />
-	 * ファイルクリーンアップの対象にしたい場合、当マイグレーションを参考にマイグレーション作成して、<br />
-	 * 対象プラグインのデータをclean_upsテーブルに書き込む
-	 *
-	 * @var array $migration
-	 */
+
+/**
+ * records<br />
+ * ファイルクリーンアップの対象にしたい場合、当マイグレーションを参考にマイグレーション作成して、<br />
+ * 対象プラグインのデータをclean_upsテーブルに書き込む
+ *
+ * @var array $migration
+ */
 	public $records = array(
 		'CleanUp' => array(
 			//汎用データベース
@@ -123,22 +124,22 @@ class AddAliveFuncColumn extends NetCommonsMigration {
 		),
 	);
 
-	/**
-	* Before migration callback
-	*
-	* @param string $direction Direction of migration process (up or down)
-	* @return bool Should process continue
-	*/
+/**
+ * Before migration callback
+ *
+ * @param string $direction Direction of migration process (up or down)
+ * @return bool Should process continue
+ */
 	public function before($direction) {
 		return true;
 	}
 
-	/**
-	* After migration callback
-	*
-	* @param string $direction Direction of migration process (up or down)
-	* @return bool Should process continue
-	*/
+/**
+ * After migration callback
+ *
+ * @param string $direction Direction of migration process (up or down)
+ * @return bool Should process continue
+ */
 	public function after($direction) {
 		if ($direction === 'down') {
 			return true;
