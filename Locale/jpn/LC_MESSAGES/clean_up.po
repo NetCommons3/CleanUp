@@ -89,8 +89,8 @@ msgid "[%s:%s]  Failed to delete \"%s\"."
 msgstr "[%s:%s] 「%s」の削除に失敗しました。"
 
 #: Model/CleanUp.php:411
-msgid "[%s:%s] \"%s\" deleted."
-msgstr "[%s:%s] 「%s」を削除しました。"
+msgid "[%s] \"%s\" deleted."
+msgstr "[%s] 「%s」を削除しました。"
 
 #: Utility/CleanUpUtility.php:117
 msgid "Created a lock file."
