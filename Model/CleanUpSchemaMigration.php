@@ -16,16 +16,18 @@
  * @property UploadFile $UploadFile
  */
 class CleanUpSchemaMigration extends CleanUpAppModel {
+
 /**
  * Use table config
  *
  * @var bool
  */
-    public $useTable = 'schema_migrations';
+	public $useTable = 'schema_migrations';
+
 /**
  * Use table alias
  *
  * @var bool
  */
-    public $alias = 'SchemaMigration';    
+	public $alias = 'SchemaMigration';
 }

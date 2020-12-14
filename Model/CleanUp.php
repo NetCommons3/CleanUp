@@ -20,6 +20,7 @@ App::uses('CleanUpLockFile', 'CleanUp.Lib');
  * @author Mitsuru Mutaguchi <mutaguchi@opensource-workshop.jp>
  * @package NetCommons\CleanUp\Model
  * @property UploadFile $UploadFile
+ * @SuppressWarnings(PHPMD.LongVariable)
  */
 class CleanUp extends CleanUpAppModel {
 
@@ -59,7 +60,7 @@ class CleanUp extends CleanUpAppModel {
  *
  * @var int
  */
-public $nc2ToNc3UplaodFileMaxId = 0;
+	public $nc2ToNc3UplaodFileMaxId = 0;
 
 /**
  * NC3 3.1.4 相当のファイルがインストールされた日時<br />
@@ -68,7 +69,7 @@ public $nc2ToNc3UplaodFileMaxId = 0;
  *
  * @var string
  */
-public $nc314InstallDatetime = '';
+	public $nc314InstallDatetime = '';
 
 /**
  * 削除する拡張子の区切り文字
@@ -194,7 +195,23 @@ public $nc314InstallDatetime = '';
 		// プラグイン単位でまとめなおした配列にする
 		return $this->find('all', $params);
 	}
-
+/**
+ * ファイルクリーンアップ対象プラグインデータ 並べ替え
+ *
+ * @param array $cleanUps CleanUpテーブルから取得したレコード
+ * @return array
+ */
+	private function __combineCleanUpsAndPlugin($cleanUps) {
+		$cleanUpsByPlugin = array();
+		foreach ($cleanUps as $cleanUp) {
+			$pluginKey = $cleanUp['CleanUp']['plugin_key'];
+			if (! isset($cleanUpsByPlugin[$pluginKey])) {
+				$cleanUpsByPlugin[$pluginKey] = [];
+			}
+			$cleanUpsByPlugin[$pluginKey][] = $cleanUp;
+		}
+		return $cleanUpsByPlugin;
+	}
 /**
  * 入力チェックのみ行う
  *
@@ -253,18 +270,10 @@ public $nc314InstallDatetime = '';
 		// UploadFileはどのプラグインで使用している、の情報は載っているが
 		// どのモデルで使用しているの情報がないため、間違って巻き込み判断をするので。
 		$cleanUps = $this->findCleanUpsAndPlugin($data);
-		$cleanUpsByPlugin = array();
-		foreach ($cleanUps as $cleanUp) {
-			$pluginKey = $cleanUp['CleanUp']['plugin_key'];
-			if (! isset($cleanUpsByPlugin[$pluginKey])) {
-				$cleanUpsByPlugin[$pluginKey] = [];
-			}
-			$cleanUpsByPlugin[$pluginKey][] = $cleanUp;
-		}
+		$cleanUpsByPlugin = $this->__combineCleanUpsAndPlugin($cleanUps);
 
 		try {
-			foreach ($cleanUpsByPlugin as $pluginKey => $cleanUps) {
-
+			foreach ($cleanUpsByPlugin as $cleanUps) {
 				// プラグイン中の代表Model
 				// 最低１つは絶対存在するので安心して「０」を取り出している
 				$cleanUp = $cleanUps[0];
@@ -304,10 +313,8 @@ public $nc314InstallDatetime = '';
 						[$pluginName, $model]), ['CleanUp']);
 				}
 			}
-
 			//トランザクションCommit
 			$this->commit();
-
 		} catch (Exception $ex) {
 			// ロック解除
 			CleanUpLockFile::deleteLockFile();
@@ -343,7 +350,7 @@ public $nc314InstallDatetime = '';
 			'UploadFile.path',
 			'UploadFile.original_name',
 			'UploadFile.modified',
-			'Block.plugin_key',	
+			'Block.plugin_key',
 		);
 
 		// block_keyあり(Blockと結合するためblock_keyは必ずあり)、content_keyありorなし
@@ -376,7 +383,7 @@ public $nc314InstallDatetime = '';
 			'conditions' => array(
 				$this->UploadFile->alias . '.plugin_key' => 'wysiwyg',
 				$this->UploadFile->alias . '.id >' => $this->nc2ToNc3UplaodFileMaxId,
-				$this->UploadFile->alias . '.created >' => $this->nc314InstallDatetime,  
+				$this->UploadFile->alias . '.created >' => $this->nc314InstallDatetime,
 				'OR' => array(
 					'Block.plugin_key' => $cleanUp['CleanUp']['plugin_key'],
 					'Block.plugin_key is null',
@@ -420,12 +427,18 @@ public $nc314InstallDatetime = '';
 				continue;
 			}
 
-			// このコンテンツでアップロードファイルを使っているかどうか。
-			// 該当あり => 該当ファイルは使ってるため削除しない
-			if ($this->__isUseUploadFile($uploadFile, $cleanUps)) {
-				continue;
+			// Block情報があるときだけ使用中判定関数を行う
+			// Blockがないのはもう持ち主もわからない不使用ファイルです
+			if (! empty($uploadFile['Block']['plugin_key'])) {
+				// このコンテンツでアップロードファイルを使っているかどうか。
+				// 該当あり => 該当ファイルは使ってるため削除しない
+				if ($this->__isUseUploadFile($uploadFile, $cleanUps)) {
+					continue;
+				}
+				$pluginName = $cleanUp['Plugin']['name'];
+			} else {
+				$pluginName = '----';
 			}
-			//var_dump($uploadFile);
 
 			// お知らせウィジウィグでファイルアップした場合、upload_files_contentsにデータはできなかったため、
 			// upload_files_contents削除処理は、なし
@@ -435,7 +448,6 @@ public $nc314InstallDatetime = '';
 			// しかし、１プラグイン中に複数モデルが登録される場合、どのモデルでファイル削除したのかがわからない
 			// (upload_filesテーブルにJOINするblocksテーブルには「プラグイン名」しか記載されていないため)
 			// よってメッセージからモデル名を削除する
-			$pluginName = $cleanUp['Plugin']['name'];
 			$fileName = $uploadFile['UploadFile']['original_name'];
 			if ($this->__deleteUploadFile($uploadFile) === false) {
 				CakeLog::info(__d('clean_up', '[%s]  Failed to delete "%s".',
@@ -502,12 +514,15 @@ public $nc314InstallDatetime = '';
  * @param array $uploadFile UploadFile
  * @param array $cleanUps [n][CleanUp][...]
  * @return bool true:使ってる|false:使ってない
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 	private function __isUseUploadFile($uploadFile, $cleanUps) {
-		if (empty($uploadFile['Block']['plugin_key'])) {
-			// 対応ブロックがないならば、すでに対象データが削除されている 絶対使われていない false
-			return false;
-		}
+		// こちらの関数でブロックNULL判断でfalse返す処理を入れていると
+		// Call元の方では誤ったプラグイン名の名前を付けてログを出力してしまう
+		// (Blockが存在しないのだから、持ち主不明のはず。
+		//  しかしCall元はプラグイン順番で処理しているので処理中プラグインの判断としてしまう)
+		// Block有無判断だけは__deleteUploadFilesで行う
+
 		if (! $uploadFile['UploadFile']['content_key']) {
 			// 既存バグでコンテンツキーなしで登録されているデータがすでに発生している可能性があります
 			// 使用中ファイルを消さないようにするため、安全を考え、ノーチェックでtrueリターンする
@@ -551,11 +566,11 @@ public $nc314InstallDatetime = '';
 			$class = $cleanUp['CleanUp']['class'];
 			$fields = $cleanUp['CleanUp']['fields'];
 			$func = $cleanUp['CleanUp']['alive_func'];
-	
+
 			$this->loadModels(array(
 				$model => $class,
 			));
-	
+
 			// fileUrl, imageUrl使ってる条件
 			$checkConditions = [];
 			$fieldsArray = explode(self::FIELD_DELIMITER, $fields);
@@ -566,7 +581,7 @@ public $nc314InstallDatetime = '';
 				$checkConditions['OR'][]
 						= array($this->$model->alias . '.' . $field . ' LIKE' => '%' . $checkImageUrl . '%');
 			}
-	
+
 			// 最新とアクティブを取得する条件（多言語も取得される）
 			//
 			// 多言語
@@ -578,7 +593,7 @@ public $nc314InstallDatetime = '';
 			// ※日英ともに、is_active=1 and is_latest=1がありえる。つまり同じkeyでis_active=1 and is_latest=1が2件ある状態。
 			// 多言語であっても、is_active=1 or is_latest=1で画像orファイル使っているかの対象になり、該当すればcountされる。
 			// そのため、多言語（language_id=1 or 2）でもis_active=1 or is_latest=1でチェック対象になってる
-	
+
 			// is_activeやis_latestフィールドを持たないModelもある
 			// そのようなイリーガルなModelは自分自身で独自の生死判断メソッドをもつことが要求される
 			// かつ、その生死判断メソッドをclean_upsテーブルのalive_funcフィールドに登録する
@@ -588,13 +603,12 @@ public $nc314InstallDatetime = '';
 					// エラーログを出力して、
 					CakeLog::error(__d('clean_up', '[%s:%s] model does not have method.',
 					$this->$model->alias, $func));
-					// TODO ログファイルにエラーのことを出力できないでしょうか？
 					// 実情判断できないので、使用中ということにする
 					return true;
 				}
 				$judgeConditions = $this->$model->$func($uploadFile['UploadFile']['content_key']);
 				$conditions = array_merge_recursive(
-					Hash::get($judgeConditions, 'conditions', array()), 
+					Hash::get($judgeConditions, 'conditions', array()),
 					array($checkConditions));
 				$joins = Hash::get($judgeConditions, 'joins', array());
 			} else {
@@ -612,15 +626,13 @@ public $nc314InstallDatetime = '';
 			}
 			try {
 				// 多言語, 最新とアクティブ, のコンテンツで複数件ある
-					$count = $this->$model->find('count', 
+					$count = $this->$model->find('count',
 						array_merge(
-							array('recursive' => -1), 
-							array('conditions' => $conditions), 
+							array('recursive' => -1),
+							array('conditions' => $conditions),
 							array('joins' => $joins)
 						)
 					);
-					$this->log($this->getDataSource()->getLog(), 'debug');
-					$this->log($count, 'debug');
 					if ($count > 0) {
 						return true;
 					}
