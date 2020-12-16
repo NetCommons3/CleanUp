@@ -60,6 +60,8 @@ class CleanUpPrivateIsOverDelayDateTest extends CleanUpModelTestCase {
  */
 	public function setUp() {
 		parent::setUp();
+		$model = $this->_modelName;
+		$this->$model->nc314InstallDatetime = '2015-03-31 00:00:00';
 	}
 
 /**
