@@ -26,6 +26,8 @@ class CleanUpFileCleanUpTest extends CleanUpModelTestCase {
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
+		'plugin.clean_up.schema_migration',
+		'plugin.clean_up.nc2_to_nc3_map',
 		'plugin.plugin_manager.plugin4test',
 	);
 

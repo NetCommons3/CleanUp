@@ -28,6 +28,8 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
  */
 	public $fixtures = array(
 		'plugin.clean_up.clean_up',
+		'plugin.clean_up.schema_migration',
+		'plugin.clean_up.nc2_to_nc3_map',
 		'plugin.clean_up.announcement_for_clean_up',
 		'plugin.clean_up.block_for_clean_up',
 		'plugin.clean_up.plugin_for_clean_up',
@@ -154,6 +156,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 
 		// 'plugin_key' => 'announcements',
 		//$cleanUp['CleanUp'] = (new CleanUpFixture())->records[0];
+		$cleanUp['CleanUp'] = $cleanUp;
 
 		//テスト実施
 		$result = $this->_testReflectionMethod(
@@ -178,42 +181,47 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 
 		$UploadFileFixture = new UploadFileForCleanUpFixture();
 
+		// 2020年の仕様変更で、content_key=NULLは無条件に削除対象外とすることになった
+		// ※過去のいくつかのプラグインのバグでcontent_keyをNULLのままに保存してしまっているcontentsがあるため
+		// 実質、isUseの判定の基準は、対象のプラグインの対象テーブルに使用中レコードがあるかどうかだけである
+		// よって、下記の各種判定データの中で実際に対象プラグインテーブルにレコード有無を見ているデータだけを残す
+
 		return [
-			'1.お知らせで使われてない(block.id=null, block.plugin_key="announcements"なし)' => [
-				'uploadFile' => [
-					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12のwysiwygアップロードデータを利用 */
-					'UploadFile' => $UploadFileFixture->records[2]
-				],
-				'cleanUp' => $cleanUp,
-				'assertMessage' =>
-					'ファイル(block.id=null, block.plugin_key="announcements"なし)で、お知らせで使われてないため、falseが戻る想定'
-			],
-			'2.お知らせで使われてない(content_key="")' => [
-				'uploadFile' => [
-					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=17のwysiwygアップロードデータを利用 */
-					'UploadFile' => $UploadFileFixture->records[7]
-				],
-				'cleanUp' => $cleanUp,
-				'assertMessage' =>
-					'ファイル(content_key="")で、お知らせで使われてないため、falseが戻る想定'
-			],
-			'3.お知らせで使われてない(content_key=null)' => [
-				'uploadFile' => [
-					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=18のwysiwygアップロードデータを利用 */
-					'UploadFile' => $UploadFileFixture->records[8]
-				],
-				'cleanUp' => $cleanUp,
-				'assertMessage' =>
-					'ファイル(content_key=null)で、お知らせで使われてないため、falseが戻る想定'
-			],
-			'4.プラグイン不明ファイルで使われてない(content_key=null)' => [
-				'uploadFile' => [
-					'UploadFile' => $UploadFileFixture->records[2]
-				],
-				'cleanUp' => $cleanUp,
-				'assertMessage' =>
-					'コンテンツキーなしで、使われていないため、falseが戻る想定'
-			],
+			//'1.お知らせで使われてない(block.id=null, block.plugin_key="announcements"なし)' => [
+			//	'uploadFile' => [
+			//		/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=12のwysiwygアップロードデータを利用 */
+			//		'UploadFile' => $UploadFileFixture->records[2]
+			//	],
+			//	'cleanUp' => $cleanUp,
+			//	'assertMessage' =>
+			//		'ファイル(block.id=null, block.plugin_key="announcements"なし)で、お知らせで使われてないため、falseが戻る想定'
+			//],
+			//'2.お知らせで使われてない(content_key="")' => [
+			//	'uploadFile' => [
+			//		/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=17のwysiwygアップロードデータを利用 */
+			//		'UploadFile' => $UploadFileFixture->records[7]
+			//	],
+			//	'cleanUp' => $cleanUp,
+			//	'assertMessage' =>
+			//		'ファイル(content_key="")で、お知らせで使われてないため、falseが戻る想定'
+			//],
+			//'3.お知らせで使われてない(content_key=null)' => [
+			//	'uploadFile' => [
+			//		/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=18のwysiwygアップロードデータを利用 */
+			//		'UploadFile' => $UploadFileFixture->records[8]
+			//	],
+			//	'cleanUp' => $cleanUp,
+			//	'assertMessage' =>
+			//		'ファイル(content_key=null)で、お知らせで使われてないため、falseが戻る想定'
+			//],
+			//'4.プラグイン不明ファイルで使われてない(content_key=null)' => [
+			//	'uploadFile' => [
+			//		'UploadFile' => $UploadFileFixture->records[2]
+			//	],
+			//	'cleanUp' => $cleanUp,
+			//	'assertMessage' =>
+			//		'コンテンツキーなしで、使われていないため、falseが戻る想定'
+			//],
 			'5.お知らせで英日あり。どちらもファイル使ってない' => [
 				'uploadFile' => [
 					/* @sse UploadFileForCleanUpFixture アップロードファイルのテストデータ. id=19のwysiwygアップロードデータを利用 */
@@ -257,6 +265,7 @@ class CleanUpPrivateIsUseUploadFileTest extends CleanUpModelTestCase {
 
 		// 'plugin_key' => 'announcements',
 		//$cleanUp['CleanUp'] = (new CleanUpFixture())->records[0];
+		$cleanUp['CleanUp'] = $cleanUp;
 
 		//テスト実施
 		$result = $this->_testReflectionMethod(
