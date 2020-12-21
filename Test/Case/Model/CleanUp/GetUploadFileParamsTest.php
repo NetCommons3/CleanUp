@@ -91,7 +91,7 @@ class CleanUpGetUploadFileParamsTest extends CleanUpModelTestCase {
 		//var_export($params);
 		//var_export($params['joins'][0]);
 		$this->assertEquals([$params['joins'][0]['table'], $params['joins'][0]['type']],
-			['blocks', 'inner'],
+			['blocks', 'left'],
 			'プラグイン対象:announcementsはblockテーブルと結合条件を含む想定');
 	}
 

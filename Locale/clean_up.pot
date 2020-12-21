@@ -74,7 +74,7 @@ msgid "[%s:%s]  Failed to delete \"%s\"."
 msgstr ""
 
 #: Model/CleanUp.php:411
-msgid "[%s:%s] \"%s\" deleted."
+msgid "[%s] \"%s\" deleted."
 msgstr ""
 
 #: Utility/CleanUpUtility.php:117

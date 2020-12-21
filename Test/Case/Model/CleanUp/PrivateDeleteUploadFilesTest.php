@@ -60,6 +60,8 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
  */
 	public function setUp() {
 		parent::setUp();
+		$model = $this->_modelName;
+		$this->$model->nc314InstallDatetime = '2015-03-31 00:00:00';
 	}
 
 /**
@@ -98,7 +100,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//var_dump($uploadFiles);
 
 		// 削除対象件数 初期値
-		$targetCount = 0;
+		//$targetCount = 0;
 
 		// 削除遅延日 x日前
 		// ありえないほど前の日(20年～30年前)を指定して削除対象外にする
@@ -109,7 +111,7 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//テスト実施
 		//
 		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $cleanUps)
 		);
 
 		//チェック
@@ -155,13 +157,13 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//var_dump($uploadFiles);
 
 		// 削除対象件数 初期値
-		$targetCount = 0;
+		//$targetCount = 0;
 
 		//
 		//テスト実施
 		//
 		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $cleanUps)
 		);
 
 		//チェック
@@ -238,13 +240,13 @@ class CleanUpPrivateDeleteUploadFilesTest extends CleanUpModelTestCase {
 		//var_dump($uploadFiles);
 
 		// 削除対象件数 初期値
-		$targetCount = 0;
+		//$targetCount = 0;
 
 		//
 		//テスト実施
 		//
 		$result = $this->_testReflectionMethod(
-			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $targetCount)
+			$this->$model, $methodName, array($uploadFiles, $cleanUps[0], $cleanUps)
 		);
 
 		//チェック
