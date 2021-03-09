@@ -13,17 +13,23 @@ App::uses('NetCommonsTime', 'NetCommons.Utility');
 App::uses('CleanUpLog', 'CleanUp.Lib');
 
 /* @see https://github.com/NetCommons3/NetCommons3/blob/6451c4b5ee2a17c74ea65eb7e4d757d148cd1835/app/Config/core.php#L368 */
+//
+// 基本的にcore.phpで定義されたキャッシュ方式を踏襲する
+// キャッシュファイルのprefixの一部(cake_core_)をCleanUpで使用している特別Prefixに置き換えて使用する
+//
+// 全てを置き換えないようにしているのは、
+// 複数サーバーが同一箇所のキャッシュ場所を使用した場合も
+// コンタミしないように工夫されたprefixを消さないようにしているため
+// デフォルトでは頭に"myapp_"がついています
+// ※NC3ではキャッシュファイル名を「固定」にしてはいけないということ 
+//   必ずcore.phpで用いられるprefixを意識しないといけない
+//
 $cacheSetting = Cache::settings('_cake_core_');
-//$cacheSetting['prefix'] =
-//	preg_replace('/cake_core_/', 'netcommons_clean_up_lock_', $cacheSetting['prefix']);
-Cache::config(CleanUpLockFile::$cacheConfigName, array(
-	'engine' => $cacheSetting['engine'],
-	//'prefix' => $cacheSetting['prefix'],
-	'prefix' => 'netcommons_clean_up_lock_',
-	'path' => CACHE,
-	'serialize' => $cacheSetting['serialize'],
+$cleanUpLockFileSetting = array_merge($cacheSetting, [
+	'prefix' => preg_replace('/cake_core_/', 'netcommons_clean_up_lock_', $cacheSetting['prefix']),
 	'duration' => '+7 days'
-));
+]);
+Cache::config(CleanUpLockFile::$cacheConfigName, $cleanUpLockFileSetting);
 
 /**
  * ファイルクリーンアップ ライブラリ
