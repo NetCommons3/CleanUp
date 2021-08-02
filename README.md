@@ -1,8 +1,9 @@
-# CleanUp
-CleanUp for NetCommons3
+CleanUp
+=============
 
-[![Build Status](https://api.travis-ci.org/NetCommons3/CleanUp.svg?branch=master)](https://travis-ci.org/NetCommons3/CleanUp)
+[![Tests Status](https://github.com/NetCommons3/CleanUp/actions/workflows/tests.yml/badge.svg?branch=master)](https://github.com/NetCommons3/CleanUp/actions/workflows/tests.yml)
 [![Coverage Status](https://coveralls.io/repos/NetCommons3/CleanUp/badge.svg?branch=master)](https://coveralls.io/r/NetCommons3/CleanUp?branch=master)
+[![Stable Version](https://img.shields.io/packagist/v/netcommons/clean-up.svg?label=stable)](https://packagist.org/packages/netcommons/clean-up)
 
 ### [phpdoc](https://netcommons3.github.io/NetCommons3Docs/phpdoc/CleanUp/)
 
