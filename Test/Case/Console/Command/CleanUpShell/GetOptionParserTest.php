@@ -23,7 +23,9 @@ class CleanUpConsoleCommandCleanUpShellGetOptionParserTest extends CleanUpConsol
  *
  * @var array
  */
-	public $fixtures = array();
+	public $fixtures = array(
+		'plugin.clean_up.clean_up',
+	);
 
 /**
  * Plugin name

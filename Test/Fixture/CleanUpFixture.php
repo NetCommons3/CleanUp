@@ -17,29 +17,6 @@
 class CleanUpFixture extends CakeTestFixture {
 
 /**
- * Fields
- *
- * @var array
- */
-	public $fields = array(
-		'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'unsigned' => false, 'key' => 'primary'),
-		'plugin_key' => array('type' => 'string', 'null' => false, 'default' => null, 'key' => 'index', 'collate' => 'utf8_general_ci', 'comment' => 'プラグインKey', 'charset' => 'utf8'),
-		'model' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'モデル', 'charset' => 'utf8'),
-		'class' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'クラス記法', 'charset' => 'utf8'),
-		'fields' => array('type' => 'string', 'null' => false, 'default' => null, 'collate' => 'utf8_general_ci', 'comment' => 'WYSIWYG対象フィールド名(複数はカンマ区切り)', 'charset' => 'utf8'),
-		'alive_func' => array('type' => 'string', 'null' => true, 'default' => null, 'collate' => 'utf8_general_ci', 'charset' => 'utf8'),
-		'created_user' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
-		'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'modified_user' => array('type' => 'integer', 'null' => true, 'default' => null, 'unsigned' => false),
-		'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-		'indexes' => array(
-			'PRIMARY' => array('column' => 'id', 'unique' => 1),
-			'plugin_key' => array('column' => 'plugin_key', 'unique' => 0)
-		),
-		'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-	);
-
-/**
  * Records
  *
  * @var array
@@ -212,5 +189,16 @@ class CleanUpFixture extends CakeTestFixture {
 			'modified_user' => '1',
 		),
 	);
+
+/**
+ * Initialize the fixture.
+ *
+ * @return void
+ */
+	public function init() {
+		require_once App::pluginPath('CleanUp') . 'Config' . DS . 'Schema' . DS . 'schema.php';
+		$this->fields = (new CleanUpSchema())->tables['clean_ups'];
+		parent::init();
+	}
 
 }
